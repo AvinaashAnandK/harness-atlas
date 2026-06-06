@@ -44,6 +44,10 @@
   function tip(c){ return ' data-fate-tip="'+esc(FATE_TIPS[c])+'" tabindex="0"'; }
 
   var FILT = { layers:{}, fates:{}, harness:null };
+  /* analytics (GoatCounter, cookieless) — count.js auto-counts the page load;
+     this fires a clean virtual pageview for in-page deep-dive navigation. */
+  var routedOnce = false;
+  function gcount(path, title){ if(window.goatcounter && window.goatcounter.count){ try{ window.goatcounter.count({path:path, title:title||path, event:false}); }catch(e){} } }
 
   /* ============================================================ RAIL (deepdives + matter only) */
   var RR = [17,26,34,41,47];
@@ -399,6 +403,11 @@
     var m = h.match(/#\/cap\/([\w-]+)/);
     var slug = m ? m[1] : null;
     var isMap = h.indexOf('map')>=0;
+    if(SURFACE==='deepdives' && routedOnce){
+      if(slug && bySlug[slug]) gcount('/cap/'+slug, bySlug[slug].name);
+      else if(isMap) gcount('/fate-map','Fate map');
+    }
+    routedOnce = true;
     renderRail(slug);
     if(SURFACE==='matter'){ renderSit(); return; }
     if(SURFACE==='atlas'){
