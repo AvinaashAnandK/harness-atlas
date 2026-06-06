@@ -1,0 +1,90 @@
+/* ============================================================
+   HARNESS ATLAS - Timeline surface.
+   Loads after fieldnote-tokens.css + atlas.css.
+   The living record: every dated source the atlas is built on,
+   grouped by quarter, filterable by layer, type, and harness.
+   Marker color encodes SOURCE TYPE in a non-fate palette; the
+   fate dot on a capability chip is that capability's fate (the
+   only fate-color use here).
+   ============================================================ */
+
+.tl-wrap{max-width:1040px; margin:0 auto; padding:0 28px}
+
+/* ---- hero ---- */
+.tl-head{padding:52px 0 14px}
+.tl-head .eyebrow{margin-bottom:14px}
+.tl-head h1{font-family:var(--sans); font-weight:700; font-size:clamp(2.1rem,5vw,3.1rem); line-height:1.04; letter-spacing:-.026em; margin:0 0 14px}
+.tl-head .lead{font-family:var(--sans); font-size:1.16rem; line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0}
+.tl-stat{margin-top:18px; display:flex; flex-wrap:wrap; gap:8px 16px; font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--ink-3)}
+.tl-stat b{color:var(--ink)}
+
+/* ---- controls ---- */
+.tl-controls{position:sticky; top:49px; z-index:30; background:color-mix(in srgb,var(--bg) 92%,transparent); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:13px 0; margin:14px 0 0}
+.tl-controls-in{max-width:1040px; margin:0 auto; padding:0 28px}
+.crow{display:flex; flex-wrap:wrap; align-items:center; gap:10px}
+.crow + .crow{margin-top:10px}
+.tl-search{flex:1; min-width:220px; display:flex; align-items:center; gap:8px; background:var(--bg-raised); border:1px solid var(--line-2); border-radius:var(--r-pill); padding:7px 14px; transition:border-color var(--fast)}
+.tl-search:focus-within{border-color:var(--live)}
+.tl-search svg{width:14px; height:14px; color:var(--ink-3); flex:none}
+.tl-search input{flex:1; background:none; border:0; outline:none; color:var(--ink); font-family:var(--sans); font-size:.92rem}
+.tl-search input::placeholder{color:var(--ink-3)}
+.tl-select{font-family:var(--mono); font-size:10.5px; letter-spacing:.03em; text-transform:uppercase; color:var(--ink); background:var(--bg-raised); border:1px solid var(--line-2); border-radius:var(--r-pill); padding:7px 12px; cursor:pointer}
+.tl-sort{font-family:var(--mono); font-size:10.5px; letter-spacing:.03em; text-transform:uppercase; color:var(--ink-2); background:var(--bg-raised); border:1px solid var(--line-2); border-radius:var(--r-pill); padding:7px 12px; cursor:pointer; white-space:nowrap; transition:border-color var(--fast),color var(--fast)}
+.tl-sort:hover{border-color:var(--live); color:var(--live)}
+.clab{font-family:var(--mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-right:2px}
+.tl-count{font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; color:var(--ink-3); white-space:nowrap; margin-left:auto}
+.tl-count b{color:var(--live)}
+.tl-chips{display:flex; flex-wrap:wrap; gap:7px}
+.tchip{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-2); background:var(--bg-raised); border:1px solid var(--line-2); border-radius:var(--r-pill); padding:5px 11px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; user-select:none; transition:all var(--fast)}
+.tchip:hover{border-color:var(--ink-3); color:var(--ink)}
+.tchip.off{opacity:.4}
+.tchip .km{width:9px; height:9px; border-radius:50%; flex:none}
+.tchip .ln{font-family:var(--mono); font-weight:700; font-size:9px; color:var(--ink-3)}
+.km.release{background:var(--concept)} .km.research{background:var(--as)} .km.incident{background:var(--cav)} .km.neutral{background:var(--ink-3)}
+
+/* ---- the spine ---- */
+.tl-list{padding:8px 0 80px}
+.qhead{position:sticky; top:142px; z-index:10; display:flex; align-items:baseline; gap:12px; padding:24px 0 10px; background:linear-gradient(var(--bg),var(--bg) 72%,transparent)}
+.qhead h2{font-family:var(--mono); font-weight:700; font-size:1.05rem; letter-spacing:.02em; margin:0; color:var(--ink)}
+.qhead .qn{font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+.events{position:relative; border-left:2px solid var(--line); margin-left:108px}
+
+.ev{position:relative; display:block; padding:0 0 16px 26px}
+.ev .node{position:absolute; left:-7px; top:6px; width:12px; height:12px; border-radius:50%; border:2px solid var(--bg); background:var(--ink-3)}
+.ev.release .node{background:var(--concept)} .ev.research .node{background:var(--as)} .ev.incident .node{background:var(--cav)} .ev.neutral .node{background:var(--ink-3)}
+.ev .date{position:absolute; left:-134px; top:4px; width:100px; text-align:right; font-family:var(--mono); font-size:10.5px; color:var(--ink-3); line-height:1.3}
+.ev .date .approx{opacity:.6}
+
+.tl-card{background:var(--bg-raised); border:1px solid var(--line); border-radius:var(--r-md); padding:13px 16px; transition:border-color var(--fast)}
+.tl-card:hover{border-color:var(--line-2)}
+.tl-card .ttl{font-family:var(--sans); font-weight:600; font-size:1rem; line-height:1.32; letter-spacing:-.008em; margin:0; display:inline}
+.tl-card .ttl a{color:var(--ink); border-bottom:1px solid transparent}
+.tl-card .ttl a:hover{color:var(--live-ink); border-bottom-color:var(--live-bd); text-decoration:none}
+.tl-card .ttl a::after{content:" \2197"; font-family:var(--mono); font-size:.7rem; color:var(--ink-3)}
+.tl-card .est{font-size:.9rem; color:var(--ink-2); line-height:1.48; margin:7px 0 0}
+.tl-meta{margin-top:11px; display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.tl-tag{font-family:var(--mono); font-weight:700; font-size:9px; letter-spacing:.05em; text-transform:uppercase; padding:3px 8px; border-radius:var(--r-pill); border:1px solid var(--line-2); color:var(--ink-3); white-space:nowrap}
+.tl-tag.type{color:var(--ink-2); border-color:var(--ink-3)}
+.tl-tag.lyr{color:var(--ink-2)}
+.tl-tag.harn{color:var(--ink-3)}
+/* capability chip -> deep dive; carries the fate dot + tooltip */
+.tl-cap{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-weight:700; font-size:9px; letter-spacing:.04em; text-transform:uppercase; padding:3px 8px 3px 7px; border-radius:var(--r-pill); border:1px solid var(--line-2); background:var(--bg-sunken); color:var(--ink-2); cursor:help; white-space:nowrap}
+.tl-cap:hover{color:var(--ink); border-color:var(--ink-3); text-decoration:none}
+.tl-cap .fdot{width:7px; height:7px}
+
+.tl-empty{padding:56px 0; text-align:center; color:var(--ink-3); font-family:var(--mono); font-size:12px}
+.tl-foot{border-top:1px solid var(--line); padding:24px 0 60px; color:var(--ink-3); font-size:.86rem; line-height:1.55}
+.tl-foot code{font-family:var(--mono); font-size:.82rem; color:var(--ink-2); background:var(--bg-sunken); padding:1px 5px; border-radius:var(--r-sm)}
+
+/* ---- mobile ---- */
+@media (max-width:760px){
+  .tl-wrap, .tl-controls-in{padding:0 18px}
+  .tl-head{padding:34px 0 10px}
+  .tl-controls{position:static}
+  .events{margin-left:0}
+  .ev{padding-left:22px}
+  .ev .date{position:static; width:auto; text-align:left; display:block; margin-bottom:5px}
+  .qhead{top:0}
+  .tl-count{margin-left:0; flex-basis:100%}
+}
+@media (prefers-reduced-motion:reduce){ .tl-card{transition:none} }

@@ -1,0 +1,95 @@
+/* ============================================================
+   HARNESS ATLAS — landing (Home).
+   Loads after fieldnote-tokens.css + atlas.css.
+   Hero, the scale line, provenance, the five doors. No new colors;
+   fate hues only on the three fate words, each with a tooltip.
+   ============================================================ */
+
+.land{max-width:var(--w-full); margin:0 auto; padding:0 28px}
+.land-in{max-width:920px; margin:0 auto}
+
+/* ---- hero ---- */
+.hero{padding:62px 0 30px}
+.hero .eyebrow{margin-bottom:18px}
+.hero h1{
+  font-family:var(--sans); font-weight:700;
+  font-size:clamp(2.6rem,6.2vw,4.4rem); line-height:1.02; letter-spacing:-.03em;
+  margin:0 0 28px; max-width:14ch;
+}
+.thesis{
+  font-family:var(--sans); font-weight:400;
+  font-size:clamp(1.28rem,2.7vw,1.9rem); line-height:1.42; letter-spacing:-.014em;
+  color:var(--ink); max-width:30ch;
+}
+/* the three fate words: fate-colored, hoverable for a tooltip (cursor:help, not coral) */
+.fate-w{font-weight:600; cursor:help; border-bottom:1.5px dotted currentColor; white-space:nowrap}
+.fate-w.compound{color:var(--fate-compound)}
+.fate-w.fade{color:var(--fate-fade)}
+.fate-w.protect{color:var(--fate-protect)}
+
+/* ---- section rhythm ---- */
+.land-sec{padding:40px 0; border-top:1px solid var(--line)}
+.land-sec .kicker{
+  font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:16px;
+}
+.land-sec p{font-family:var(--sans); font-size:1.12rem; line-height:1.62; color:var(--ink); max-width:64ch; margin:0 0 1em}
+.land-sec p:last-child{margin-bottom:0}
+.land-sec p .lead-em{color:var(--ink); font-weight:600}
+.land-sec p.muted-line{color:var(--ink-2)}
+
+/* the "Claude Code is the first specimen, not the subject" punch line */
+.provenance-punch{
+  font-family:var(--sans); font-weight:600; font-size:1.18rem; letter-spacing:-.012em;
+  color:var(--ink); margin-top:6px;
+}
+
+/* ---- the scale line + honesty ---- */
+.scalewrap{padding:30px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin:8px 0 0}
+.scaleline{
+  font-family:var(--mono); font-weight:700; font-size:clamp(.95rem,2vw,1.18rem);
+  letter-spacing:.04em; color:var(--ink); display:flex; flex-wrap:wrap; gap:.55em; align-items:baseline;
+}
+.scaleline .dot{color:var(--ink-3)}
+.scaleline .num{color:var(--live)}
+.honesty{font-size:.92rem; color:var(--ink-3); line-height:1.55; max-width:60ch; margin:16px 0 0}
+
+/* ---- the doors (editorial icon columns, divided by hairlines) ---- */
+.doors-band{padding:50px 0 34px}
+.doors-head{display:flex; align-items:center; gap:14px; margin-bottom:2px}
+.doors-head::before{content:""; width:22px; height:1px; background:var(--live); flex:none}
+.doors-head .k{font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); white-space:nowrap}
+.doors-head::after{content:""; flex:1; height:1px; background:var(--line)}
+.doors{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); margin-top:26px}
+.door{background:var(--bg); display:flex; flex-direction:column; text-align:left; padding:28px 24px 26px; min-height:250px; transition:background var(--fast)}
+.door:hover{background:var(--bg-raised); text-decoration:none}
+.door-n{font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.08em; color:var(--live); margin-bottom:16px}
+.door-ico{color:var(--live); height:30px; margin-bottom:16px; display:flex; align-items:center}
+.door-ico svg{width:30px; height:30px; stroke-width:1.5}
+.door-name{font-family:var(--sans); font-weight:600; font-size:1.26rem; letter-spacing:-.016em; line-height:1.12; color:var(--ink); margin:0 0 8px}
+.door-desc{font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); line-height:1.4; margin-bottom:13px}
+.door-body{font-size:.92rem; line-height:1.5; color:var(--ink-2); margin:0; max-width:none}
+.door-cta{margin-top:auto; padding-top:18px; font-family:var(--mono); font-weight:700; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--live-ink); display:inline-flex; align-items:center; gap:6px}
+.door-cta .ar{transition:transform var(--fast)}
+.door:hover .door-cta .ar{transform:translateX(3px)}
+@media (max-width:1080px){ .doors{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:680px){ .doors{grid-template-columns:1fr} .door{min-height:0; padding:24px 16px} }
+
+/* ---- footer line ---- */
+.land-foot{padding:40px 0 70px; border-top:1px solid var(--line)}
+.land-foot .fl{font-family:var(--sans); font-weight:500; font-size:1.16rem; line-height:1.45; letter-spacing:-.01em; color:var(--ink-2); max-width:52ch}
+.land-foot .fl b{color:var(--ink); font-weight:600}
+
+/* ---- mobile ---- */
+@media (max-width:760px){
+  .land{padding:0 20px}
+  .hero{padding:42px 0 24px}
+  .hero h1{max-width:none}
+  .thesis{max-width:none}
+  .land-sec p{font-size:1.05rem}
+  .fate-w{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  .door:hover{transform:none}
+  .door:hover .door-cta .ar{transform:none}
+}

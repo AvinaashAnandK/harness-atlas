@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline · Harness Atlas</title>
+<meta name="description" content="The Timeline: every dated source the Harness Atlas is built on, release notes, papers, news, and incidents, from 2023 to 2026, each mapped to the capability it informed. 5 layers · 24 capabilities · 140+ documented incidents.">
+<link rel="stylesheet" href="fieldnote-tokens.css">
+<link rel="stylesheet" href="atlas.css">
+<link rel="stylesheet" href="timeline.css">
+</head>
+<body data-surface="timeline">
+
+<header class="mast">
+  <div class="mast-in">
+    <a href="Harness Atlas.html" class="mark">HARNESS<span class="mid">·</span><b>ATLAS</b></a>
+    <span class="sep"></span>
+    <nav aria-label="Surfaces">
+      <a href="01 The Tour.html"><span class="nn">01</span> <span class="nlabel">The Tour</span></a>
+      <a href="02 The Atlas.html"><span class="nn">02</span> <span class="nlabel">The Atlas</span></a>
+      <a href="03 Capability Deep Dives.html"><span class="nn">03</span> <span class="nlabel">Deep Dives</span></a>
+      <a href="04 What Should Matter to You.html"><span class="nn">04</span> <span class="nlabel">What Matters</span></a>
+      <a class="cur" href="05 Timeline.html"><span class="nn">05</span> <span class="nlabel">Timeline</span></a>
+    </nav>
+    <button class="t-toggle" id="themeBtn" aria-label="Toggle light and dark mode">◐ Light</button>
+  </div>
+</header>
+
+<main class="tl-wrap">
+  <section class="tl-head">
+    <p class="eyebrow">05 · Timeline · the living record</p>
+    <h1>Research provenance</h1>
+    <p class="lead">Every dated source the atlas is built on: the release notes, papers, news reports, and incidents read and incorporated, each one mapped to the capability it informed. New evidence lands here first, then gets drawn into the layers.</p>
+    <div class="tl-stat" id="tlStat"></div>
+  </section>
+</main>
+
+<section class="tl-controls">
+  <div class="tl-controls-in">
+    <div class="crow">
+      <label class="tl-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="tlSearch" type="search" placeholder="Search titles, sources, what they established, capabilities" aria-label="Search the timeline">
+      </label>
+      <select class="tl-select" id="tlHarn" aria-label="Filter by harness"><option value="all">All harnesses</option></select>
+      <button class="tl-sort" id="tlSort">↓ Newest first</button>
+    </div>
+    <div class="crow">
+      <span class="clab">Layers</span>
+      <div class="tl-chips" id="tlLayerChips"></div>
+      <span class="tl-count" id="tlCount"></span>
+    </div>
+    <div class="crow">
+      <span class="clab">Type</span>
+      <div class="tl-chips" id="tlTypeChips"></div>
+    </div>
+  </div>
+</section>
+
+<main class="tl-wrap">
+  <div class="tl-list" id="tl"></div>
+  <footer class="tl-foot">
+    Provenance dates are taken from the 24 capability dossiers; precision varies (day, month, or year) and is shown as such. Marker color is the source type, not a fate; the colored dot on a capability chip is that capability's fate. The living source is <code>harness-timeline.json</code>; to add an entry, append to it and regenerate <code>timeline-data.js</code>.
+  </footer>
+</main>
+
+<script src="atlas-data.js"></script>
+<script src="timeline-data.js"></script>
+<script src="timeline.js"></script>
+</body>
+</html>

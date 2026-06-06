@@ -1,0 +1,147 @@
+/* ============================================================
+   FIELDNOTE — Colors & Type foundations
+   Token source of truth for the Fieldnote design system.
+   A look-feel-voice system for interactive explainer blogs.
+
+   Two faces only:  Space Grotesk (read) · Space Mono (label).
+   Two modes:       light (warm paper) · dark (warm near-black).
+   Five meanings:   concept · live · highlight · caveat · aside.
+   Self-hosted woff2 in ./fonts/ — no network dependency.
+   ============================================================ */
+
+/* ---- FONTS ------------------------------------------------ */
+/* Space Grotesk ships as a variable file (300–700). */
+@font-face{
+  font-family:"Space Grotesk";
+  src:url("fonts/SpaceGrotesk-variable.woff2") format("woff2");
+  font-weight:300 700; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"Space Mono";
+  src:url("fonts/SpaceMono-Regular.woff2") format("woff2");
+  font-weight:400; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"Space Mono";
+  src:url("fonts/SpaceMono-Bold.woff2") format("woff2");
+  font-weight:700; font-style:normal; font-display:swap;
+}
+
+/* ============================================================
+   TOKENS — LIGHT (warm paper). This is the default.
+   ============================================================ */
+:root{
+  /* --- surfaces --- */
+  --bg:#FBF8F1;          /* page — warm paper, never pure white */
+  --bg-raised:#FEFCF7;   /* cards / surfaces */
+  --bg-sunken:#F1ECE0;   /* recessed: table heads, code, rails */
+
+  /* --- ink --- */
+  --ink:#1C1815;         /* primary text */
+  --ink-2:#574F45;       /* secondary */
+  --ink-3:#8B8173;       /* tertiary / muted / placeholder */
+
+  /* --- lines --- */
+  --line:#E7E0D0;        /* hairline dividers */
+  --line-2:#D6CCB7;      /* container / strong borders */
+
+  /* --- semantic: CONCEPT (links, key terms) : indigo --- */
+  --concept:#3A4ED6; --concept-bg:#E8EAFB; --concept-bd:#C3C8F2;
+  /* --- semantic: LIVE (everything interactive) : vermilion. THE signature --- */
+  --live:#E8481F; --live-ink:#BF3A18; --live-bg:#FCE7E0; --live-bd:#F4C0B0;
+  /* --- semantic: HIGHLIGHT (tl;dr, the gist) : amber --- */
+  --hl:#8A6200; --hl-strong:#C28700; --hl-bg:#FAECC9; --hl-bd:#EACF8A;
+  /* --- semantic: CAVEAT (the catch, tradeoffs) : crimson --- */
+  --cav:#BE3A2B; --cav-bg:#F8E3DF; --cav-bd:#EDB6AD;
+  /* --- semantic: ASIDE (deep dives, context) : slate --- */
+  --as:#41526B; --as-bg:#E9EEF4; --as-bd:#C7D2DF;
+
+  /* --- type families --- */
+  --sans:"Space Grotesk", system-ui, sans-serif;
+  --mono:"Space Mono", ui-monospace, monospace;
+
+  /* --- radii (restrained, slightly warmer than corporate) --- */
+  --r-sm:4px; --r-md:8px; --r-lg:12px; --r-pill:999px;
+
+  /* --- widths --- */
+  --w-text:680px;   /* reading column */
+  --w-wide:940px;   /* figures + interactives break out */
+  --w-full:1200px;  /* page max */
+
+  /* --- motion --- */
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --fast:.15s;   /* taps, hovers, color */
+  --med:.35s;    /* reveals, accordions */
+
+  /* --- paper grain opacity --- */
+  --noise:.035;
+
+  color-scheme:light;
+}
+
+/* ============================================================
+   TOKENS — DARK (warm near-black). Every token is a L/D pair.
+   ============================================================ */
+[data-theme="dark"]{
+  --bg:#15120F; --bg-raised:#1E1A16; --bg-sunken:#100D0B;
+  --ink:#F1EBE0; --ink-2:#B6AC9C; --ink-3:#857C6E;
+  --line:#2C271F; --line-2:#3C352A;
+
+  --concept:#8E9BFF; --concept-bg:#23253A; --concept-bd:#3A3E63;
+  --live:#FF6B45; --live-ink:#FF8163; --live-bg:#33201A; --live-bd:#5C2F22;
+  --hl:#E7B84D; --hl-strong:#F2C657; --hl-bg:#2E2614; --hl-bd:#4A3C1C;
+  --cav:#F0796A; --cav-bg:#321C19; --cav-bd:#54271F;
+  --as:#9FB4D0; --as-bg:#1C2430; --as-bd:#33404F;
+
+  --noise:.05;
+  color-scheme:dark;
+}
+
+/* ============================================================
+   BASE — body defaults
+   ============================================================ */
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:19px; line-height:1.62;
+  font-weight:400; letter-spacing:-.003em;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+
+/* ============================================================
+   SEMANTIC TYPE — drop-in classes. Build hierarchy from
+   FAMILY + WEIGHT + CASE, never from stacking many sizes.
+   Max three sizes in any single view.
+   ============================================================ */
+
+/* Eyebrow — Mono 700, uppercase, faint. Names a series/doc type. */
+.eyebrow{
+  font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3);
+}
+
+/* Display — post title only. Grotesk 700. One line. */
+.display{
+  font-family:var(--sans); font-weight:700; font-size:clamp(2.5rem,5.4vw,3.5rem);
+  line-height:1.04; letter-spacing:-.025em; color:var(--ink);
+}
+
+/* Heading — section titles. Grotesk 600. */
+.h1{ font-family:var(--sans); font-weight:600; font-size:clamp(1.85rem,3vw,2.2rem); line-height:1.12; letter-spacing:-.018em; }
+/* Subhead — sub-sections. Grotesk 600. */
+.h2{ font-family:var(--sans); font-weight:600; font-size:1.42rem; line-height:1.22; letter-spacing:-.012em; }
+.h3{ font-family:var(--sans); font-weight:600; font-size:1.12rem; line-height:1.3; }
+
+/* Lead — the one-sentence promise under a title. */
+.lead{ font-family:var(--sans); font-size:1.28rem; line-height:1.5; color:var(--ink); font-weight:400; }
+/* Subhead paragraph — supporting deck. */
+.subhead{ font-family:var(--sans); font-size:1.18rem; color:var(--ink-2); max-width:60ch; line-height:1.5; }
+
+/* Body — all prose. Grotesk 400 @19/1.62, measure <= 68ch. */
+.body{ font-family:var(--sans); font-weight:400; font-size:19px; line-height:1.62; color:var(--ink); max-width:68ch; }
+
+/* Meta — eyebrows, tags, data, code, timestamps. Mono. */
+.meta{ font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+.mono,code{ font-family:var(--mono); font-size:.88em; }
+
+.muted{ color:var(--ink-3); }
+.small{ font-size:.875rem; }

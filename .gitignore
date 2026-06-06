@@ -1,0 +1,10 @@
+# macOS / design-tool cruft
+.DS_Store
+.thumbnail
+
+# build-tool screenshots and uploads (not part of the published site)
+uploads/
+screenshots/
+
+# internal build-plan meta page (not a public surface)
+00 System.html

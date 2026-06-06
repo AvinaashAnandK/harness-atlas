@@ -1,0 +1,406 @@
+/* ============================================================
+   THE TOUR — scroll-driven styles
+   Loads after fieldnote-tokens.css + atlas.css.
+   Scrubbed visuals are driven by JS inline styles (scroll
+   position), so they never depend on a CSS transition firing.
+   Every scene's resting state is its readable static end-state.
+   ============================================================ */
+
+/* ---- progress rail (top, under masthead) -------------------- */
+.tprog{position:fixed; left:0; top:0; height:2px; width:0; background:var(--live); z-index:60; transition:width .1s linear}
+
+/* ---- section kicker ----------------------------------------- */
+.kicker{max-width:var(--w-text); margin:0 auto; padding:0 28px}
+.kicker .ek{font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--live); display:flex; align-items:center; gap:10px}
+.kicker .ek::after{content:""; flex:1; height:1px; background:var(--line-2)}
+.kicker h2{font-weight:600; font-size:clamp(1.7rem,3.4vw,2.3rem); line-height:1.1; letter-spacing:-.02em; margin:14px 0 0; max-width:18ch}
+
+/* ---- COLD OPEN ---------------------------------------------- */
+.cold{min-height:92vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 28px; position:relative}
+.cold .one{font-weight:500; font-size:clamp(1.6rem,4vw,2.6rem); line-height:1.28; letter-spacing:-.02em; max-width:20ch; color:var(--ink)}
+.cold .watch{color:var(--live-ink)}
+.cold .scrollcue{position:absolute; bottom:34px; left:50%; transform:translateX(-50%); font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); display:flex; flex-direction:column; align-items:center; gap:8px}
+.cold .scrollcue .ar{width:1px; height:26px; background:var(--ink-3); position:relative}
+.cold .scrollcue .ar::after{content:""; position:absolute; bottom:0; left:50%; transform:translateX(-50%) rotate(45deg); width:6px; height:6px; border-right:1px solid var(--ink-3); border-bottom:1px solid var(--ink-3)}
+
+/* ---- SCROLLY (two-column: sticky stage + beat column) ------- */
+.scrolly{max-width:var(--w-full); margin:0 auto; padding:0 28px; display:grid; grid-template-columns:1.05fr .95fr; gap:54px; align-items:start}
+.scrolly.flip{grid-template-columns:.95fr 1.05fr}
+.scrolly.flip .stagecol{order:2}
+.stagecol{position:sticky; top:0; height:100vh; display:flex; align-items:center}
+.stage{position:relative; width:100%; min-height:62vh; display:flex; align-items:center; justify-content:center}
+
+/* a scene = one persistent visual state; only .on is shown */
+.scene{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .45s var(--ease)}
+.scene.on{opacity:1; pointer-events:auto}
+.scene-inner{width:100%}
+
+/* beat text column */
+.beatcol{padding:14vh 0}
+.beat{min-height:82vh; display:flex; align-items:center}
+.beat .bcard{transition:opacity var(--med) var(--ease)}
+.beat:not(.cur) .bcard{opacity:.32}
+.beat .bcard p{max-width:42ch}
+.beat .bcard p.big{font-size:1.34rem; line-height:1.42; letter-spacing:-.01em; color:var(--ink); max-width:24ch; font-weight:500}
+.beat .lead-in{font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:14px; display:block}
+.beat code.inl{background:var(--bg-sunken); border:1px solid var(--line); padding:2px 7px; border-radius:var(--r-sm); font-family:var(--mono); font-size:.82em; color:var(--live-ink)}
+
+/* source chip */
+.srcchip{display:flex; flex-direction:column; align-items:flex-start; gap:5px; margin-top:18px; padding:12px 15px; border:1px solid var(--line-2); border-radius:var(--r-md); background:var(--bg-raised); max-width:42ch; min-height:62px; justify-content:center}
+.srcchip .prov{font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); line-height:1.5; max-width:38ch}
+.srcchip a{color:var(--live-ink); font-weight:700; font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; white-space:normal; border-bottom:1px solid var(--live-bd); line-height:1.4}
+.srcchip a:hover{text-decoration:none; border-bottom-color:var(--live)}
+.srcchip a::after{content:" \2197"}
+
+/* full-bleed interstitial beat (a single big question) */
+.interstitial{min-height:78vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:40px 28px}
+.interstitial .q{font-weight:500; font-size:clamp(1.5rem,3.6vw,2.4rem); line-height:1.3; letter-spacing:-.02em; max-width:22ch; color:var(--ink)}
+.interstitial .q .sub{display:block; font-size:1.12rem; color:var(--ink-2); font-weight:400; margin-top:16px; max-width:34ch; margin-left:auto; margin-right:auto; line-height:1.5}
+
+/* ============================================================
+   SCENE: TERMINAL TRACE (loud incident)
+   ============================================================ */
+.term-win{border:1px solid var(--line-2); border-radius:var(--r-lg); background:var(--bg-sunken); overflow:hidden; box-shadow:none; width:100%}
+.term-bar{display:flex; align-items:center; gap:7px; padding:10px 14px; border-bottom:1px solid var(--line); background:var(--bg-raised)}
+.term-bar .tdot{width:10px; height:10px; border-radius:50%; background:var(--line-2)}
+.term-bar .ttitle{font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin-left:8px}
+.term-body{padding:18px 18px 20px; font-family:var(--mono); font-size:.84rem; line-height:1.85; color:var(--ink-2); min-height:230px}
+.term-body .tl{display:block; white-space:pre-wrap; word-break:break-word}
+.term-body .tl .pmt{color:var(--ink-3)}
+.term-body .tl .call{color:var(--concept)}
+.term-body .tl.err{color:var(--cav); font-weight:700}
+.term-body .tl .dim{color:var(--ink-3)}
+/* stamp */
+.stamp{display:inline-flex; align-items:center; gap:7px; margin-top:16px; font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:.18em; text-transform:uppercase; padding:6px 12px; border-radius:var(--r-sm); border:1px solid}
+.stamp .sd{width:9px; height:9px; border-radius:50%}
+.stamp.loud{color:var(--fate-fade); border-color:var(--fate-fade-bd); background:var(--fate-fade-bg)}
+.stamp.loud .sd{background:var(--fate-fade)}
+.stamp.silent{color:var(--fate-compound); border-color:var(--fate-compound-bd); background:var(--fate-compound-bg)}
+.stamp.silent .sd{background:var(--fate-compound)}
+.stamp.absorbed{color:var(--fate-fade); border-color:var(--fate-fade-bd); background:var(--fate-fade-bg)}
+.stamp.compounding{color:var(--fate-compound); border-color:var(--fate-compound-bd); background:var(--fate-compound-bg)}
+.where-nothing{margin-top:16px; font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); border:1px dashed var(--line-2); border-radius:var(--r-sm); padding:8px 12px; display:inline-block}
+
+/* ============================================================
+   SCENE: SILENT RUN (chat + context window sidebar)
+   ============================================================ */
+.silent-grid{display:grid; grid-template-columns:1fr 150px; gap:14px; width:100%; align-items:stretch}
+.chatpane{border:1px solid var(--line-2); border-radius:var(--r-md); background:var(--bg-raised); padding:14px; display:flex; flex-direction:column; gap:9px; min-height:300px}
+.bub{font-size:.82rem; line-height:1.4; padding:9px 12px; border-radius:10px; max-width:88%}
+.bub.user{align-self:flex-end; background:var(--concept-bg); border:1px solid var(--concept-bd); color:var(--ink)}
+.bub.agent{align-self:flex-start; background:var(--bg-sunken); border:1px solid var(--line); color:var(--ink-2)}
+.bub.danger{align-self:flex-start; background:var(--cav-bg); border:1px solid var(--cav-bd); color:var(--cav)}
+.bub .who{font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:3px}
+.ctxwin{border:1px solid var(--line-2); border-radius:var(--r-md); background:var(--bg-sunken); padding:10px; display:flex; flex-direction:column}
+.ctxwin .ctxlab{font-family:var(--mono); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:9px}
+.ctxlines{display:flex; flex-direction:column; gap:5px; flex:1}
+.ctxlines .cln{height:9px; border-radius:2px; background:var(--line-2)}
+.ctxlines .cln.instr{background:var(--line-2)}
+.delcount{margin-top:10px; font-family:var(--mono); font-weight:700; text-align:center}
+.delcount .num{font-size:1.5rem; color:var(--cav); display:block; line-height:1}
+.delcount .lab{font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3)}
+
+/* ============================================================
+   SCENE: MOAT SPLIT (beat 6)
+   ============================================================ */
+.split2{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line-2); border:1px solid var(--line-2); border-radius:var(--r-md); overflow:hidden; width:100%}
+.split2 .half{background:var(--bg-raised); padding:18px; min-height:280px}
+.split2 .half .hlab{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:7px}
+.split2 .half.loud .hlab{color:var(--fate-fade)}
+.split2 .half.silent .hlab{color:var(--fate-compound)}
+.mini-trace{font-family:var(--mono); font-size:.74rem; line-height:1.7; color:var(--ink-3)}
+.mini-trace .red{color:var(--cav); font-weight:700; background:var(--cav-bg); padding:1px 4px; border-radius:3px}
+.machine-diag{display:flex; flex-direction:column; gap:8px; margin-top:8px}
+.machine-diag .node{border:1px solid var(--line); border-radius:var(--r-sm); padding:7px 10px; font-size:.74rem; color:var(--ink-2); background:var(--bg-sunken); display:flex; align-items:center; gap:8px}
+.machine-diag .gate{border-color:var(--fate-compound-bd); background:var(--fate-compound-bg); color:var(--fate-compound); font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.06em; text-transform:uppercase}
+.machine-diag .human{width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg,var(--live),var(--concept)); flex:none}
+
+/* ============================================================
+   SECTION 2 — verifiability (concept + slate, NO fate colors)
+   ============================================================ */
+/* objective / subjective lists */
+.vlist{display:flex; flex-direction:column; gap:10px; width:100%}
+.vrow{display:flex; align-items:center; gap:12px; border:1px solid var(--line-2); border-radius:var(--r-md); background:var(--bg-raised); padding:13px 16px}
+.vrow .vout{font-size:.96rem; color:var(--ink); flex:1}
+.vrow .verdict{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.08em; text-transform:uppercase; display:inline-flex; align-items:center; gap:6px; padding:4px 9px; border-radius:var(--r-pill)}
+.vrow .verdict.auto{color:var(--concept); background:var(--concept-bg); border:1px solid var(--concept-bd)}
+.vrow .verdict.shrug{color:var(--ink-3); background:var(--bg-sunken); border:1px solid var(--line-2)}
+.vrow .verdict.expert{color:var(--as); background:var(--as-bg); border:1px solid var(--as-bd)}
+.vrow .ck{width:18px;height:18px;flex:none}
+.scap{font-size:.92rem; color:var(--ink-2); margin-top:16px; max-width:46ch}
+.scap b.concept{color:var(--concept)}
+.scap b.slate{color:var(--as)}
+
+/* coding/support pairs */
+.pairwrap{display:flex; flex-direction:column; gap:14px; width:100%}
+.pairblock .plab{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:8px}
+.pairsplit{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line-2); border:1px solid var(--line-2); border-radius:var(--r-md); overflow:hidden}
+.pairsplit .pc{background:var(--bg-raised); padding:13px 15px}
+.pairsplit .pc .pt{font-size:.88rem; color:var(--ink); margin-bottom:8px; line-height:1.35}
+.pairsplit .pc .verdict{font-family:var(--mono); font-weight:700; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; padding:3px 8px; border-radius:var(--r-pill); display:inline-flex; align-items:center; gap:5px}
+.pairsplit .pc.obj .verdict{color:var(--concept); background:var(--concept-bg); border:1px solid var(--concept-bd)}
+.pairsplit .pc.subj .verdict{color:var(--as); background:var(--as-bg); border:1px solid var(--as-bd)}
+
+/* the spectrum */
+.spectrum{width:100%; padding:8px 0}
+.spec-track-wrap{position:relative; margin:80px 96px 0}
+.spec-axis{position:relative; height:3px; background:var(--line-2); border-radius:var(--r-pill)}
+.spec-end{position:absolute; top:50%; transform:translateY(-50%); font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); width:76px}
+.spec-end.l{right:100%; margin-right:14px; text-align:right}
+.spec-end.r{left:100%; margin-left:14px; text-align:left}
+.spec-axis .mid{position:absolute; left:50%; top:-7px; width:1px; height:17px; background:var(--line-2)}
+.marker{position:absolute; top:50%; transform:translate(-50%,-50%)}
+.marker .mdot{width:13px; height:13px; border-radius:50%; background:var(--concept); border:2px solid var(--bg); box-shadow:0 0 0 1px var(--concept-bd)}
+.marker .mlabel{position:absolute; left:50%; transform:translateX(-50%); bottom:calc(100% + 13px); display:flex; flex-direction:column; align-items:center; gap:7px; width:max-content}
+.marker.below .mlabel{bottom:auto; top:calc(100% + 13px)}
+.marker .mname{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink); white-space:nowrap}
+.marker .mbar{display:flex; width:126px; height:13px; border-radius:3px; overflow:hidden; border:1px solid var(--line-2)}
+.marker .mbar .obj{background:var(--concept)}
+.marker .mbar .subj{background:var(--as)}
+.spec-legend{display:flex; gap:20px; justify-content:center; margin-top:88px; font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
+.spec-legend .sl{display:inline-flex; align-items:center; gap:6px}
+.spec-legend .sl i{width:13px;height:11px;border-radius:3px}
+.spec-legend .sl i.o{background:var(--concept)}
+.spec-legend .sl i.s{background:var(--as)}
+
+/* foundation: the literal ground the harness sits on */
+.ground-stage{width:100%}
+.harness-on-ground{position:relative; height:138px; display:flex; align-items:flex-end; justify-content:center}
+.hog-outline{position:absolute; bottom:0; left:14%; right:14%; height:118px; border:2px dashed var(--line-2); border-bottom:0; border-radius:110px 110px 0 0}
+.hog-core{position:relative; z-index:2; width:54px; height:54px; border-radius:50%; background:var(--bg-sunken); border:1.5px solid var(--line-2); display:grid; place-items:center; text-align:center; font-family:var(--mono); font-size:8.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); line-height:1.2; margin-bottom:14px}
+.ground-band{display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line-2); border-radius:var(--r-sm); overflow:hidden}
+.gb-side{padding:12px 15px}
+.gb-side .gb-h{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:5px}
+.gb-side small{display:block; font-size:.72rem; line-height:1.4; color:var(--ink-2)}
+.gb-side.l{background:var(--concept-bg); border-right:1px solid var(--line-2)}
+.gb-side.l .gb-h{color:var(--concept)}
+.gb-side.r{background:var(--as-bg); text-align:right}
+.gb-side.r .gb-h{color:var(--as)}
+.harness-outline{height:150px; width:78%; border:2px dashed var(--line-2); border-bottom:0; border-radius:120px 120px 0 0; display:flex; align-items:flex-end; justify-content:center; padding-bottom:14px; position:relative}
+.harness-outline .core{width:46px; height:46px; border-radius:50%; background:var(--bg-sunken); border:1.5px solid var(--line-2); display:grid; place-items:center; font-family:var(--mono); font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); text-align:center; line-height:1.1}
+
+/* ============================================================
+   SECTION 3 — three fates (fate colors introduced here)
+   ============================================================ */
+/* scaffold setup */
+.scaffold-stage{width:100%; display:flex; flex-direction:column; align-items:center}
+.scaffold-stage .harness-outline{height:170px; width:84%}
+.scaffold-chips{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:20px; max-width:96%}
+.schip{display:flex; flex-direction:column; align-items:flex-start; gap:2px; border:1px solid var(--line-2); border-radius:var(--r-md); background:var(--bg-raised); padding:10px 13px; min-width:120px}
+.schip .sc-dot{width:9px; height:9px; border-radius:2px; margin-bottom:5px; background:var(--ink-3)}
+.schip .sc-name{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-2)}
+.schip .sc-sub{font-family:var(--mono); font-size:8.5px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.04em}
+.schip.fade{border-color:var(--fate-fade-bd)} .schip.fade .sc-dot{background:var(--fate-fade)} .schip.fade .sc-name{color:var(--fate-fade)}
+.schip.compound{border-color:var(--fate-compound-bd)} .schip.compound .sc-dot{background:var(--fate-compound)} .schip.compound .sc-name{color:var(--fate-compound)}
+.schip.protect{border-color:var(--fate-protect-bd)} .schip.protect .sc-dot{background:var(--fate-protect)} .schip.protect .sc-name{color:var(--fate-protect)}
+
+/* loud timeline (attach -> absorb) */
+.tl-flow{width:100%; display:flex; flex-direction:column; gap:22px; align-items:center}
+.tl-track{display:flex; align-items:center; gap:0; width:100%; justify-content:center}
+.tl-core{width:96px; height:96px; border-radius:50%; background:var(--bg-sunken); border:2px solid var(--line-2); display:grid; place-items:center; text-align:center; font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); transition:none; flex:none; position:relative}
+.tl-core .gen{font-size:8px; color:var(--ink-3); display:block; margin-top:3px}
+.tl-conn{width:54px; height:2px; background:var(--line-2); position:relative}
+.tl-scaffold{border:1px solid var(--fate-fade-bd); background:var(--fate-fade-bg); color:var(--fate-fade); border-radius:var(--r-md); padding:12px 14px; font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.06em; text-transform:uppercase; flex:none; text-align:center; line-height:1.5}
+.tl-slot{width:110px; height:60px; border:1.5px dashed var(--line-2); border-radius:var(--r-md); display:grid; place-items:center; font-family:var(--mono); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3)}
+.tl-caption{font-size:.86rem; color:var(--ink-2); text-align:center; max-width:42ch; min-height:2.6em}
+
+/* silent family (growing verification) */
+.fam{width:100%}
+.fam-axis{display:flex; align-items:center; gap:10px; font-family:var(--mono); font-weight:700; font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-bottom:18px}
+.fam-axis .track{flex:1; height:2px; background:linear-gradient(90deg,var(--line-2),var(--fate-compound))}
+.fam-nodes{display:flex; flex-direction:column; gap:8px}
+.dw-steps{display:flex; flex-direction:column; gap:8px}
+.dw-step{display:flex; align-items:flex-start; gap:11px; padding:11px 13px; border:1px solid var(--line-2); border-radius:var(--r-md); background:var(--bg-raised)}
+.dw-step .dw-n{font-family:var(--mono); font-weight:700; font-size:9px; color:var(--ink-3); border:1px solid var(--line-2); border-radius:50%; width:20px; height:20px; display:grid; place-items:center; flex:none}
+.dw-step .dw-t{font-size:.84rem; color:var(--ink); line-height:1.35}
+.dw-step.emph{border-color:var(--fate-compound-bd); background:var(--fate-compound-bg)}
+.dw-step.emph .dw-n{color:var(--fate-compound); border-color:var(--fate-compound-bd)}
+.dw-step.emph .dw-t b{color:var(--fate-compound)}
+
+/* commercial wall: the model's toolbox with an injected decoy */
+.toolbox-stage{width:100%; display:grid; grid-template-columns:1.1fr auto 1fr; align-items:center; gap:12px}
+.toolbox{border:1px solid var(--line-2); border-radius:var(--r-md); background:var(--bg-raised); padding:13px}
+.toolbox .tb-lab{font-family:var(--mono); font-weight:700; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:9px}
+.tool{border:1px solid var(--line); border-radius:var(--r-sm); padding:7px 10px; font-family:var(--mono); font-size:.74rem; color:var(--ink-2); background:var(--bg-sunken); margin-bottom:6px}
+.tool:last-child{margin-bottom:0}
+.tool.decoy{border-color:var(--fate-protect-bd); background:var(--fate-protect-bg); color:var(--fate-protect); font-weight:700; display:flex; justify-content:space-between; align-items:center; gap:8px}
+.tool.decoy small{font-size:7.5px; letter-spacing:.06em; text-transform:uppercase}
+.tb-arrow{font-size:1.5rem; color:var(--fate-protect); text-align:center; line-height:1}
+.poison{border:1.5px dashed var(--fate-protect-bd); border-radius:var(--r-md); padding:13px; background:transparent}
+.poison .poison-lab{font-family:var(--mono); font-weight:700; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin-bottom:6px}
+.poison .poison-body{font-size:.78rem; color:var(--ink-2); line-height:1.4}
+
+/* HERMES */
+.hermes-stage{width:100%; display:flex; flex-direction:column; gap:16px}
+.hermes-meters{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.meter-card{border:1px solid var(--line-2); border-radius:var(--r-md); background:var(--bg-raised); padding:14px}
+.meter-card .mc-lab{font-family:var(--mono); font-weight:700; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); margin-bottom:10px}
+.bill-bar{height:80px; border:1px solid var(--line-2); border-radius:var(--r-sm); background:var(--bg-sunken); position:relative; overflow:hidden; display:flex; align-items:flex-end}
+.bill-fill{width:100%; background:var(--cav); transition:none}
+.bill-amt{font-family:var(--mono); font-weight:700; font-size:1.2rem; color:var(--cav); margin-top:8px; text-align:center}
+.dial{width:88px; height:88px; border-radius:50%; margin:0 auto; display:grid; place-items:center; font-family:var(--mono); font-weight:700; font-size:1.1rem; color:var(--ink-2)}
+.dial small{display:block; font-size:8px; color:var(--ink-3); letter-spacing:.08em; text-transform:uppercase; font-weight:700}
+.commit-line{font-family:var(--mono); font-size:.8rem; color:var(--ink-2); background:var(--bg-sunken); border:1px solid var(--line); border-radius:var(--r-sm); padding:10px 13px}
+.commit-line .hermes{color:var(--fate-protect); font-weight:700}
+.commit-line .cur{border-right:2px solid var(--live)}
+
+/* the legend earned */
+.legend-final{max-width:var(--w-text); margin:0 auto; padding:0 28px}
+.legend-final .lf-row{display:flex; align-items:flex-start; gap:16px; padding:20px 0; border-bottom:1px solid var(--line)}
+.legend-final .lf-row:last-child{border-bottom:0}
+.legend-final .lf-dot{width:18px; height:18px; border-radius:50%; flex:none; margin-top:5px}
+.legend-final .lf-dot.compound{background:var(--fate-compound)}
+.legend-final .lf-dot.fade{background:var(--fate-fade)}
+.legend-final .lf-dot.protect{background:var(--fate-protect)}
+.legend-final .lf-t b{font-weight:600; font-size:1.12rem}
+.legend-final .lf-t b.compound{color:var(--fate-compound)}
+.legend-final .lf-t b.fade{color:var(--fate-fade)}
+.legend-final .lf-t b.protect{color:var(--fate-protect)}
+.legend-final .lf-t p{margin:5px 0 0; color:var(--ink-2); font-size:.98rem; max-width:52ch}
+
+/* ============================================================
+   SECTION 4 — the new hire (flip cards + hands)
+   Flip = opacity cross-fade between faces (never strands copy);
+   a decorative rotate rides along but does not gate content.
+   ============================================================ */
+.newhire{max-width:var(--w-text); margin:0 auto; padding:0 28px}
+.trait-row{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--concept-bd); border:1px solid var(--concept-bd); border-radius:var(--r-md); overflow:hidden; margin:24px 0}
+.trait{background:var(--concept-bg); padding:16px 14px}
+.trait .tic-ico{width:38px; height:38px; border-radius:var(--r-sm); background:var(--bg-raised); border:1px solid var(--concept-bd); display:grid; place-items:center; margin-bottom:13px}
+.trait .tic-ico svg{width:21px; height:21px; stroke-width:1.6; color:var(--concept)}
+.trait .ti{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.09em; text-transform:uppercase; color:var(--concept); margin-bottom:6px}
+.trait p{font-size:.84rem; color:var(--ink); margin:0; line-height:1.42}
+@media (max-width:760px){ .trait-row{grid-template-columns:1fr 1fr} }
+
+/* brain flip-card stage */
+.qstage{width:100%; display:flex; flex-direction:column; gap:14px}
+.qcard{position:relative; border:1.5px solid var(--live-bd); border-radius:var(--r-lg); background:var(--bg-raised); min-height:320px; cursor:pointer; overflow:hidden}
+.qcard .flip-hint{position:absolute; top:13px; right:15px; z-index:3; font-family:var(--mono); font-weight:700; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--live-ink); display:inline-flex; align-items:center; gap:6px}
+.qcard .flip-hint::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--live)}
+.qcard .face{position:absolute; inset:0; padding:28px; display:flex; flex-direction:column}
+.qcard .front{justify-content:center}
+.qcard .front .qq{font-size:1.5rem; line-height:1.36; color:var(--ink); font-weight:600; max-width:22ch; letter-spacing:-.015em}
+.qcard .front .qq::before{content:"\201C"; color:var(--live); margin-right:2px}
+.qcard .front .qq::after{content:"\201D"; color:var(--live); margin-left:1px}
+.qcard .back{opacity:0; pointer-events:none; justify-content:flex-start; padding-top:26px; overflow:auto}
+.qcard.flipped .front{opacity:0; pointer-events:none}
+.qcard.flipped .back{opacity:1; pointer-events:auto}
+.qcard .capname{font-weight:600; font-size:1.18rem; margin:12px 0 2px; letter-spacing:-.01em; display:flex; align-items:center; gap:9px}
+.capicon{flex:none; color:inherit}
+.capname svg,.hname svg{width:18px; height:18px; stroke-width:1.5; flex:none}
+.qtray .slot .sn svg{width:12px; height:12px; stroke-width:1.6; vertical-align:-2px; margin-right:4px}
+.shells-grid .scol .snode svg{width:13px; height:13px; stroke-width:1.6; flex:none; margin-top:1px}
+.qcard .faillead{font-family:var(--mono); font-weight:700; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin:14px 0 8px}
+.wpair{display:flex; flex-direction:column}
+.wrow{display:flex; gap:12px; padding:9px 0; border-top:1px solid var(--line); font-size:.86rem; line-height:1.4}
+.wrow .wk{font-family:var(--mono); font-weight:700; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); flex:none; width:54px; padding-top:2px}
+.wrow .wv{color:var(--ink); flex:1}
+.wrow .wv b{color:var(--ink)}
+
+/* growing tray */
+.qtray{display:flex; gap:6px; margin-top:4px}
+.qtray .slot{flex:1; border:1px solid var(--line); border-radius:var(--r-sm); padding:8px 9px; background:var(--bg-sunken); opacity:.35; transition:opacity var(--med) var(--ease), border-color var(--med); min-width:0}
+.qtray .slot.docked{opacity:1; border-color:var(--line-2)}
+.qtray .slot .sn{font-family:var(--mono); font-weight:700; font-size:8px; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-2); display:block; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.qtray .slot .fdot{margin-bottom:5px}
+
+/* the four hands */
+.hand{width:100%}
+.hand .hlead{margin-bottom:14px}
+.hand .hlayer{font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink)}
+.hand .htag{font-size:.96rem; color:var(--ink-2); margin-top:5px; max-width:44ch}
+.hand-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.hcard{position:relative; border:1px solid var(--live-bd); border-radius:var(--r-md); background:var(--bg-raised); padding:14px 13px 13px; cursor:pointer; min-height:148px; overflow:hidden}
+.hcard .hface{position:relative}
+.hcard .hfront{padding-right:30px}
+.hcard .hfront .hq{font-size:1rem; color:var(--ink); line-height:1.34; font-weight:600; letter-spacing:-.01em}
+.hcard .hfront .hq::before{content:"\201C"; color:var(--live)}
+.hcard .hfront .hq::after{content:"\201D"; color:var(--live)}
+.hcard .hback{position:absolute; inset:0; padding:13px; opacity:0; pointer-events:none; display:flex; flex-direction:column; justify-content:center; background:var(--bg-raised)}
+.hcard.flipped .hfront{opacity:0; pointer-events:none}
+.hcard.flipped .hback{opacity:1; pointer-events:auto}
+.hcard .hname{font-weight:600; font-size:.96rem; line-height:1.25; margin-bottom:9px; display:flex; align-items:center; gap:8px}
+.hcard .flip-hint{position:absolute; top:9px; right:10px; font-family:var(--mono); font-weight:700; font-size:8px; letter-spacing:.06em; text-transform:uppercase; color:var(--live-ink)}
+.spotlight{margin-top:10px; border:1.5px solid var(--live-bd); border-radius:var(--r-md); background:var(--live-bg); padding:15px 17px}
+.spotlight .sp-lab{font-family:var(--mono); font-weight:700; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--live-ink); display:flex; align-items:center; gap:8px; margin-bottom:9px}
+.spotlight .sp-story{font-size:.96rem; color:var(--ink); line-height:1.5}
+
+/* ============================================================
+   SECTION 5 — the assembled atlas (five concentric shells)
+   ============================================================ */
+.shells-wrap{position:relative; width:100%; max-width:540px; margin:0 auto; aspect-ratio:1/1}
+.shells-svg{position:absolute; inset:0; width:100%; height:100%}
+.shells-svg circle{fill:none; stroke:var(--line); stroke-width:.5}
+.shells-svg circle.wall{stroke:var(--line-2); stroke-width:1; stroke-dasharray:2 1.6}
+.shells-core{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:88px; height:88px; border-radius:50%; background:var(--bg-sunken); border:1.5px solid var(--line-2); display:grid; place-items:center; text-align:center; font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2); line-height:1.3; z-index:3}
+.shellnode{position:absolute; transform:translate(-50%,-50%); width:15px; height:15px; border-radius:50%; border:2px solid var(--bg); cursor:default; z-index:4; transition:transform var(--fast) var(--ease)}
+.shellnode.compound{background:var(--fate-compound)}
+.shellnode.fade{background:var(--fate-fade)}
+.shellnode.protect{background:var(--fate-protect)}
+.shellnode.split{background:linear-gradient(90deg,var(--fate-fade) 0 50%, var(--fate-compound) 50% 100%)}
+.shellnode.edge{box-shadow:0 0 0 2px var(--fate-protect)}
+.shellnode:hover{transform:translate(-50%,-50%) scale(1.5); z-index:9}
+.shellnode[data-name]:hover::after{content:attr(data-name); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%); white-space:nowrap; background:var(--ink); color:var(--bg); font-family:var(--mono); font-size:9.5px; letter-spacing:.04em; padding:5px 8px; border-radius:var(--r-sm); z-index:20}
+.ring-label{position:absolute; transform:translate(-50%,-50%); font-family:var(--mono); font-weight:700; font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); background:var(--bg); padding:0 4px; z-index:2}
+.shells-legend{display:flex; gap:16px; justify-content:center; margin-top:18px; font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); flex-wrap:wrap}
+.shells-legend .sl{display:inline-flex; align-items:center; gap:6px}
+.shells-legend .sl .fdot{width:10px;height:10px}
+
+/* mobile fallback: five-column grid */
+.shells-grid{display:none}
+.cta-open{display:inline-flex; align-items:center; gap:10px; margin-top:18px; font-family:var(--mono); font-weight:700; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:14px 22px; border-radius:var(--r-pill); border:1px solid var(--live-bd); background:var(--live-bg); color:var(--live-ink); transition:background var(--fast), color var(--fast), transform var(--fast)}
+.cta-open:hover{background:var(--live); color:#fff; border-color:var(--live); text-decoration:none}
+.cta-open:active{transform:scale(.97)}
+.cta-open .arr{font-size:1.1em}
+
+@media (max-width:880px){
+  .shells-wrap{display:none}
+  .shells-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line-2); border:1px solid var(--line-2); border-radius:var(--r-md); overflow:hidden; margin:8px 0}
+  .shells-grid .scol{background:var(--bg-raised); padding:11px 9px}
+  .shells-grid .scol .sch{font-family:var(--mono); font-weight:700; font-size:8.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink); margin-bottom:9px}
+  .shells-grid .scol .snode{display:flex; align-items:flex-start; gap:6px; margin-bottom:8px; font-size:.7rem; line-height:1.25; color:var(--ink-2)}
+  .shells-grid .scol .snode .fdot{width:8px;height:8px;margin-top:3px;flex:none}
+}
+
+
+@media (max-width:880px){
+  .scrolly,.scrolly.flip{grid-template-columns:1fr; gap:0; padding:0 20px}
+  .scrolly.flip .stagecol{order:0}
+  /* the stage pins under the masthead so the visual tracks the beats as you scroll */
+  .stagecol{position:sticky; top:49px; height:auto; align-self:start; margin:0 -20px 16px; padding:14px 20px; background:color-mix(in srgb,var(--bg) 94%,transparent); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); z-index:8}
+  .stage{min-height:0}
+  .scene{position:relative; opacity:1; pointer-events:auto; display:none}
+  .scene.on{display:flex}
+  .beatcol{padding:0}
+  .beat{min-height:0; margin-bottom:34px}
+  .beat:first-child{margin-top:4px}
+  .beat .bcard{opacity:1 !important}
+  .beat .bcard p, .beat .bcard p.big{max-width:none}
+  .silent-grid{grid-template-columns:1fr 116px}
+  /* spectrum: shed the wide desktop side margins so the track fits */
+  .spec-track-wrap{margin:68px 60px 0}
+  .spec-legend{margin-top:78px}
+  /* the toolbox decoy scene: stack, rotate the arrow */
+  .toolbox-stage{grid-template-columns:1fr; gap:12px}
+  .tb-arrow{transform:rotate(90deg)}
+}
+
+@media (max-width:560px){
+  .scrolly,.scrolly.flip{padding:0 16px}
+  .stagecol{margin:0 -16px 14px; padding:12px 16px}
+  /* the two-up scene grids stack on phones */
+  .split2,.pairsplit,.hermes-meters,.hand-grid,.silent-grid{grid-template-columns:1fr}
+  .spec-track-wrap{margin:58px 36px 0}
+  .marker .mbar{width:92px}
+  .term-body{font-size:.78rem; min-height:0}
+  .cold .one{font-size:clamp(1.5rem,6.4vw,2rem)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  /* flip cards show both faces stacked so nothing hides behind a flip */
+  .qcard{min-height:auto}
+  .qcard .face{position:relative; inset:auto; opacity:1 !important; pointer-events:auto !important}
+  .qcard .back{padding-top:16px; margin-top:4px; border-top:1px solid var(--line)}
+  .hcard{min-height:auto}
+  .hcard .hback{position:relative; inset:auto; opacity:1 !important; pointer-events:auto !important; margin-top:8px; border-top:1px solid var(--line); background:transparent}
+}
