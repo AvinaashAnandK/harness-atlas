@@ -366,20 +366,21 @@
 @media (max-width:880px){
   .scrolly,.scrolly.flip{grid-template-columns:1fr; gap:0; padding:0 20px}
   .scrolly.flip .stagecol{order:0}
-  /* the stage pins under the masthead so the visual tracks the beats as you scroll */
-  .stagecol{position:sticky; top:49px; height:auto; align-self:start; margin:0 -20px 16px; padding:14px 20px; background:color-mix(in srgb,var(--bg) 94%,transparent); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); z-index:8}
+  /* stage flows inline ABOVE its beats; never pinned, so it cannot cover the text */
+  .stagecol{position:relative; top:auto; height:auto; align-self:start; margin:0 0 18px}
   .stage{min-height:0}
   .scene{position:relative; opacity:1; pointer-events:auto; display:none}
   .scene.on{display:flex}
   .beatcol{padding:0}
-  .beat{min-height:0; margin-bottom:34px}
-  .beat:first-child{margin-top:4px}
+  .beat{min-height:0; margin-bottom:28px}
   .beat .bcard{opacity:1 !important}
   .beat .bcard p, .beat .bcard p.big{max-width:none}
-  .silent-grid{grid-template-columns:1fr 116px}
+  /* keep the silent scene side-by-side (compact) rather than stacking it tall */
+  .silent-grid{grid-template-columns:1fr 112px}
+  .chatpane{min-height:0}
   /* spectrum: shed the wide desktop side margins so the track fits */
-  .spec-track-wrap{margin:68px 60px 0}
-  .spec-legend{margin-top:78px}
+  .spec-track-wrap{margin:64px 56px 0}
+  .spec-legend{margin-top:74px}
   /* the toolbox decoy scene: stack, rotate the arrow */
   .toolbox-stage{grid-template-columns:1fr; gap:12px}
   .tb-arrow{transform:rotate(90deg)}
@@ -387,10 +388,9 @@
 
 @media (max-width:560px){
   .scrolly,.scrolly.flip{padding:0 16px}
-  .stagecol{margin:0 -16px 14px; padding:12px 16px}
-  /* the two-up scene grids stack on phones */
-  .split2,.pairsplit,.hermes-meters,.hand-grid,.silent-grid{grid-template-columns:1fr}
-  .spec-track-wrap{margin:58px 36px 0}
+  /* the two-up scene grids stack on phones (silent-grid stays side-by-side) */
+  .split2,.pairsplit,.hermes-meters,.hand-grid{grid-template-columns:1fr}
+  .spec-track-wrap{margin:56px 34px 0}
   .marker .mbar{width:92px}
   .term-body{font-size:.78rem; min-height:0}
   .cold .one{font-size:clamp(1.5rem,6.4vw,2rem)}

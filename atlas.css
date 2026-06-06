@@ -298,7 +298,14 @@ details.dive .dive-body p{max-width:none}
   body{font-size:18px}
   .grid.c3,.grid.c4{grid-template-columns:1fr}
   .grid.c2{grid-template-columns:1fr}
+  /* opaque masthead so scrolling content does not bleed through it */
+  .mast{background:var(--bg)}
+  .mast-in{padding:9px 14px; gap:10px}
+  .mast .mark{font-size:12px; letter-spacing:.12em}
+  .mast nav{gap:1px}
+  .mast nav a{padding:5px 7px}
   .mast nav a .nlabel{display:none}
+  .t-toggle{padding:5px 9px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
