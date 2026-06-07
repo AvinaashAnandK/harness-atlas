@@ -14,9 +14,9 @@
   var hkey = {}; A.harnesses.forEach(function(h){ hkey[h.key] = h.name; });
 
   var SURFACE = (document.body && document.body.getAttribute('data-surface')) || 'atlas';
-  var ATLAS_PAGE  = '02 The Atlas.html';
-  var DEEP_PAGE   = '03 Capability Deep Dives.html';
-  var MATTER_PAGE = '04 What Should Matter to You.html';
+  var ATLAS_PAGE  = '02-the-atlas.html';
+  var DEEP_PAGE   = '03-capability-deep-dives.html';
+  var MATTER_PAGE = '04-what-should-matter-to-you.html';
   function capHref(slug){ return SURFACE==='deepdives' ? ('#/cap/'+slug) : (DEEP_PAGE+'#/cap/'+slug); }
 
   var CAP_ICONS = {
@@ -105,7 +105,7 @@
       + '<div class="legend-row">'+fdot('compound')+'<div><b style="color:var(--fate-compound)">Teal, Compounds:</b> the failure it catches is silent, so the catch gets encoded into the harness and keeps its value as models improve.</div></div>'
       + '<div class="legend-row">'+fdot('fade')+'<div><b style="color:var(--fate-fade)">Warm gray, Fades:</b> the failure is loud, and the next model absorbs it, so the scaffolding comes off.</div></div>'
       + '<div class="legend-row">'+fdot('protect')+'<div><b style="color:var(--fate-protect)">Amber, Protects the builder:</b> it does not make the agent better at all; the builder raises it for its own commercial or legal reasons, so it neither fades nor compounds, it just persists.</div></div>'
-      + '<div class="lk">The Tour teaches all three with real incidents in about seven minutes. <a href="01 The Tour.html">Take the tour -&gt;</a></div>'
+      + '<div class="lk">The Tour teaches all three with real incidents in about seven minutes. <a href="01-the-tour.html">Take the tour -&gt;</a></div>'
       + '</div></details>';
   }
 

@@ -18,7 +18,7 @@
   // CoWork's L5 file-stem labels -> slugs
   var ALIAS = { 'Cant Do - Ceilings':'cant-do-ceilings', 'Wont Do - Commercial':'wont-do-commercial', 'Wont Do - Safety':'wont-do-safety', 'Wont Show - Opacity':'wont-show-opacity' };
   function resolveCap(name){ if(capByName[name]) return capByName[name]; if(ALIAS[name]&&capBySlug[ALIAS[name]]) return capBySlug[ALIAS[name]]; return null; }
-  var DEEP_PAGE = '03 Capability Deep Dives.html';
+  var DEEP_PAGE = '03-capability-deep-dives.html';
 
   var FATE_TIPS = {
     compound:"Built against a silent failure, one nothing in the run announces. Caught and encoded, it keeps its value as models improve; this is the scaffolding that can become the moat.",
