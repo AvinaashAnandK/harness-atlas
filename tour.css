@@ -348,6 +348,31 @@
 
 /* mobile fallback: five-column grid */
 .shells-grid{display:none}
+
+/* anchored entry points land below the sticky masthead */
+#two-incidents,#catching-silence,#three-fates,#new-hire,#assembled-atlas{scroll-margin-top:50px}
+
+/* ============================================================
+   SCENE: one node, opened (the tour closer)
+   ============================================================ */
+.scene[data-scene="capopen"]{align-items:flex-start; overflow-y:auto; padding:6px 0}
+.capopen{border:1.5px solid var(--line-2); border-radius:var(--r-lg); background:var(--bg-raised); padding:20px 22px 16px; width:100%; max-width:560px; margin:0 auto}
+.capopen .co-head{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap}
+.capopen .capname{font-weight:600; font-size:1.06rem; display:flex; align-items:center; gap:8px; margin:0}
+.capopen .co-q{font-size:1.04rem; font-weight:600; color:var(--ink); line-height:1.4; margin:12px 0 14px; letter-spacing:-.01em}
+.capopen .co-block{border-top:1px solid var(--line); padding:12px 0}
+.capopen .co-lab{font-family:var(--mono); font-weight:700; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:8px}
+.capopen .co-block p{font-size:.86rem; line-height:1.5; color:var(--ink-2); margin:0 0 8px}
+.capopen .co-src{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.04em; text-transform:uppercase; color:var(--live-ink); border-bottom:1px solid var(--live-bd)}
+.capopen .co-src:hover{text-decoration:none; border-bottom-color:var(--live)}
+.capopen .co-fam{border:1px solid var(--line); border-radius:var(--r-sm); background:var(--bg-sunken); padding:9px 11px; margin-bottom:7px}
+.capopen .co-fam-t{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.capopen .co-fam b{font-size:.84rem; color:var(--ink)}
+.capopen .co-chips{font-family:var(--mono); font-size:9px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3)}
+.capopen .co-fam small{display:block; margin-top:4px; font-size:.74rem; color:var(--ink-3); line-height:1.4}
+.capopen .co-fate{display:flex; align-items:center; gap:9px; border-top:1px solid var(--line); padding-top:12px; font-size:.84rem; color:var(--fate-compound); font-weight:600}
+.capopen .co-fate .fdot{flex:none}
+
 .cta-open{display:inline-flex; align-items:center; gap:10px; margin-top:18px; font-family:var(--mono); font-weight:700; font-size:13px; letter-spacing:.06em; text-transform:uppercase; padding:14px 22px; border-radius:var(--r-pill); border:1px solid var(--live-bd); background:var(--live-bg); color:var(--live-ink); transition:background var(--fast), color var(--fast), transform var(--fast)}
 .cta-open:hover{background:var(--live); color:#fff; border-color:var(--live); text-decoration:none}
 .cta-open:active{transform:scale(.97)}
@@ -364,15 +389,15 @@
 
 
 @media (max-width:880px){
-  .scrolly,.scrolly.flip{grid-template-columns:1fr; gap:0; padding:0 20px}
-  .scrolly.flip .stagecol{order:0}
-  /* stage flows inline ABOVE its beats; never pinned, so it cannot cover the text */
-  .stagecol{position:relative; top:auto; height:auto; align-self:start; margin:0 0 18px}
-  .stage{min-height:0}
-  .scene{position:relative; opacity:1; pointer-events:auto; display:none}
+  .scrolly,.scrolly.flip{display:block; padding:0 20px}
+  /* compact sticky stage: the visual stays in view while its beat text
+     scrolls beneath it, so scene changes never happen off-screen */
+  .stagecol{position:sticky; top:44px; z-index:5; height:auto; margin:0 -20px 14px; padding:8px 20px 12px; background:var(--bg); border-bottom:1px solid var(--line)}
+  .stage{min-height:0; max-height:44vh; overflow-y:auto}
+  .scene{position:relative; inset:auto; opacity:1; pointer-events:auto; display:none}
   .scene.on{display:flex}
-  .beatcol{padding:0}
-  .beat{min-height:0; margin-bottom:28px}
+  .beatcol{padding:0 0 8vh}
+  .beat{min-height:46vh; margin-bottom:0; align-items:flex-start; padding-top:10px}
   .beat .bcard{opacity:1 !important}
   .beat .bcard p, .beat .bcard p.big{max-width:none}
   /* keep the silent scene side-by-side (compact) rather than stacking it tall */

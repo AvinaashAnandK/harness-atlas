@@ -241,6 +241,18 @@
     });
   };
 
+  /* SCENE: capopen — one node unfolds into a mini capability page */
+  SCENES.capopen = function(stage, gbeat, prog, ab){
+    var sc = stage.querySelector('[data-scene="capopen"]'); if(!sc) return;
+    var p = (gbeat >= 32) ? 1 : (reduce ? 1 : prog);
+    var blocks = sc.querySelectorAll('[data-co]');
+    blocks.forEach(function(b, i){
+      var t = clamp((p - 0.12 - i * 0.22) / 0.22, 0, 1);
+      b.style.opacity = t;
+      b.style.transform = 'translateY(' + ((1 - t) * 10) + 'px)';
+    });
+  };
+
   /* expose for later sections to extend */
   window.TourScenes = SCENES;
 
@@ -265,7 +277,9 @@
     initScene(stage);
 
     function update(){
-      var mid = window.innerHeight * 0.42;
+      /* on mobile the stage is a compact sticky panel up top, so the
+         activation line moves down below it */
+      var mid = window.innerHeight * (window.innerWidth <= 880 ? 0.68 : 0.42);
       var active = 0, best = Infinity;
       beats.forEach(function(b, i){
         var r = b.getBoundingClientRect();
@@ -292,7 +306,7 @@
   var FATE_TIPS = {
     compound: "Built against a silent failure, one nothing in the run announces. Caught and encoded, it keeps its value as models improve; this is the scaffolding that can become the moat.",
     fade: "Built against a loud failure, one the trace announces. Better models absorb these, so the scaffolding is temporary: a loan the next model repays.",
-    protect: "A wall the builder raises for its own commercial or legal reasons, not to make the agent better. Anti-distillation and hidden codenames when the builder makes the model; PII and compliance walls when it rents one. It neither fades nor compounds; it lasts as long as the business reason does.",
+    protect: "A wall the agent-building team raises for its own commercial or legal reasons, not to make the agent better. Anti-distillation and hidden codenames when the team also makes the model; PII and compliance walls when it rents one. It neither fades nor compounds; it lasts as long as the business reason does.",
     split: "This capability's halves age differently: part fades as models improve, part compounds. The page explains which is which."
   };
   function applyFateTips(){
@@ -332,6 +346,11 @@
       c.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); c.classList.toggle('flipped'); } });
     });
     onScroll();
+    // deep-link entry points: re-run the jump after layout settles
+    if(location.hash){
+      var target = document.getElementById(location.hash.slice(1));
+      if(target) setTimeout(function(){ target.scrollIntoView(); onScroll(); }, 60);
+    }
   }
   var ticking = false;
   function onScroll(){

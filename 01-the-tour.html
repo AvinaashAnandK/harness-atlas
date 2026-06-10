@@ -37,7 +37,7 @@
 </section>
 
 <!-- ============ SECTION 1 · TWO INCIDENTS ============ -->
-<section class="tsection" data-screen-label="Two incidents">
+<section class="tsection" id="two-incidents" data-screen-label="Two incidents">
   <div class="kicker" style="padding-top:24px;padding-bottom:8px">
     <span class="ek">Two incidents</span>
     <h2>One failure shouted. One said nothing at all.</h2>
@@ -174,7 +174,7 @@
 <!-- ============ SECTIONS 2-5 SLOT IN HERE ============ -->
 
 <!-- ============ BEAT 7 · TRANSITION QUESTION ============ -->
-<section class="interstitial" data-screen-label="Section 2 open">
+<section class="interstitial" id="catching-silence" data-screen-label="Section 2 open">
   <p class="q">So how do you catch a failure that never announces itself?
     <span class="sub">Start one level down: what is an outcome, and who can say it went wrong?</span>
   </p>
@@ -329,7 +329,7 @@
 </section>
 
 <!-- ============ SECTION 3 · THREE FATES ============ -->
-<section class="tsection" data-screen-label="Three fates">
+<section class="tsection" id="three-fates" data-screen-label="Three fates">
   <div class="kicker" style="padding-top:10px;padding-bottom:8px">
     <span class="ek">Three fates</span>
     <h2>Built into the harness, but not necessarily forever.</h2>
@@ -476,9 +476,10 @@
       <div class="beat" data-beat="18" data-scene="commwall" data-screen-label="Beat: fate three, commercial defense">
         <div class="bcard">
           <span class="lead-in">Fate three · the wall nobody blogs about</span>
-          <p>There is a third kind, and no builder writes blog posts about it.</p>
-          <p>When the March 2026 leak opened Claude Code up, people found a flag named tengu_anti_distill_fake_tool_injection. The harness can quietly add tools that do not exist to the model's own toolbox. Not to help you. If someone records the traffic to train a competing model, they train on tools that were never real.</p>
-          <p>This is scaffolding built into the harness purely to protect the builder. It makes the agent's world a little fake so the model is harder to copy. You would never see it, and it does nothing for your task.</p>
+          <p>There is a third kind, and no team writes blog posts about it.</p>
+          <p>When the March 2026 leak opened Claude Code up, people found a flag named tengu_anti_distill_fake_tool_injection (tengu is Claude Code's internal codename). The harness can quietly add tools that do not exist to the model's own toolbox. Not to help you. If someone records the traffic to train a competing model, they train on tools that were never real.</p>
+          <p>This is scaffolding built to protect the team that builds the agent. Every serious harness has some, on two fronts: safety walls that protect the user, and walls like this one that protect the business. It makes the agent's world a little fake so the model is harder to copy. You would never see it, and it does nothing for your task.</p>
+          <p>Decoy tools are how Claude Code did it, because Claude Code's team also makes the model worth copying. A support agent like Intercom's Fin, a workspace agent like Notion's, or a recommendation system would raise different walls: memory you cannot export, ranking logic you cannot audit. The shape follows the business; the purpose is the same.</p>
           <span class="srcchip"><a href="https://alex000kim.com/posts/2026-03-31-claude-code-source-leak/" target="_blank" rel="noopener">Source: Kim, source-leak writeup</a><span class="prov">Found in the March 2026 source-map leak</span></span>
         </div>
       </div>
@@ -488,9 +489,9 @@
         <div class="bcard">
           <span class="lead-in">The closer · HERMES</span>
           <p>In April 2026, a $200-a-month subscriber watched a separate "extra usage" charge drain $200.98 while his plan sat 86 percent unused.</p>
-          <p>He found the cause by binary-searching his own repositories: the filename HERMES.md, the name of a rival harness, sitting in one commit message. A detection wall, built to keep rival tools off subscription pricing, had silently rerouted his billing.</p>
+          <p>He found the cause by elimination, halving his repositories until the charge stopped: the filename HERMES.md, the name of a rival harness, sitting in one commit message. A detection wall, built to keep rival tools off subscription pricing, had silently rerouted his billing.</p>
           <p>The wall was real. He was just never told it existed.</p>
-          <p>Some scaffolding protects you. Some protects the builder. The atlas tags every capability with which.</p>
+          <p>Some scaffolding protects you. Some protects the team that built the agent. The atlas tags every capability with which.</p>
           <span class="srcchip"><a href="https://github.com/anthropics/claude-code/issues/53262" target="_blank" rel="noopener">Source: issue #53262</a><span class="prov">anthropics/claude-code issue #53262; refunds issued after public reporting</span></span>
         </div>
       </div>
@@ -511,14 +512,14 @@
       </div>
       <div class="lf-row">
         <span class="lf-dot protect"></span>
-        <div class="lf-t"><b class="protect">Amber: it protects the builder.</b><p>Not built to make the agent better, but for the builder's own commercial or legal reasons. Know which side of it you are on.</p></div>
+        <div class="lf-t"><b class="protect">Amber: it protects the builder.</b><p>Not built to make the agent better, but for the agent-building team's own commercial or legal reasons. Every serious harness has these; only the shape changes from product to product. Know which side of the wall you are on.</p></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ============ SECTION 4 · THE NEW HIRE ============ -->
-<section class="tsection" data-screen-label="The new hire">
+<section class="tsection" id="new-hire" data-screen-label="The new hire">
   <!-- BEAT 20 · the pivot -->
   <div class="newhire" data-screen-label="Beat: the new hire" style="padding-top:8vh">
     <div class="kicker" style="padding-left:0;padding-right:0;padding-bottom:6px"><span class="ek">The new hire</span><h2 style="max-width:22ch">Now meet the thing the harness is wrapped around.</h2></div>
@@ -563,7 +564,7 @@
                   <p class="faillead">If the harness does not answer this:</p>
                   <div class="wpair">
                     <div class="wrow"><span class="wk">Coding</span><span class="wv">never shown the migrate tool, it invents one. Fails the instant it runs.</span></div>
-                    <div class="wrow"><span class="wk">Support</span><span class="wv">the billing token silently expires; the agent reads empty results as "no charges" and says so.</span></div>
+                    <div class="wrow"><span class="wk">Support</span><span class="wv">its access to the billing system silently expires; the agent reads the empty result as "no charges" and tells the customer so.</span></div>
                   </div>
                 </div>
               </div>
@@ -702,7 +703,7 @@
     </div>
     <div class="beatcol">
       <div class="beat cur" data-beat="26" data-layer="1" data-scene="hand" data-screen-label="Beat: Hands layer">
-        <div class="bcard"><span class="lead-in">Layer 02 · Hands</span><p class="big">The moment it stops thinking and starts touching things you care about.</p><p>The hire reaches for real tools. Hands is what stands between it and the things it cannot undo. Flip the hand to name each capability; one card is spotlit with the incident that forces it.</p></div>
+        <div class="bcard"><span class="lead-in">Layer 02 · Hands</span><p class="big">The moment it stops thinking and starts touching things you care about.</p><p>The hire reaches for real tools. Hands is what stands between it and the things it cannot undo. Flip each card to name the capability behind it; one is spotlit with the incident that forces it.</p></div>
       </div>
       <div class="beat" data-beat="27" data-layer="2" data-scene="hand" data-screen-label="Beat: Coherence layer">
         <div class="bcard"><span class="lead-in">Layer 03 · Coherence</span><p class="big">The memory and the thread it does not have on its own.</p><p>The hire is amnesiac. Coherence is how the harness gives it a memory.</p></div>
@@ -720,7 +721,7 @@
 <!-- @@MORE@@ -->
 
 <!-- ============ SECTION 5 · THE ASSEMBLED ATLAS ============ -->
-<section class="tsection" data-screen-label="The assembled atlas">
+<section class="tsection" id="assembled-atlas" data-screen-label="The assembled atlas">
   <div class="kicker" style="padding-top:10px;padding-bottom:8px">
     <span class="ek">The assembled atlas</span>
     <h2>The whole machine: a model at the core, five layers wrapped around it.</h2>
@@ -744,6 +745,30 @@
             </div>
           </div>
         </div>
+
+        <!-- SCENE: one node, opened (mini capability page) -->
+        <div class="scene" data-scene="capopen">
+          <div class="scene-inner">
+            <div class="capopen">
+              <div class="co-head">
+                <h4 class="capname">Identity and Context</h4>
+                <span class="fbadge compound"><span class="fdot compound"></span>Compounds</span>
+              </div>
+              <p class="co-q">"What is this project, and what are the rules of the world I'm operating in?"</p>
+              <div class="co-block" data-co="1">
+                <span class="co-lab">Failure in the wild · 1 of 5</span>
+                <p>Atlassian benchmarked Claude Code with and without its Teamwork Graph. Blind, the agent guesses and hallucinates with full confidence. Grounded in the graph, it found the cross-repo dependencies on its own: 44% more accurate, on 48% fewer tokens.</p>
+                <a class="co-src" href="https://www.atlassian.com/blog/company-news/teamwork-graph-team-26" target="_blank" rel="noopener">Atlassian, Team '26 ↗</a>
+              </div>
+              <div class="co-block" data-co="2">
+                <span class="co-lab">Approaches · two parallel bets</span>
+                <div class="co-fam"><div class="co-fam-t"><b>Rules files in context</b><span class="co-chips">Claude Code · Codex · Cursor</span></div><small>one file → a hierarchy with precedence → rules that load only where they apply</small></div>
+                <div class="co-fam"><div class="co-fam-t"><b>External knowledge graph</b><span class="co-chips">Atlassian · Sourcegraph · Aider</span></div><small>query relationships in a live store instead of stuffing files into the prompt</small></div>
+              </div>
+              <div class="co-fate" data-co="3"><span class="fdot compound"></span>The failure is silent and the model's statelessness is permanent. This scaffolding compounds.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="beatcol">
@@ -757,8 +782,17 @@
         </div>
       </div>
 
-      <!-- BEAT 28 -->
-      <div class="beat" data-beat="31" data-scene="shells" data-screen-label="Beat: handoff">
+      <!-- BEAT 31 · one node, opened -->
+      <div class="beat" data-beat="31" data-scene="capopen" data-screen-label="Beat: one node opened">
+        <div class="bcard">
+          <span class="lead-in">Open one node</span>
+          <p>Every node opens the same way: the question it answers, the real cited failures that forced it into the harness, the families of approaches that answer it with who uses what, and its fate.</p>
+          <p>Here is the first node of Brain, opened. You have just read one page of the atlas. There are twenty-three more.</p>
+        </div>
+      </div>
+
+      <!-- BEAT 32 · handoff -->
+      <div class="beat" data-beat="32" data-scene="capopen" data-screen-label="Beat: handoff">
         <div class="bcard">
           <span class="lead-in">Where to next</span>
           <p>The tour gave you the lens. The Atlas is the territory: every capability, the real incidents that force it, the approaches that answer it, who uses what, and whether it lasts. Open it anywhere; every page stands alone.</p>
