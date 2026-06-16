@@ -3,8 +3,111 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Harness Atlas</title>
-<meta name="description" content="An atlas of agentic AI harnesses: the capabilities every serious harness ends up building, the cited failures that force each one into existence, and which of these investments last. 5 layers · 24 capabilities · 147 documented incidents.">
+<title>Harness Atlas: the scaffolding that turns an LLM into an agent</title>
+<meta name="description" content="An agent harness is the scaffolding teams build around an LLM to turn it into a working agent. The Harness Atlas maps the 24 capabilities a serious harness needs, the cited failures that force each one, and which ones keep their value as models improve.">
+<link rel="canonical" href="https://avinaashanandk.github.io/harness-atlas/">
+<meta name="author" content="Avinaash Anand K">
+<meta name="theme-color" content="#15120F">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Harness Atlas">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Harness Atlas: the scaffolding that turns an LLM into an agent">
+<meta property="og:description" content="An agent harness is the scaffolding teams build around an LLM to turn it into a working agent. The Harness Atlas maps the 24 capabilities a serious harness needs, the cited failures that force each one, and which ones keep their value as models improve.">
+<meta property="og:url" content="https://avinaashanandk.github.io/harness-atlas/">
+<meta property="og:image" content="https://avinaashanandk.github.io/harness-atlas/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Harness Atlas cover. The headline 'the moat is not the model, it is the scaffolding around it' beside a diagram of five concentric rings around a model core.">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Harness Atlas: the scaffolding that turns an LLM into an agent">
+<meta name="twitter:description" content="An agent harness is the scaffolding teams build around an LLM to turn it into a working agent. It maps the 24 capabilities a serious harness needs and which ones last as models improve.">
+<meta name="twitter:image" content="https://avinaashanandk.github.io/harness-atlas/og-cover.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://avinaashanandk.github.io/harness-atlas/#website",
+      "url": "https://avinaashanandk.github.io/harness-atlas/",
+      "name": "Harness Atlas",
+      "description": "An atlas of the scaffolding teams build around an LLM to turn it into a working agent.",
+      "inLanguage": "en",
+      "publisher": { "@id": "https://avinaashanandk.github.io/harness-atlas/#author" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://avinaashanandk.github.io/harness-atlas/#author",
+      "name": "Avinaash Anand K",
+      "url": "https://avinaashanandk926279.substack.com/",
+      "sameAs": ["https://github.com/AvinaashAnandK", "https://avinaashanandk926279.substack.com/"]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://avinaashanandk.github.io/harness-atlas/#webpage",
+      "url": "https://avinaashanandk.github.io/harness-atlas/",
+      "name": "Harness Atlas: the scaffolding that turns an LLM into an agent",
+      "description": "An agent harness is the scaffolding teams build around an LLM to turn it into a working agent. The Harness Atlas maps the 24 capabilities a serious harness needs, the cited failures that force each one, and which ones keep their value as models improve.",
+      "isPartOf": { "@id": "https://avinaashanandk.github.io/harness-atlas/#website" },
+      "primaryImageOfPage": "https://avinaashanandk.github.io/harness-atlas/og-cover.png",
+      "datePublished": "2026-06-06",
+      "dateModified": "2026-06-16",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://avinaashanandk.github.io/harness-atlas/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an agent harness?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An agent harness is the scaffolding teams build around a large language model to turn it into a working agent. It supplies the parts the model cannot reliably provide for itself, such as project context, tool access, memory across turns, safety limits, and a way to learn from past failures."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between a model and an agent harness?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The model is the general reasoning engine, and most teams rent it from a provider. The harness is everything built around the model so it can work inside one company and follow its rules. A model on its own is not an agent. The harness is what makes it operational."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which agent harness capabilities last as models improve?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Capabilities built to catch silent failures tend to last, because a better model cannot fix a failure it cannot see. Capabilities built to catch loud failures, the kind that show up in the run, often fade as models stop making those mistakes. A third kind protects the company that builds the agent, and it lasts as long as the business reason does."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between a loud failure and a silent failure?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A loud failure announces itself in the run, for example an error or a failed test, so it is cheap to catch. A silent failure leaves no trace, for example a confident wrong answer or a bug behind a passing build, so only a careful review catches it."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the Harness Atlas cover?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Harness Atlas covers 24 capabilities across 5 layers, which are Brain, Hands, Coherence, Feedback, and Limitations. Each claim is backed by one of 147 documented incidents, and every incident has a citation."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
 <link rel="stylesheet" href="fieldnote-tokens.css">
 <link rel="stylesheet" href="atlas.css">
 <link rel="stylesheet" href="landing.css">
@@ -20,8 +123,7 @@
       <a href="the-tour.html"><span class="nn">01</span> <span class="nlabel">The Tour</span></a>
       <a href="the-atlas.html"><span class="nn">02</span> <span class="nlabel">The Atlas</span></a>
       <a href="capability-deep-dives.html"><span class="nn">03</span> <span class="nlabel">Deep Dives</span></a>
-      <a href="what-should-matter-to-you.html"><span class="nn">04</span> <span class="nlabel">What Matters</span></a>
-      <a href="timeline.html"><span class="nn">05</span> <span class="nlabel">Timeline</span></a>
+      <a href="timeline.html"><span class="nn">04</span> <span class="nlabel">Timeline</span></a>
     </nav>
     <button class="t-toggle" id="themeBtn" aria-label="Toggle light and dark mode">◐ Light</button>
   </div>
@@ -34,21 +136,22 @@
     <section class="hero">
       <p class="eyebrow">An atlas of agentic harnesses</p>
       <h1>The Harness Atlas</h1>
-      <p class="thesis">In 2026 the moat is not the model. It is the scaffolding around it. And not all scaffolding is equal: some <b class="fate-w compound" tabindex="0" data-fate-tip="Built against a silent failure, one nothing in the run announces. Caught and encoded, it keeps its value as models improve; this is the scaffolding that can become the moat.">compounds</b>, some <b class="fate-w fade" tabindex="0" data-fate-tip="Built against a loud failure, one the trace announces. Better models absorb these, so the scaffolding is temporary: a loan the next model repays.">decays</b>, and some is there to <b class="fate-w protect" tabindex="0" data-fate-tip="A wall the builder raises for its own commercial or legal reasons, not to make the agent better. Anti-distillation and hidden codenames when the builder makes the model; PII and compliance walls when it rents one. It neither fades nor compounds; it lasts as long as the business reason does.">protect the builder</b>, not to make the agent better.</p>
+      <p class="thesis">In 2026 the moat is not the model. It is the scaffolding around it. And not all of that scaffolding is worth the same. Some of it <b class="fate-w compound" tabindex="0" data-fate-tip="Built against a silent failure, the kind nothing in the run announces. Once you catch it and write it into the harness, it keeps its value as models improve. This is the scaffolding that can become the moat.">compounds</b> and can become the moat. Some of it <b class="fate-w fade" tabindex="0" data-fate-tip="Built against a loud failure, the kind the run announces on its own. A better model usually learns to avoid it, so this scaffolding is temporary. Build it lightly.">fades</b> as models improve. And some of it is there to <b class="fate-w protect" tabindex="0" data-fate-tip="A wall the builder raises for its own business or legal reasons, not to make the agent better. For example, copy protection when the builder owns the model, or privacy and compliance walls when it rents one. It does not fade or compound. It lasts as long as the business reason does.">protect the company that builds the agent</b>, not to make the agent better.</p>
     </section>
 
     <!-- WHAT THIS IS -->
     <section class="land-sec">
       <span class="kicker">What this is</span>
-      <p>This is my attempt at an atlas of agentic harnesses: the capabilities every serious harness ends up building, the real failures that force each one into existence, and which of these investments last.</p>
-      <p>It is organized the way the territory is organized. Five layers, from how an agent gets oriented to the hard walls around it. Twenty-four capabilities, each one a question the agent has to answer. Three fates, because scaffolding ages in three different ways, and telling them apart is the entire game.</p>
+      <p>This atlas collects three things. First, the capabilities every serious harness ends up building. Second, the real failures that force each one into existence. Third, which of these investments hold their value over time.</p>
+      <p>It is organized the way the harness itself is organized. There are five layers, from how the agent gets oriented to the hard walls around it. There are twenty-four capabilities, and each one is a question the agent has to answer. And there are three fates, because scaffolding ages in three ways.</p>
+      <p>The difference is the kind of failure each piece was built to catch. A loud failure shows up in the run, so a better model usually learns to avoid it and the scaffolding fades. A silent failure leaves no trace, so a better model cannot fix it and the scaffolding compounds. The third kind is not about the agent's work at all. It protects the company that builds the agent. Telling the three apart is what this atlas is for.</p>
     </section>
 
     <!-- PROVENANCE -->
     <section class="land-sec">
       <span class="kicker">The living atlas</span>
-      <p>The atlas starts with a teardown of one specimen: Claude Code, opened up by the March 31, 2026 source-map leak (about 1,900 files and 512,000 lines) and the wave of releases that followed it. From there it grows. Capabilities observed in other harnesses keep getting mapped in: Cursor, Replit, OpenClaw, Shopify's agents, Intercom Fin, Google's agent stack, and whatever ships next.</p>
-      <p class="provenance-punch">Claude Code is the first specimen, not the subject.</p>
+      <p>The atlas starts with one example, Claude Code. The March 31, 2026 source-map leak exposed about 1,900 files and 512,000 lines of it, and many releases followed. From there the atlas grows. I keep adding capabilities seen in other harnesses, including Cursor, Replit, OpenClaw, Shopify's agents, Intercom Fin, Atlassian, and Google's agent stack, plus whatever ships next.</p>
+      <p class="provenance-punch">Claude Code is the first example, not the subject.</p>
     </section>
 
     <!-- SCALE LINE + HONESTY -->
@@ -58,14 +161,14 @@
         <span><span class="num">24</span> capabilities</span><span class="dot">·</span>
         <span><span class="num">147</span> documented incidents</span>
       </div>
-      <p class="honesty">Every failure in this atlas is a real, cited incident. No hypotheticals. Where a claim could not be verified against a primary source, the atlas says so.</p>
+      <p class="honesty">Every failure in this atlas is a real incident with a citation. None of them are hypothetical. Where I could not verify a claim against a primary source, I say so.</p>
     </section>
 
   </div><!-- /land-in -->
 
   <!-- THE DOORS -->
   <section class="doors-band">
-    <div class="doors-head"><span class="k">Five ways in</span></div>
+    <div class="doors-head"><span class="k">Four ways in</span></div>
     <div class="doors">
 
       <a class="door" href="the-tour.html">
@@ -73,7 +176,7 @@
         <span class="door-ico"><i data-lucide="route"></i></span>
         <h3 class="door-name">The Tour</h3>
         <span class="door-desc">watch the harness assemble · 7 min</span>
-        <p class="door-body">Watch the harness assemble, about seven minutes of scrolling. Two real incidents, one spectrum, three fates, and a brilliant new hire.</p>
+        <p class="door-body">Two real incidents, the loud and silent failure split, the three fates, and the new hire model the rest of the atlas runs on.</p>
         <span class="door-cta">Take the tour <span class="ar">-&gt;</span></span>
       </a>
 
@@ -81,8 +184,8 @@
         <span class="door-n">02</span>
         <span class="door-ico"><i data-lucide="layout-grid"></i></span>
         <h3 class="door-name">The Atlas</h3>
-        <span class="door-desc">browse · filter · sort</span>
-        <p class="door-body">The reference. Browse every capability by layer, fate, and harness, and sort the fate map to see the moat cluster at a glance.</p>
+        <span class="door-desc">browse · filter · compare</span>
+        <p class="door-body">This is the reference. You can browse every capability by layer, fate, and harness, then open a Deep Dive when you want the evidence.</p>
         <span class="door-cta">Open the atlas <span class="ar">-&gt;</span></span>
       </a>
 
@@ -90,26 +193,17 @@
         <span class="door-n">03</span>
         <span class="door-ico"><i data-lucide="layers"></i></span>
         <h3 class="door-name">Capability Deep Dives</h3>
-        <span class="door-desc">24 dossiers</span>
-        <p class="door-body">One dossier per capability: the failures that force it, the approaches that answer it, who uses what, and whether it lasts.</p>
-        <span class="door-cta">Open the dossiers <span class="ar">-&gt;</span></span>
-      </a>
-
-      <a class="door" href="what-should-matter-to-you.html">
-        <span class="door-n">04</span>
-        <span class="door-ico"><i data-lucide="crosshair"></i></span>
-        <h3 class="door-name">What Should Matter to You</h3>
-        <span class="door-desc">the take-home tool</span>
-        <p class="door-body">Place your agent by autonomy, supervision, and how verifiable its work is, and watch the capabilities you actually need light up.</p>
-        <span class="door-cta">Find your map <span class="ar">-&gt;</span></span>
+        <span class="door-desc">24 Deep Dives</span>
+        <p class="door-body">Each one covers the failures that force the capability, the approaches that answer it, who uses what, and whether it lasts.</p>
+        <span class="door-cta">Open the Deep Dives <span class="ar">-&gt;</span></span>
       </a>
 
       <a class="door" href="timeline.html">
-        <span class="door-n">05</span>
+        <span class="door-n">04</span>
         <span class="door-ico"><i data-lucide="milestone"></i></span>
         <h3 class="door-name">Timeline</h3>
         <span class="door-desc">the living record</span>
-        <p class="door-body">When each capability first surfaced in a release note, a paper, or an incident this atlas tracks, in the order it happened.</p>
+        <p class="door-body">When each capability first showed up in a release note, a paper, or an incident, listed in the order it happened.</p>
         <span class="door-cta">Open the timeline <span class="ar">-&gt;</span></span>
       </a>
 
@@ -120,7 +214,7 @@
 
     <!-- FOOTER LINE -->
     <section class="land-foot">
-      <p class="fl">One question organizes everything here: <b>when this thing fails, does anything announce it?</b></p>
+      <p class="fl">Everything here comes back to one question. <b>When your agent fails, does anything announce it?</b></p>
     </section>
 
   </div>

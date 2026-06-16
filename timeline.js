@@ -21,9 +21,9 @@
   var DEEP_PAGE = 'capability-deep-dives.html';
 
   var FATE_TIPS = {
-    compound:"Built against a silent failure, one nothing in the run announces. Caught and encoded, it keeps its value as models improve; this is the scaffolding that can become the moat.",
-    fade:"Built against a loud failure, one the trace announces. Better models absorb these, so the scaffolding is temporary: a loan the next model repays.",
-    protect:"A wall the builder raises for its own commercial or legal reasons, not to make the agent better. Anti-distillation and hidden codenames when the builder makes the model; PII and compliance walls when it rents one. It neither fades nor compounds; it lasts as long as the business reason does.",
+    compound:"Built against a silent failure, the kind nothing in the run announces. Once you catch it and write it into the harness, it keeps its value as models improve. This is the scaffolding that can become the moat.",
+    fade:"Built against a loud failure, the kind the run announces on its own. A better model usually learns to avoid it, so this scaffolding is temporary. Build it lightly.",
+    protect:"A wall the builder raises for its own business or legal reasons, not to make the agent better. For example, copy protection when the builder owns the model, or privacy and compliance walls when it rents one. It does not fade or compound. It lasts as long as the business reason does.",
     split:"This capability's halves age differently: part fades as models improve, part compounds. The page explains which is which."
   };
   var LAYERS = [{n:1,name:'Brain'},{n:2,name:'Hands'},{n:3,name:'Coherence'},{n:4,name:'Feedback'},{n:5,name:'Limitations'}];

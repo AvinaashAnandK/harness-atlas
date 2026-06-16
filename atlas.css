@@ -63,8 +63,10 @@ p{margin:0 0 1.05em}
 .mast{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 88%,transparent);
   -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .mast-in{max-width:var(--w-full);margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
-.mark{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.08em;color:var(--ink);text-decoration:none;background:none;padding:0}
+.mark{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.08em;color:var(--ink);text-decoration:none;background:none;padding:0;transition:color .15s ease}
 .mark .mid{color:var(--live)} .mark b{color:var(--ink)}
+/* logo home link: one consistent hover on every surface — HARNESS picks up the orange accent (the dot stays live, ATLAS stays ink); overrides the generic link underline below */
+.mark:hover{color:var(--live);text-decoration:none}
 .mast .sep{flex:none;width:1px;height:18px;background:var(--line-2)}
 .mast nav{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none}
 .mast nav::-webkit-scrollbar{display:none}

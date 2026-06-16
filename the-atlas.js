@@ -7,7 +7,7 @@
        with Constraints and incentives as a cross-cutting overlay
      4 the fate lens, visible by default, framed as a hypothesis
      5 optional expert layer: the implementation atlas
-     6 closer to the dossiers
+     6 closer to the Deep Dives
    Diagram types are curated per capability (DIAGRAM below),
    not inferred by a heuristic.
    ============================================================ */
@@ -32,17 +32,17 @@
     'identity-and-context':'Supplies the project rules and domain knowledge the model does not start with.',
     'tool-discovery':'Shows the available tools without loading every schema into every turn.',
     'orchestration-routing':'Decides when one run should stay linear and when work should split across helpers.',
-    'planning':'Forms an approach before action, with approval where the blast radius warrants it.',
+    'planning':'Forms an approach before action, with approval where the possible damage is large enough to need it.',
     'reasoning-effort-allocation':'Matches thinking effort and model cost to the task.',
     'permission-and-irreversibility':'Enforces approval at the action boundary for changes the agent cannot safely undo.',
     'execution-security':'Prevents hostile content from becoming executable instructions.',
     'isolation':'Limits what a run can reach when something fails.',
     'input-and-output-gating':'Stops one oversized result from consuming the working context.',
     'tool-dispatch-and-retry':'Handles failed tool calls with retry, adjustment, or escalation.',
-    'context-curation':'Keeps load-bearing context active and discards lower-value material.',
+    'context-curation':'Keeps the context the run depends on active and discards lower-value material.',
     'compression-for-coherence':'Shrinks a growing history without losing the plot.',
     'state-persistence-and-ownership':'Carries useful state beyond one run and defines who owns it.',
-    'offline-consolidation':'Distills messy session notes into a better starting point for the next run.',
+    'offline-consolidation':'Turns messy session notes into a better starting point for the next run.',
     'cross-agent-coherence':'Keeps parallel workers from returning contradictory pieces.',
     'implicit-signals':'Uses behavior as evidence when the user never states the issue directly.',
     'explicit-signals':'Captures corrections so the fix travels beyond one session.',
@@ -91,10 +91,10 @@
     'wont-show-opacity':'Examples'                  /* a vendor lane of documented hiding, an operator lane of countermeasures */
   };
   var DIAGRAM_NOTE = {
-    'Alternatives':'Competing approaches. Teams choose among these tracks; arrows mark evolution inside a track.',
-    'Pipeline':'One pipeline. The stages compose and run in order; nothing here is a rival to anything else.',
+    'Alternatives':'Competing approaches. Teams choose among these tracks. Arrows mark how one track evolves.',
+    'Pipeline':'One pipeline. The stages compose and run in order. Nothing here is a rival to anything else.',
     'Maturity path':'One approach maturing into a more capable version. Sibling tracks branch off the spine.',
-    'Control set':'Not rivals. These mechanisms are usually deployed together; arrows mark evolution inside a track.',
+    'Control set':'Not rivals. These mechanisms are usually deployed together. Arrows mark how one track evolves.',
     'Examples':'Documented product instances, not architectural options to choose among.'
   };
 
@@ -138,14 +138,14 @@
 
   function scenarioOutcome(m){
     var pct = Math.round(m.p*100);
-    if(sim.safe.gate) return {kind:'blocked', title:'Structurally enforced: the refund cannot fire without approval',
-      body:'Above £1,000 the refund tool demands an approval token the agent cannot mint. The reasoning can still go wrong; the irreversible call cannot.'};
+    if(sim.safe.gate) return {kind:'blocked', title:'Structurally enforced. The refund cannot fire without approval',
+      body:'Above £1,000 the refund tool needs an approval token that the agent cannot create on its own. The reasoning can still go wrong. The irreversible call cannot.'};
     if(pct>=85) return {kind:'good', title:'Agent requests manager approval',
       body:'The rule is almost always in the active context at the moment of decision.'};
-    if(pct>=55) return {kind:'warn', title:'Unreliable: the rule survives some runs and not others',
-      body:'Same agent, same request, different outcome depending on what eviction took that day — and every trace looks plausible.'};
+    if(pct>=55) return {kind:'warn', title:'The rule survives some runs and not others',
+      body:'The outcome depends on what eviction took that day. The agent and the request are the same, and every trace looks plausible.'};
     return {kind:'bad', title:'Agent likely issues the £4,800 refund',
-      body:'The rule usually falls out of the active context before the decision. Nothing inside the run announces it.'};
+      body:'The rule usually falls out of the active context before the decision. You see no warning inside the run.'};
   }
 
   /* --- the trade-off lens: the four dials a VP weighs for a support agent.
@@ -155,11 +155,11 @@
     var cost = Math.min(2, (m.total>=95 ? 2 : m.total>=70 ? 1 : 0) + (sim.safe.judge ? 1 : 0));
     var eng  = Math.min(2, (sim.toolload==='lazy'?1:0) + (sim.safe.judge?1:0) + (sim.safe.gate?1:0));
     var mnt  = Math.min(2, (sim.rule==='scoped'?1:0) + (sim.safe.gate?1:0) + (sim.safe.judge?1:0));
-    var note = sim.safe.gate ? 'At an upmarket retailer — a Harrods, a furniture house — most legitimate refunds exceed £1,000; each one now queues for a manager.'
-             : sim.safe.judge ? 'A judge call rides on every action: latency and cost per contact, and the judge itself can drift.'
-             : sim.toolload==='lazy' ? 'Cheaper context, more plumbing: the tool-search hop is yours to build and keep working.'
+    var note = sim.safe.gate ? 'At an upmarket retailer, e.g., a furniture house, most legitimate refunds exceed £1,000. Each one now queues for a manager.'
+             : sim.safe.judge ? 'A judge call now runs on every action. It adds latency and cost per contact, and the judge itself can drift.'
+             : sim.toolload==='lazy' ? 'The context is cheaper, but there is more plumbing. The tool-search hop is yours to build and keep working.'
              : sim.rule==='scoped' ? 'The scoped rules registry is now configuration someone owns and keeps current.'
-             : 'Most of the bill is tool schemas the agent never calls — and the rule still gets evicted.';
+             : 'Most of the bill is tool schemas the agent never calls, and the rule still gets evicted.';
     function row(name, lvl){
       var words = ['Low','Medium','High'];
       var cls = lvl===0 ? 'good' : lvl===1 ? 'mid' : 'bad';
@@ -188,8 +188,8 @@
         + '<i class="compact-mark" title="Compaction machinery wakes near 85%"></i></div>'
       + '<div class="budget-key"><span><i class="k-rule"></i>rule '+m.rulePct+'%</span><span><i class="k-tools"></i>tools '+m.toolPct+'%</span><span><i class="k-result"></i>results '+m.resultPct+'%</span><span><i class="k-reason"></i>reasoning '+m.reasonPct+'%</span><span><i class="k-other"></i>other '+m.otherPct+'%</span></div>'
       + '<p class="budget-over '+(m.pressure>0?'is-over':'')+'">'+(m.pressure>0
-          ? 'Eviction pressure: '+Math.round(m.pressure*100)+'% — compaction wakes near 85%, and nothing announces what it takes.'
-          : 'Inside the 85% compaction threshold — nothing is evicted.')+'</p>'
+          ? 'Eviction pressure is '+Math.round(m.pressure*100)+'%. Compaction wakes near 85%, and you get no notice of what it takes.'
+          : 'This is inside the 85% compaction threshold, so nothing is evicted.')+'</p>'
       + '</div><div class="ctx-col">'
         + '<div class="memory-item rule-item '+ruleClass+'"><span class="tag">the rule</span><span class="mi-body"><b>Refunds above £1,000 require manager approval.</b><em>'+esc(ruleState)+'</em></span></div>'
       + '</div>';
@@ -233,6 +233,7 @@
         + chip('safe','judge','Runtime evaluation', sim.safe.judge)
       + '</div></div>'
       + '</div>'
+      + '<p class="scenario-note">This is an illustrative model, not measured probabilities. The control is here to make the trade-off visible. Context pressure, rule placement, and action gates each push the run a different way.</p>'
       + '<div class="scenario-pane"><p class="pane-kicker">Active context · one run</p><div class="context-row" id="ctxRow"></div></div>'
       + '<div class="scenario-pane"><div class="output-row" id="outRow"></div></div>';
 
@@ -288,7 +289,7 @@
     document.getElementById('constraintsMap').innerHTML = '<div class="constraints-intro">'
       + '<p class="eyebrow">Cross-cutting overlay</p>'
       + '<h3>Limitations &amp; Guardrails</h3>'
-      + '<p>Not another step in the loop. These shape what the system may do, what it cannot do, and what the builder chooses not to expose — some protect the operator, some protect the builder.</p>'
+      + '<p>This is not another step in the loop. These constraints shape what the system may do, what it cannot do, and what the builder chooses not to expose. Some protect the operator, and some protect the builder.</p>'
       + '</div><div class="constraints-caps">'+constraintCaps.map(function(c){
         return '<div class="constraint-card"><b><span class="c-num">'+capNum[c.slug]+'</span>'+esc(c.name)+'</b><span>'+esc(DEF[c.slug])+'</span></div>';
       }).join('')+'</div>';
@@ -349,7 +350,7 @@
       + '<div class="cap-body">'
         + '<div class="lane-list">'+(c.families||[]).map(laneHTML).join('')+'</div>'
         + '<div class="cap-footer"><small>'+esc((c.incidents||[]).length+' documented incidents'+(c.thinSpot?' · caveats noted':''))+'</small>'
-        + '<a class="dossier" href="capability-deep-dives.html#/cap/'+esc(c.slug)+'">Deep Dive →</a></div>'
+        + '<a class="deep-dive-link" href="capability-deep-dives.html#/cap/'+esc(c.slug)+'">Deep Dive →</a></div>'
       + '</div></article>';
   }
   /* ---- desktop stage: Model → layer spine → capability tabs → detail panel.
@@ -386,7 +387,7 @@
       + '<span class="cap-meta">'
         + '<span class="meta-pill fate-pill '+c.fate+'">'+fdot(c.fate)+esc(fateNames[c.fate])+'</span>'
         + '<span class="meta-pill kind-pill" title="'+esc(DIAGRAM_NOTE[dtype])+'">'+esc(dtype)+'</span>'
-        + '<a class="dossier" href="capability-deep-dives.html#/cap/'+esc(c.slug)+'">Deep Dive →</a>'
+        + '<a class="deep-dive-link" href="capability-deep-dives.html#/cap/'+esc(c.slug)+'">Deep Dive →</a>'
       + '</span></div>'
       + '<p class="panel-def">'+esc(DEF[c.slug])+'</p>'
       + '<div class="lane-list">'+(c.families||[]).map(laneHTML).join('')+'</div>';
@@ -486,7 +487,7 @@
     var fr = document.getElementById('filterResult'), filtering = !!filters.harness;
     fr.style.display = filtering ? '' : 'none';
     fr.textContent = filtering
-      ? (filters.harness ? harnessNames[filters.harness]+' · ' : '')+shown+' of '+caps.length+' capabilities match. Dimmed entries fall outside the current filter.'
+      ? (filters.harness ? harnessNames[filters.harness]+' · ' : '')+shown+' of '+caps.length+' capabilities match. Dimmed entries are outside the current filter.'
       : '';
     [].slice.call(root.querySelectorAll('.cap-head')).forEach(function(b){
       b.onclick = function(){ var card=b.parentNode, open=card.classList.toggle('open'); b.setAttribute('aria-expanded', open?'true':'false'); };

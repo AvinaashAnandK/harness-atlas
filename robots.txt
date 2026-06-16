@@ -1,0 +1,6 @@
+# Harness Atlas
+# All crawlers are welcome, including AI answer engines.
+User-agent: *
+Allow: /
+
+Sitemap: https://avinaashanandk.github.io/harness-atlas/sitemap.xml

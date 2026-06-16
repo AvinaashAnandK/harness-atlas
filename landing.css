@@ -1,7 +1,7 @@
 /* ============================================================
    HARNESS ATLAS — landing (Home).
    Loads after fieldnote-tokens.css + atlas.css.
-   Hero, the scale line, provenance, the five doors. No new colors;
+   Hero, the scale line, provenance, the four doors. No new colors;
    fate hues only on the three fate words, each with a tooltip.
    ============================================================ */
 
@@ -60,7 +60,7 @@
 .doors-head::before{content:""; width:22px; height:1px; background:var(--live); flex:none}
 .doors-head .k{font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); white-space:nowrap}
 .doors-head::after{content:""; flex:1; height:1px; background:var(--line)}
-.doors{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); margin-top:26px}
+.doors{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); margin-top:26px}
 .door{background:var(--bg); display:flex; flex-direction:column; text-align:left; padding:28px 24px 26px; min-height:250px; transition:background var(--fast)}
 .door:hover{background:var(--bg-raised); text-decoration:none}
 .door-n{font-family:var(--mono); font-weight:700; font-size:11px; letter-spacing:.08em; color:var(--live); margin-bottom:16px}
@@ -72,7 +72,7 @@
 .door-cta{margin-top:auto; padding-top:18px; font-family:var(--mono); font-weight:700; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--live-ink); display:inline-flex; align-items:center; gap:6px}
 .door-cta .ar{transition:transform var(--fast)}
 .door:hover .door-cta .ar{transform:translateX(3px)}
-@media (max-width:1080px){ .doors{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:1080px){ .doors{grid-template-columns:repeat(2,1fr)} }
 @media (max-width:680px){ .doors{grid-template-columns:1fr} .door{min-height:0; padding:24px 16px} }
 
 /* ---- footer line ---- */

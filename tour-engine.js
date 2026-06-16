@@ -12,7 +12,7 @@
      anatomy section's last beat, not the footer.
    · Orbital nodes: ≥24px hit areas, styled selected state, and
      each tap shows name + one-liner + a deep link into the
-     Atlas dossier. The how-to caption is persistent.
+     Atlas Deep Dive. The how-to caption is persistent.
    ============================================================ */
 (function(){
   'use strict';
@@ -369,7 +369,7 @@
         hit.setAttribute('class', 'nodehit');
         hit.setAttribute('tabindex', '0');
         hit.setAttribute('role', 'link');
-        hit.setAttribute('aria-label', node[0] + ', ' + layer.name + ' layer. Opens the Atlas dossier.');
+        hit.setAttribute('aria-label', node[0] + ', ' + layer.name + ' layer. Opens the Atlas Deep Dive.');
         var slug = slugify(node[0]);
         function show(){
           if(selected) selected.classList.remove('sel');

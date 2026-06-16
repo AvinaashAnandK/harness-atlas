@@ -4,7 +4,50 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Atlas · Harness Atlas</title>
-<meta name="description" content="A guided atlas of the scaffolding around an LLM: one failing run, the four-job operating loop, the constraints overlay, and the full implementation atlas. 24 capabilities · 147 documented incidents.">
+<meta name="description" content="The Atlas is an interactive reference for the scaffolding around an LLM. It shows the four jobs a harness does on every run: orient, act, remember, and improve. Browse all 24 capabilities and 147 cited incidents.">
+<link rel="canonical" href="https://avinaashanandk.github.io/harness-atlas/the-atlas.html">
+<meta name="author" content="Avinaash Anand K">
+<meta name="theme-color" content="#15120F">
+
+<!-- Open Graph -->
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Harness Atlas">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="The Atlas: the four jobs a harness does on every run">
+<meta property="og:description" content="The Atlas is an interactive reference for the scaffolding around an LLM. It shows the four jobs a harness does on every run: orient, act, remember, and improve. Browse all 24 capabilities and 147 cited incidents.">
+<meta property="og:url" content="https://avinaashanandk.github.io/harness-atlas/the-atlas.html">
+<meta property="og:image" content="https://avinaashanandk.github.io/harness-atlas/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Harness Atlas cover. The headline 'the moat is not the model, it is the scaffolding around it' beside a diagram of five concentric rings around a model core.">
+<meta property="article:author" content="Avinaash Anand K">
+<meta property="article:published_time" content="2026-06-06">
+<meta property="article:modified_time" content="2026-06-16">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Atlas: the four jobs a harness does on every run">
+<meta name="twitter:description" content="The Atlas is an interactive reference for the scaffolding around an LLM. It shows the four jobs a harness does on every run: orient, act, remember, and improve. Browse all 24 capabilities and 147 cited incidents.">
+<meta name="twitter:image" content="https://avinaashanandk.github.io/harness-atlas/og-cover.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "@id": "https://avinaashanandk.github.io/harness-atlas/the-atlas.html#article",
+  "headline": "The Atlas: the four jobs a harness does on every run",
+  "description": "An interactive reference for the scaffolding around an LLM. It shows the four jobs a harness does on every run, which are orient, act, remember, and improve, across 24 capabilities and 147 cited incidents.",
+  "url": "https://avinaashanandk.github.io/harness-atlas/the-atlas.html",
+  "mainEntityOfPage": "https://avinaashanandk.github.io/harness-atlas/the-atlas.html",
+  "image": "https://avinaashanandk.github.io/harness-atlas/og-cover.png",
+  "inLanguage": "en",
+  "datePublished": "2026-06-06",
+  "dateModified": "2026-06-16",
+  "author": { "@type": "Person", "name": "Avinaash Anand K", "url": "https://avinaashanandk926279.substack.com/" },
+  "publisher": { "@type": "Organization", "name": "Harness Atlas", "url": "https://avinaashanandk.github.io/harness-atlas/" },
+  "isPartOf": { "@type": "WebSite", "name": "Harness Atlas", "url": "https://avinaashanandk.github.io/harness-atlas/" }
+}
+</script>
 <link rel="stylesheet" href="fieldnote-tokens.css">
 <link rel="stylesheet" href="atlas.css">
 <link rel="stylesheet" href="the-atlas.css">
@@ -20,8 +63,7 @@
       <a href="the-tour.html"><span class="nn">01</span> <span class="nlabel">The Tour</span></a>
       <a class="cur" href="the-atlas.html"><span class="nn">02</span> <span class="nlabel">The Atlas</span></a>
       <a href="capability-deep-dives.html"><span class="nn">03</span> <span class="nlabel">Deep Dives</span></a>
-      <a href="what-should-matter-to-you.html"><span class="nn">04</span> <span class="nlabel">What Matters</span></a>
-      <a href="timeline.html"><span class="nn">05</span> <span class="nlabel">Timeline</span></a>
+      <a href="timeline.html"><span class="nn">04</span> <span class="nlabel">Timeline</span></a>
     </nav>
     <button class="t-toggle" id="themeBtn" aria-label="Toggle light and dark mode">◐ Light</button>
   </div>
@@ -35,7 +77,7 @@
     <div class="hero-grid">
       <div>
         <h1>A model is not an agent.<br><span>The harness makes it operational.</span></h1>
-        <p class="hero-lead">Treat the model as a broadly capable new hire: strong at general reasoning, unfamiliar with your systems, policies, and history. A harness is the scaffolding that helps it orient itself, act safely, carry state forward, and improve after failure.</p>
+        <p class="hero-lead">Treat the model as a broadly capable new hire. It is strong at general reasoning, but unfamiliar with your systems, your policies, and your history. The harness is the scaffolding you build around the model. It supplies the parts the model cannot reliably provide for itself.</p>
         <div class="hero-actions">
           <a class="vbtn primary" href="#scenario">Start with one run ↓</a>
           <a class="vbtn ghost" href="#explorer">Browse the full atlas</a>
@@ -50,7 +92,7 @@
           <li><b>Remember</b><span>Restore the relevant history.</span></li>
           <li><b>Improve</b><span>Turn failures into reusable fixes.</span></li>
         </ol>
-        <p class="overlay-note"><b>Limitations and guardrails cut across the loop:</b> some protect the operator, some protect the builder, and some are hard ceilings.</p>
+        <p class="overlay-note"><b>Limitations and guardrails apply across the whole loop.</b> Some protect the operator, some protect the builder, and some are hard ceilings.</p>
       </aside>
     </div>
   </section>
@@ -60,10 +102,10 @@
     <div class="page-shell">
       <div class="section-intro narrow">
         <p class="eyebrow">Start with a failure</p>
-        <h2>What breaks when the harness loses one load-bearing rule?</h2>
-        <p>A customer asks a support agent to refund a duplicate £4,800 invoice. One rule is load-bearing — the agent is expected to follow it:</p>
+        <h2>What breaks when the harness loses the one rule it depends on?</h2>
+        <p>A customer asks a support agent to refund a duplicate £4,800 invoice. This scenario depends on one rule, and the agent is expected to follow it.</p>
         <div class="rule-callout" role="note"><span class="rule-tag">The rule</span><b>Refunds above £1,000 require manager approval.</b></div>
-        <p>You watched this mechanism eat an inbox in <a href="the-tour.html#two-failures">the Tour</a>. Size the tool catalogue, add harness blocks, and watch what survives inside the run.</p>
+        <p>You watched this same step delete an inbox in <a href="the-tour.html#two-failures">the Tour</a>. Size the tool catalogue, add harness blocks, and watch what survives inside the run.</p>
       </div>
       <div id="scenarioApp" class="scenario-app"></div>
     </div>
@@ -86,7 +128,7 @@
       <div>
         <p class="eyebrow">A lens, not a law</p>
         <h2>Which harness investments survive a better model?</h2>
-        <p class="fate-copy">The fate labels are investment hypotheses. Visible, measurable failures may need less bespoke scaffolding as models improve. Silent failures, enforcement boundaries, and business constraints tend to persist.</p>
+        <p class="fate-copy">The fate labels are investment hypotheses. Visible, measurable failures may need less bespoke scaffolding as models improve. Silent failures tend to persist, and so do enforcement boundaries and business constraints.</p>
       </div>
       <div class="legend" aria-label="Fate legend">
         <div><span class="fdot compound"></span><b>Compounds</b><small>Silent failure; the encoded fix keeps its value.</small></div>
@@ -122,14 +164,15 @@
   <section class="page-shell closer">
     <p class="eyebrow">The takeaway</p>
     <h2>The roadmap question is not “How smart is the model?”</h2>
-    <p>Ask where a failure would surface, what the blast radius is, and whether a better model removes the need or merely makes the failure harder to notice.</p>
-    <a class="vbtn primary" href="capability-deep-dives.html">Open the evidence dossiers →</a>
+    <p>Ask where a failure would surface. Ask how much damage it would cause. Then ask whether a better model removes the need for the fix or just makes the failure harder to notice.</p>
+    <a class="vbtn primary" href="capability-deep-dives.html">Open the Deep Dives →</a>
   </section>
 
 </main>
 
 <script src="atlas-data.js"></script>
 <script src="the-atlas.js"></script>
+<script src="first-visit.js"></script>
 <!-- analytics: GoatCounter (cookieless) -->
 <script data-goatcounter="https://harness-atlas.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>

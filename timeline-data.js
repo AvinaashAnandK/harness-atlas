@@ -10,7 +10,7 @@ window.TIMELINE = {
   "title": "Harness Atlas — research provenance timeline",
   "generated": "2026-06-06",
   "count": 158,
-  "note": "Every dated source incorporated into the 24 capability dossiers. Dates are verbatim from the dossier bibliographies; precision is day/month/year. This is the living source; edit here and the view updates."
+  "note": "Every dated source incorporated into the 24 capability Deep Dives. Dates are verbatim from the Deep Dive bibliographies; precision is day/month/year. This is the living source; edit here and the view updates."
  },
  "events": [
   {

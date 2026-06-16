@@ -29,7 +29,8 @@
   var c = COPY[surface] || COPY.atlas;
 
   var css = [
-    '.fv-back{position:fixed;inset:0;z-index:200;background:color-mix(in srgb,var(--bg) 62%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}',
+    /* starts below the sticky masthead (z-index 100) so the brand, nav and hamburger stay usable while the card is open */
+    '.fv-back{position:fixed;top:56px;left:0;right:0;bottom:0;z-index:90;background:color-mix(in srgb,var(--bg) 62%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px}',
     '.fv-card{max-width:480px;width:100%;border:1.5px solid var(--line-2);border-radius:var(--r-lg);background:var(--bg-raised);padding:26px 26px 22px;box-shadow:0 18px 60px rgba(0,0,0,.25)}',
     '.fv-ek{font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--live);display:block;margin-bottom:12px}',
     '.fv-h{font-weight:600;font-size:1.18rem;line-height:1.38;letter-spacing:-.015em;color:var(--ink);margin:0 0 12px}',

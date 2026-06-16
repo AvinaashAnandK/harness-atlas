@@ -2,7 +2,7 @@
    THE ATLAS — app: surface-aware hash router + renderers.
    - atlas (02):   approaches-forward accordion (question -> approaches),
                    full width, no rail. Filters; harness highlights nodes.
-   - deepdives (03): lean index + full dossiers + the fate map. Has rail.
+   - deepdives (03): full-width layer browser + full Deep Dives.
    - matter (04):  the quadrant closer. Has rail.
    ============================================================ */
 (function(){
@@ -30,10 +30,10 @@
     'wont-do-commercial':'circle-dollar-sign','cant-do-ceilings':'arrow-up-to-line','wont-show-opacity':'eye-off'
   };
   var FATE_TIPS = {
-    compound:"Built against a silent failure, one nothing in the run announces. Caught and encoded, it keeps its value as models improve; this is the scaffolding that can become the moat.",
-    fade:"Built against a loud failure, one the trace announces. Better models absorb these, so the scaffolding is temporary: a loan the next model repays.",
-    protect:"A wall the builder raises for its own commercial or legal reasons, not to make the agent better. Anti-distillation and hidden codenames when the builder makes the model; PII and compliance walls when it rents one. It neither fades nor compounds; it lasts as long as the business reason does.",
-    split:"This capability's halves age differently: part fades as models improve, part compounds. The page explains which is which."
+    compound:"This is a hypothesis about durable value. The failure is silent, so the harness has to preserve the catch because the model may never observe the miss on its own.",
+    fade:"This is a hypothesis about temporary scaffolding. The failure is visible in traces, tests, or user reports, so better models and evaluations may absorb more of it over time.",
+    protect:"A wall the builder raises for commercial or legal reasons. It may persist, but the protected party is not necessarily the operator using the agent.",
+    split:"This capability covers two different failure classes. One side may shrink with better models, and the other remains structural."
   };
   var FATE_PLAIN = {compound:'Compounds', fade:'May fade', protect:'Protects builder', split:'Split'};
 
@@ -53,17 +53,17 @@
     'identity-and-context':'Supplies the project rules and domain knowledge the model does not start with.',
     'tool-discovery':'Shows the available tools without loading every schema into every turn.',
     'orchestration-routing':'Decides when one run should stay linear and when work should split across helpers.',
-    'planning':'Forms an approach before action, with approval where the blast radius warrants it.',
+    'planning':'Forms an approach before action, with approval where the possible damage is large enough to need it.',
     'reasoning-effort-allocation':'Matches thinking effort and model cost to the task.',
     'permission-and-irreversibility':'Enforces approval at the action boundary for changes the agent cannot safely undo.',
     'execution-security':'Prevents hostile content from becoming executable instructions.',
     'isolation':'Limits what a run can reach when something fails.',
     'input-and-output-gating':'Stops one oversized result from consuming the working context.',
     'tool-dispatch-and-retry':'Handles failed tool calls with retry, adjustment, or escalation.',
-    'context-curation':'Keeps load-bearing context active and discards lower-value material.',
+    'context-curation':'Keeps the context the run depends on active and discards lower-value material.',
     'compression-for-coherence':'Shrinks a growing history without losing the plot.',
     'state-persistence-and-ownership':'Carries useful state beyond one run and defines who owns it.',
-    'offline-consolidation':'Distills messy session notes into a better starting point for the next run.',
+    'offline-consolidation':'Turns messy session notes into a better starting point for the next run.',
     'cross-agent-coherence':'Keeps parallel workers from returning contradictory pieces.',
     'implicit-signals':'Uses behavior as evidence when the user never states the issue directly.',
     'explicit-signals':'Captures corrections so the fix travels beyond one session.',
@@ -88,10 +88,10 @@
     'wont-do-commercial':'Examples','cant-do-ceilings':'Control set','wont-show-opacity':'Examples'
   };
   var DIAGRAM_NOTE = {
-    'Alternatives':'Competing approaches: teams choose among these tracks. Arrows mark evolution inside a track, not a single timeline.',
-    'Pipeline':'One pipeline: the stages compose and run in order. Nothing here is a rival to anything else.',
+    'Alternatives':'Competing approaches. Teams choose among these tracks. Arrows mark how one track evolves.',
+    'Pipeline':'One pipeline. The stages compose and run in order. Nothing here is a rival to anything else.',
     'Maturity path':'One approach maturing into a more capable version. Sibling tracks branch off the spine.',
-    'Control set':'Not rivals: these mechanisms are usually deployed together. Arrows mark evolution inside a track.',
+    'Control set':'Not rivals. These mechanisms are usually deployed together. Arrows mark how one track evolves.',
     'Examples':'Documented product instances, not architectural options to choose among.'
   };
 
@@ -100,8 +100,24 @@
   function lucide(){ if(window.lucide && window.lucide.createIcons){ try{ window.lucide.createIcons(); }catch(e){} } }
   function fdot(c, edge){ return '<span class="fdot '+c+(edge?' edge':'')+'"></span>'; }
   function tip(c){ return ' data-fate-tip="'+esc(FATE_TIPS[c])+'" tabindex="0"'; }
+  function tidy(s){ return String(s==null?'':s).replace(/\s+,/g, ',').replace(/\s{2,}/g, ' ').trim(); }
+  function displayFateSub(c){ return tidy(c.fateSub || ''); }
+  function displayFateLine(c){
+    return tidy(c.fateLine || '')
+      .replace(/\baccretes\b/g, 'keeps accumulating')
+      .replace(/\bthe moat\b/g, 'durable advantage')
+      .replace(/\bmoat\b/g, 'durable advantage');
+  }
+  function provenance(in_){
+    var raw = ((in_.source||'')+' '+(in_.by||'')+' '+(in_.url||'')).toLowerCase();
+    if(!in_.url || raw.indexOf('vault')>=0) return {cls:'vault', label:'Vault note', desc:'Internal research note or no public URL'};
+    if(raw.indexOf('unverified')>=0 || raw.indexOf('leak')>=0 || raw.indexOf('reverse')>=0 || raw.indexOf('competitor')>=0) return {cls:'caveat', label:'Caveated', desc:'Single-source, reconstructed, leak-derived, or disputed'};
+    if(raw.indexOf('docs')>=0 || raw.indexOf('blog')>=0 || raw.indexOf('engineering')>=0 || raw.indexOf('arxiv')>=0 || raw.indexOf('github')>=0 || raw.indexOf('anthropic')>=0 || raw.indexOf('microsoft')>=0 || raw.indexOf('shopify')>=0 || raw.indexOf('intercom')>=0 || raw.indexOf('atlassian')>=0 || raw.indexOf('project vend')>=0) return {cls:'primary', label:'Primary/public', desc:'Primary source, public docs, paper, or firsthand issue'};
+    return {cls:'reported', label:'Reported', desc:'Public report or practitioner account'};
+  }
 
   var FILT = { layers:{}, fates:{}, harness:null };
+  var DDFILT = { layer:null, harness:null };
   /* analytics (GoatCounter, cookieless) — count.js auto-counts the page load;
      this fires a clean virtual pageview for in-page deep-dive navigation. */
   var routedOnce = false;
@@ -111,8 +127,9 @@
   var RR = [17,26,34,41,47];
   function renderRail(activeSlug){
     if(!rail) return;
+    if(SURFACE==='deepdives'){ rail.innerHTML = ''; return; }
     var isMap = location.hash.indexOf('map')>=0;
-    var html = '<div class="rail-lab">The map</div>';
+    var html = '<div class="rail-lab">Deep Dive nav</div>';
     html += '<div class="rail-shells" id="railShells"><svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"></svg><div class="rail-core">model<br>core</div></div>';
     html += '<div class="rail-legend">'
       + '<span class="rl">'+fdot('compound')+'compounds</span>'
@@ -123,8 +140,6 @@
     html += '<div class="rail-nav">'
       + '<a href="'+ATLAS_PAGE+'">'+icon('layout-grid')+'The Atlas</a>'
       + '<a href="'+DEEP_PAGE+'" class="'+(SURFACE==='deepdives' && !isMap ? 'cur':'')+'">'+icon('book-open')+'Deep dives</a>'
-      + '<a href="'+(SURFACE==='deepdives'?'#/map':DEEP_PAGE+'#/map')+'" class="'+(SURFACE==='deepdives' && isMap ? 'cur':'')+'">'+icon('table-2')+'The fate map</a>'
-      + '<a href="'+MATTER_PAGE+'" class="'+(SURFACE==='matter' ? 'cur':'')+'">'+icon('crosshair')+'What should matter</a>'
       + '</div>';
     rail.innerHTML = html;
     var wrap = document.getElementById('railShells'), svg = wrap.querySelector('svg'), ns='http://www.w3.org/2000/svg';
@@ -159,11 +174,11 @@
     return '<details class="fates-acc">'
       + '<summary>'+fdot('compound')+fdot('fade')+fdot('protect')+'<span>How to read the colors</span></summary>'
       + '<div class="fates-callout" style="margin:10px 0 0">'
-      + '<p style="margin:0 0 4px">Most capabilities here are scaffolding built to catch a failure, and that scaffolding ages in one of two ways.</p>'
-      + '<div class="legend-row">'+fdot('compound')+'<div><b style="color:var(--fate-compound)">Teal, Compounds:</b> the failure it catches is silent, so the catch gets encoded into the harness and keeps its value as models improve.</div></div>'
-      + '<div class="legend-row">'+fdot('fade')+'<div><b style="color:var(--fate-fade)">Warm gray, May fade:</b> the failure is loud, the kind a better model may absorb, so this scaffolding may come off as a temporary crutch. A hypothesis, not a verdict.</div></div>'
-      + '<div class="legend-row">'+fdot('protect')+'<div><b style="color:var(--fate-protect)">Amber, Protects builder:</b> it does not make the agent better at all; the builder raises it for its own commercial or legal reasons, so it neither fades nor compounds, it just persists.</div></div>'
-      + '<div class="lk">The Tour teaches all three with real incidents in about seven minutes. <a href="the-tour.html">Take the tour -&gt;</a></div>'
+      + '<p style="margin:0 0 4px">Fate is an investment hypothesis. It says what kind of failure forced this capability, and what a better model is likely to remove.</p>'
+      + '<div class="legend-row">'+fdot('compound')+'<div><b style="color:var(--fate-compound)">Teal, Compounds:</b> the failure is silent, so the catch has to stay in the harness unless another system makes it visible.</div></div>'
+      + '<div class="legend-row">'+fdot('fade')+'<div><b style="color:var(--fate-fade)">Warm gray, May fade:</b> the failure is visible enough for models, tests, or evaluations to absorb more of it over time.</div></div>'
+      + '<div class="legend-row">'+fdot('protect')+'<div><b style="color:var(--fate-protect)">Amber, Protects builder:</b> the builder raises the wall for commercial or legal reasons. The operator may not be the protected party.</div></div>'
+      + '<div class="lk">The Tour teaches all three with documented incidents in about seven minutes. <a href="the-tour.html">Take the tour -&gt;</a></div>'
       + '</div></details>';
   }
 
@@ -181,7 +196,7 @@
         + '<div class="ln-desc">'+esc(nd.desc)+'</div>'
         + (nd.rel?'<span class="ln-rel">'+esc(nd.rel)+'</span>':'')
         + used
-        + '<div class="ln-panel"><span class="lp-lab">Used by</span>'+(nd.usedBy&&nd.usedBy.length?harnessChips(nd.usedBy):'<span class="ln-desc">no tracked harness yet</span>')+(nd.rel?'<div style="margin-top:8px"><span class="lp-lab">Relationship</span>'+esc(nd.rel)+'</div>':'')+'</div>'
+        + '<div class="ln-panel"><span class="lp-lab">Family bet</span>'+esc(fam.bet || 'This is one implementation track.')+'<div style="margin-top:8px"><span class="lp-lab">Tracked use</span>'+(nd.usedBy&&nd.usedBy.length?harnessChips(nd.usedBy):'<span class="ln-desc">no tracked harness yet</span>')+'</div>'+(nd.rel?'<div style="margin-top:8px"><span class="lp-lab">Relationship</span>'+esc(nd.rel)+'</div>':'')+'</div>'
         + '</div>';
       return arrow + node;
     }).join('');
@@ -203,7 +218,7 @@
       + '<div class="acard-body">'
         + '<p class="approaches-note">'+esc(DIAGRAM_NOTE[DIAGRAM[c.slug]||'Alternatives'])+' Tap a node for who uses it.</p>'
         + '<div class="lanes">'+c.families.map(laneHTML).join('')+'</div>'
-        + '<a class="acard-cta" href="'+DEEP_PAGE+'#/cap/'+c.slug+'">Navigate to dossier '+icon('arrow-right')+'</a>'
+        + '<a class="acard-cta" href="'+DEEP_PAGE+'#/cap/'+c.slug+'">Open Deep Dive '+icon('arrow-right')+'</a>'
       + '</div>'
       + '</div>';
   }
@@ -243,43 +258,166 @@
     [].slice.call(document.querySelectorAll('.lnode')).forEach(function(n){ n.onclick = function(){ n.classList.toggle('open'); }; });
   }
 
-  /* ============================================================ DEEP DIVES — index, grouped as the operating loop (L1-L4) + constraints overlay (L5) */
+  /* ============================================================ DEEP DIVES — layer browser, filters, and pages */
   function ddItem(c){
-    return '<li><a href="#/cap/'+c.slug+'">'+fdot(c.fate,c.edge)+'<span class="dd-nm">'+esc(c.name)+'</span><span class="dd-q">'+esc(c.question)+'</span><span class="dd-go">'+icon('arrow-right')+'</span></a></li>';
+    return '<li data-dd-item="'+esc(c.slug)+'" data-layer="'+c.layerNum+'" data-fate="'+esc(c.fate)+'" data-harnesses="'+esc((c.harnesses||[]).join(' '))+'"><a href="#/cap/'+c.slug+'">'
+      + '<span class="dd-card-top"><span class="dd-num">'+(c.n<10?'0'+c.n:c.n)+'</span><span class="dd-layer">L'+c.layerNum+' · '+esc(c.layer)+'</span><span class="dd-mini-fate '+c.fate+'">'+fdot(c.fate,c.edge)+esc(c.fateLabel)+'</span></span>'
+      + '<span class="dd-nm">'+esc(c.name)+'</span>'
+      + '<span class="dd-q">'+esc(c.question)+'</span>'
+      + '<span class="dd-fear">'+esc(c.fear)+'</span>'
+      + '<span class="dd-go">'+icon('arrow-right')+'</span>'
+      + '</a></li>';
   }
+
+  function deepFilterBarHTML(){
+    var hchips = A.harnesses.map(function(h){ return '<button class="chip-f" data-dd-harness="'+h.key+'">'+esc(h.name)+'</button>'; }).join('');
+    return '<div class="dd-filterbar" id="ddBrowse"><div class="dd-filter-head"><div><p class="eyebrow">Find a Deep Dive</p><h2>Filter by harness</h2></div><span class="fb-count" id="ddCount"></span></div>'
+      + '<div class="fb-in">'
+      + '<div class="fgroup"><span class="fglab">Harness</span>'+hchips+'</div>'
+      + '<button class="fb-clear" id="ddClear">Clear</button>'
+      + '</div></div>';
+  }
+
+  function ddBoardCard(c){
+    return '<a href="#/cap/'+c.slug+'" class="dd-board-card" data-dd-item="'+esc(c.slug)+'" data-layer="'+c.layerNum+'" data-fate="'+esc(c.fate)+'" data-harnesses="'+esc((c.harnesses||[]).join(' '))+'">'
+      + '<span class="dd-card-top"><span class="dd-num">'+(c.n<10?'0'+c.n:c.n)+'</span><span class="dd-layer">L'+c.layerNum+' · '+esc(c.layer)+'</span><span class="dd-mini-fate '+c.fate+'">'+fdot(c.fate,c.edge)+esc(c.fateLabel)+'</span></span>'
+      + '<span class="dd-nm">'+esc(c.name)+'</span>'
+      + '<span class="dd-q">'+esc(c.question)+'</span>'
+      + '<span class="dd-fear">'+esc(c.fear)+'</span>'
+      + '<span class="dd-go">'+icon('arrow-right')+'</span>'
+      + '</a>';
+  }
+
+  function ddBoardHTML(){
+    return '<section class="dd-board" id="ddBoard" aria-label="Capability layer browser">'
+      + '<div class="dd-board-left">'
+        + '<div class="dd-stage-spine">'
+          + '<div class="dd-spine-model">Model<span>Core</span></div>'
+          + '<div class="dd-spine-layers">'
+          + layers.map(function(L){
+              return '<button type="button" class="dd-spine-layer" data-dd-board-layer="'+L.num+'" aria-pressed="false">'
+                + '<span><b>L'+L.num+' · '+esc(L.name)+'</b><em>'+esc(L.num<5 ? ROLE[L.num] : 'Overlay')+'</em></span>'
+                + '<i class="dd-spine-count" data-dd-count="'+L.num+'"></i>'
+                + '</button>';
+            }).join('')
+          + '</div>'
+        + '</div>'
+      + '</div>'
+      + '<div class="dd-board-main">'
+        + layers.map(function(L){
+            var lc = caps.filter(function(c){ return c.layerNum===L.num; });
+            var q = L.num<5 ? LOOP_Q[L.num] : 'What won’t it do, can’t it do, won’t it show?';
+            return '<section class="dd-board-layer" data-dd-board-panel="'+L.num+'">'
+              + '<div class="dd-board-head"><span>'+(L.num<5 ? ROLE[L.num] : 'Overlay')+'</span><h2>L'+L.num+' · '+esc(L.name)+'</h2><p>'+esc(q)+'</p></div>'
+              + '<div class="dd-board-cards">'+lc.map(ddBoardCard).join('')+'</div>'
+              + '</section>';
+          }).join('')
+      + '</div>'
+      + '</section>';
+  }
+
+  function drawDeepSpine(){
+    var spine = document.querySelector('.dd-stage-spine'); if(!spine) return;
+    var old = spine.querySelector('.dd-spine-svg'); if(old) old.parentNode.removeChild(old);
+    var model = spine.querySelector('.dd-spine-model');
+    var btns = [].slice.call(spine.querySelectorAll('.dd-spine-layer'));
+    if(!model || !btns.length) return;
+    var s = spine.getBoundingClientRect();
+    if(s.width < 10) return;
+    var m = model.getBoundingClientRect();
+    var mx = m.right - s.left, my = m.top + m.height/2 - s.top;
+    var activeLayer = String(DDFILT.layer || '1');
+    var ah = 8, parts = '';
+    btns.forEach(function(b){
+      var r = b.getBoundingClientRect();
+      var bx = r.left - s.left, by = r.top + r.height/2 - s.top;
+      var on = String(b.dataset.ddBoardLayer)===activeLayer;
+      var col = on ? 'var(--live)' : 'var(--hl-strong)';
+      var op = on ? '1' : '.42';
+      var dy = by - my, d;
+      if(Math.abs(dy) < 4){
+        d = 'M '+mx+' '+my+' H '+(bx-ah);
+      } else {
+        var dir = dy>0 ? 1 : -1, tx = mx + (bx-mx)/2;
+        var rr = Math.min(12, Math.abs(dy)/2);
+        d = 'M '+mx+' '+my+' H '+(tx-rr)
+          + ' Q '+tx+' '+my+' '+tx+' '+(my+rr*dir)
+          + ' V '+(by-rr*dir)
+          + ' Q '+tx+' '+by+' '+(tx+rr)+' '+by
+          + ' H '+(bx-ah);
+      }
+      parts += '<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="2.4" stroke-linecap="round" opacity="'+op+'"/>'
+        + '<path d="M '+bx+' '+by+' l -'+ah+' -4.6 v 9.2 z" fill="'+col+'" opacity="'+op+'"/>';
+    });
+    spine.insertAdjacentHTML('beforeend',
+      '<svg class="dd-spine-svg" width="'+Math.ceil(s.width)+'" height="'+Math.ceil(s.height)+'" viewBox="0 0 '+Math.ceil(s.width)+' '+Math.ceil(s.height)+'" aria-hidden="true">'+parts+'</svg>');
+  }
+
+  function bindDeepFilters(){
+    function pick(kind, val){
+      var was = String(DDFILT[kind])===String(val);
+      DDFILT[kind] = was ? null : val;
+      applyDeepFilters();
+    }
+    [].slice.call(document.querySelectorAll('[data-dd-harness]')).forEach(function(b){ b.onclick=function(){ pick('harness', b.dataset.ddHarness); }; });
+    var clear = document.getElementById('ddClear');
+    if(clear) clear.onclick = function(){ DDFILT.harness=null; applyDeepFilters(); };
+    [].slice.call(document.querySelectorAll('[data-dd-board-layer]')).forEach(function(b){
+      b.onclick = function(){ DDFILT.layer = b.dataset.ddBoardLayer; applyDeepFilters(); };
+    });
+  }
+
+  function applyDeepFilters(){
+    var shown = 0;
+    var activeLayer = String(DDFILT.layer || '1');
+    caps.forEach(function(c){
+      var item = document.querySelector('[data-dd-item="'+c.slug+'"]'); if(!item) return;
+      var ok = String(c.layerNum)===activeLayer
+        && (!DDFILT.harness || (c.harnesses||[]).indexOf(DDFILT.harness)>=0);
+      item.classList.toggle('hidden', !ok);
+      if(ok) shown++;
+    });
+    [].slice.call(document.querySelectorAll('[data-dd-board-panel]')).forEach(function(g){
+      var on = String(g.dataset.ddBoardPanel)===activeLayer;
+      g.classList.toggle('active', on);
+      g.style.display = on ? '' : 'none';
+    });
+    [].slice.call(document.querySelectorAll('[data-dd-board-layer]')).forEach(function(b){
+      var on = activeLayer===String(b.dataset.ddBoardLayer);
+      b.classList.toggle('on', on);
+      b.classList.toggle('sel', on);
+      b.setAttribute('aria-pressed', on?'true':'false');
+    });
+    [].slice.call(document.querySelectorAll('[data-dd-harness]')).forEach(function(b){ b.classList.toggle('on', DDFILT.harness===b.dataset.ddHarness); });
+    layers.forEach(function(L){
+      var n = caps.filter(function(c){ return c.layerNum===L.num && (!DDFILT.harness || (c.harnesses||[]).indexOf(DDFILT.harness)>=0); }).length;
+      var el = document.querySelector('[data-dd-count="'+L.num+'"]');
+      if(el) el.textContent = DDFILT.harness ? String(n) : '';
+    });
+    var count = document.getElementById('ddCount');
+    var layerName = (layers.filter(function(L){ return String(L.num)===activeLayer; })[0]||{}).name || '';
+    if(count) count.textContent = shown+' Deep Dive'+(shown===1?'':'s')+' in '+layerName+(DDFILT.harness?' · '+hkey[DDFILT.harness]:'');
+    drawDeepSpine();
+  }
+
   function renderDeepIndex(){
     var html = '<div class="main-in"><section class="dd-head">'
-      + '<p class="eyebrow">03 · Capability Deep Dives · the full dossiers</p>'
+      + '<p class="eyebrow">03 · Capability Deep Dives · the full set</p>'
       + '<h1 class="display">Capability Deep Dives</h1>'
-      + '<p class="lead">The full record for each capability: the failures that force it, the approaches in context, who uses what, and whether it lasts. The harness does four jobs on every run; a constraints overlay cuts across all four. Open any capability for its dossier.</p>'
-      + '<a class="dd-maplink" href="#/map">'+icon('table-2')+'Open the fate map</a>'
+      + '<p class="lead">Each Deep Dive answers one roadmap question: what failure forced this capability, how teams implement it, who uses each approach, and whether a better model makes it less necessary.</p>'
       + '</section>';
 
-    /* the operating loop: L1-L4, in the order a run meets them */
-    html += '<div class="dd-loop">'
-      + '<div class="dd-section-head"><p class="eyebrow">The operating loop</p><h2 class="dd-section-h">Four jobs, in the order a run meets them.</h2></div>'
-      + '<div class="dd-index">'
-      + layers.filter(function(L){ return L.num<5; }).map(function(L){
-          var lc = caps.filter(function(c){ return c.layerNum===L.num; });
-          return '<section class="dd-group">'
-            + '<div class="dd-group-head"><span class="dd-role">'+ROLE[L.num]+'</span><span class="lnum">L'+L.num+'</span><h2>'+esc(L.name)+'</h2><span class="dd-gq">'+esc(LOOP_Q[L.num])+'</span></div>'
-            + '<ul class="dd-list">'+lc.map(ddItem).join('')+'</ul>'
-            + '</section>';
-        }).join('')
-      + '</div></div>';
+    html += deepFilterBarHTML();
 
-    /* the cross-cutting overlay: L5 (not a loop step) */
-    var l5 = layers.filter(function(L){ return L.num===5; })[0];
-    var l5caps = caps.filter(function(c){ return c.layerNum===5; });
-    html += '<div class="dd-overlay">'
-      + '<div class="dd-section-head"><p class="eyebrow">Cross-cutting overlay</p><h2 class="dd-section-h">Not a step in the loop: what the system may do, cannot do, and will not show. Some walls protect you, some protect the builder.</h2></div>'
-      + '<div class="dd-index"><section class="dd-group">'
-      + '<div class="dd-group-head"><span class="dd-role overlay">Overlay</span><span class="lnum">L5</span><h2>Limitations &amp; Guardrails</h2><span class="dd-gq">'+esc(l5?l5.q:'')+'</span></div>'
-      + '<ul class="dd-list">'+l5caps.map(ddItem).join('')+'</ul>'
-      + '</section></div></div>';
+    html += '<div class="dd-section-head"><p class="eyebrow">The operating loop</p><h2 class="dd-section-h">Pick a layer on the left; the Deep Dives for that layer appear on the right.</h2></div>';
+    html += ddBoardHTML();
 
     html += '</div>';
-    main.innerHTML = html; lucide(); window.scrollTo(0,0);
+    main.innerHTML = html;
+    bindDeepFilters();
+    applyDeepFilters();
+    setTimeout(drawDeepSpine, 60);
+    lucide(); window.scrollTo(0,0);
   }
 
   /* ============================================================ FILTERS (atlas) */
@@ -338,11 +476,12 @@
   }
 
   /* ============================================================ CAPABILITY DOSSIER (deepdives) */
-  function incidentCardHTML(in_){
+  function incidentCardHTML(in_, mode){
+    var pv = provenance(in_);
     var srcLabel = in_.source || 'Source';
     var srcHTML = in_.url ? '<a class="in-src" href="'+esc(in_.url)+'" target="_blank" rel="noopener">'+esc(srcLabel)+'</a>' : '<span class="in-by">'+esc(srcLabel)+' (no public URL)</span>';
-    return '<div class="incident">'
-      + '<div class="in-top"><span class="lschip '+in_.chip+'">'+esc(in_.chip)+'</span><h4>'+esc(in_.title)+'</h4></div>'
+    return '<div class="incident '+(mode||'')+'">'
+      + '<div class="in-top"><span class="lschip '+in_.chip+'">'+esc(in_.chip)+'</span><span class="source-tier '+pv.cls+'" title="'+esc(pv.desc)+'">'+esc(pv.label)+'</span><h4>'+esc(in_.title)+'</h4></div>'
       + '<p class="in-body">'+esc(in_.body)+'</p>'
       + '<div class="in-foot"><span class="in-by">Reported by '+esc(in_.by)+'</span>'+srcHTML+'</div>'
       + '</div>';
@@ -356,23 +495,31 @@
     html += '<div class="cap-head"><span class="ch-ico">'+icon(CAP_ICONS[c.slug])+'</span><span class="layerchip">L'+c.layerNum+' · '+esc(c.layer)+roleTag+'</span></div>';
     html += '<h1 class="cap-name">'+esc(c.name)+'</h1>';
     if(DEF[c.slug]){ html += '<p class="cap-standfirst">'+esc(DEF[c.slug])+'</p>'; }
-    html += '<div class="cap-fatebadge '+c.fate+'"'+tip(c.fate)+'>'+fdot(c.fate,c.edge)+'<span class="fb-l">'+esc(c.fateLabel)+'</span><span class="fb-s">'+esc(c.fateSub)+'</span></div>';
+    html += '<div class="cap-fatebadge '+c.fate+'"'+tip(c.fate)+'>'+fdot(c.fate,c.edge)+'<span class="fb-l">'+esc(c.fateLabel)+'</span><span class="fb-s">'+esc(displayFateSub(c))+'</span></div>';
     html += '<p class="cap-q">'+esc(c.question)+'</p>';
-    html += '<div class="sec-label">The challenge</div><div class="cap-challenge"><p>'+esc(c.challenge)+'</p></div>';
-    if(c.boundary){ html += '<div class="boundary-aside"><span class="ctag">What this is not</span>'+esc(c.boundary)+'</div>'; }
-    html += '<div class="sec-label">Failures in the wild</div>';
     var inc = c.incidents || [];
-    html += '<div class="incidents">'+inc.slice(0,3).map(incidentCardHTML).join('')+'</div>';
-    if(inc.length>3){
-      html += '<details class="in-more"><summary><svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Show all '+inc.length+' failures</summary><div class="incidents" style="margin-top:13px">'+inc.slice(3).map(incidentCardHTML).join('')+'</div></details>';
+    if(inc.length){
+      html += '<div class="sec-label">1 · The failure that forces it</div>';
+      html += '<div class="anchor-failure">'+incidentCardHTML(inc[0], 'anchor')+'</div>';
     }
-    if(c.more){ html += '<details class="in-more"><summary><svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Also in the dossier</summary><div class="more-body">'+esc(c.more)+'</div></details>'; }
+    html += '<div class="sec-label">2 · The challenge</div><div class="cap-challenge"><p>'+esc(c.challenge)+'</p></div>';
+    if(c.boundary){
+      html += '<details class="boundary-aside boundary-details"><summary><span class="ctag">Practitioner boundary</span> What this is not</summary><div>'+esc(c.boundary)+'</div></details>';
+    }
+    if(inc.length>1){
+      html += '<div class="sec-label">More failures in the wild</div>';
+      html += '<div class="incidents">'+inc.slice(1,3).map(function(x){ return incidentCardHTML(x); }).join('')+'</div>';
+    }
+    if(inc.length>3){
+      html += '<details class="in-more"><summary><svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Show remaining '+(inc.length-3)+' failures</summary><div class="incidents" style="margin-top:13px">'+inc.slice(3).map(function(x){ return incidentCardHTML(x); }).join('')+'</div></details>';
+    }
+    if(c.more){ html += '<details class="in-more"><summary><svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Also in the Deep Dive</summary><div class="more-body">'+esc(c.more)+'</div></details>'; }
     var dtype = DIAGRAM[c.slug] || 'Alternatives';
-    html += '<div class="sec-label">Approaches <span class="diagram-pill" title="'+esc(DIAGRAM_NOTE[dtype])+'">'+esc(dtype)+'</span></div>';
-    html += '<p class="families-note">'+esc(DIAGRAM_NOTE[dtype])+' Tap a node for who uses it.</p>';
+    html += '<div class="sec-label">3 · Approaches <span class="diagram-pill" title="'+esc(DIAGRAM_NOTE[dtype])+'">'+esc(dtype)+'</span></div>';
+    html += '<p class="families-note">'+esc(DIAGRAM_NOTE[dtype])+' Open a node for tracked use and how it relates to the family.</p>';
     html += '<div class="lanes">'+c.families.map(laneHTML).join('')+'</div>';
-    html += '<div class="sec-label">Why this fate</div>';
-    html += '<div class="whyfate '+c.fate+'"><span class="ctag">'+fdot(c.fate,c.edge)+esc(c.fateLabel)+'</span><p>'+esc(c.whyFate)+'</p><p class="fate-end">'+esc(c.fateLine)+'</p></div>';
+    html += '<div class="sec-label">4 · Fate verdict</div>';
+    html += '<div class="whyfate '+c.fate+'"><span class="ctag">'+fdot(c.fate,c.edge)+esc(c.fateLabel)+'</span><p class="fate-end">'+esc(displayFateLine(c))+'</p><details class="fate-proof"><summary>Read the argument</summary><p>'+esc(c.whyFate)+'</p></details></div>';
     if(c.forward){ var nx=byName[c.forward.cap]; var href = nx?'#/cap/'+nx.slug:'#/';
       html += '<a class="forward" href="'+href+'"><div><span class="fw-lab">Next door</span><div class="fw-name">'+esc(c.forward.cap)+'</div><div class="fw-teaser">'+esc(c.forward.teaser)+'</div></div><span class="fw-arrow">-&gt;</span></a>'; }
     if(c.thinSpot){ html += '<details class="thinspot"><summary><svg class="chev" width="10" height="10" viewBox="0 0 10 10"><path d="M3 1l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Where the sourcing is thin</summary><div class="ts-body">'+esc(c.thinSpot)+'</div></details>'; }
@@ -383,52 +530,13 @@
     window.scrollTo(0,0);
   }
 
-  /* ============================================================ FATE MAP (deepdives #/map) */
-  var mapSort = {key:'n', dir:1};
-  function renderMap(){
-    var fc = {compound:0,fade:0,protect:0,split:0};
-    caps.forEach(function(c){ if(fc[c.fate]!=null) fc[c.fate]++; });
-    var html = '<div class="main-in"><section class="interactive-head">'
-      + '<button class="cap-back" onclick="location.hash=\'#/\'">'+icon('arrow-left')+'All capabilities</button>'
-      + '<p class="eyebrow">Capability Deep Dives · the fate map</p>'
-      + '<h1>The fate map</h1>'
-      + '<p>All 24 capabilities, the failure each answers, and how its scaffolding might age. Fate is a lens, not a law: a hypothesis about what a better model removes. Sort by it to see the pattern — '+fc.compound+' compound, '+fc.split+' split, '+fc.fade+' may fade, '+fc.protect+' protects the builder. Silent failures and business walls tend to persist; loud, verifiable ones may need less bespoke scaffolding over time.</p>'
-      + '</section><div style="overflow-x:auto"><table class="fatemap" id="fatemap"></table></div></div>';
-    main.innerHTML = html;
-    drawMap();
-    lucide();
-    window.scrollTo(0,0);
-  }
-  function drawMap(){
-    var t = document.getElementById('fatemap'); if(!t) return;
-    var cols = [['n','#'],['layer','Layer'],['name','Capability'],['fear','The failure'],['fate','Fate'],['comp','Compounds?']];
-    var rows = caps.slice().sort(function(a,b){
-      var k=mapSort.key, va, vb;
-      if(k==='comp'){ va=a.compounds; vb=b.compounds; } else if(k==='fate'){ var ord={compound:0,split:1,fade:2,protect:3}; va=ord[a.fate]; vb=ord[b.fate]; } else { va=a[k]; vb=b[k]; }
-      if(va<vb) return -1*mapSort.dir; if(va>vb) return 1*mapSort.dir; return (a.n-b.n);
-    });
-    var compLabel={yes:'Yes',no:'No',partly:'Partly',builder:'No (persists)'};
-    t.innerHTML = '<thead><tr>'+cols.map(function(c){ return '<th data-k="'+c[0]+'" class="'+(mapSort.key===c[0]?'sorted':'')+'">'+c[1]+'<span class="sortcaret">'+(mapSort.key===c[0]?(mapSort.dir>0?'▲':'▼'):'↕')+'</span></th>'; }).join('')+'</tr></thead>'
-      + '<tbody>'+rows.map(function(c){
-        return '<tr onclick="location.href=\''+capHref(c.slug)+'\'">'
-          + '<td class="fm-comp">'+(c.n<10?'0'+c.n:c.n)+'</td>'
-          + '<td class="fm-layer">'+esc(c.layer)+'</td>'
-          + '<td class="fm-cap">'+esc(c.name)+'</td>'
-          + '<td class="fm-fear">'+esc(c.fear)+'</td>'
-          + '<td><span class="fm-fate '+c.fate+'"'+tip(c.fate)+'>'+fdot(c.fate,c.edge)+esc(c.fateLabel)+'</span></td>'
-          + '<td class="fm-comp">'+compLabel[c.compounds]+'</td>'
-          + '</tr>';
-      }).join('')+'</tbody>';
-    [].slice.call(t.querySelectorAll('th')).forEach(function(th){ th.onclick=function(){ var k=th.dataset.k; if(mapSort.key===k) mapSort.dir*=-1; else { mapSort.key=k; mapSort.dir=1; } drawMap(); }; });
-  }
-
   /* ============================================================ QUADRANT CLOSER (matter) */
   var SIT = { quad:null, verif:50 };
   function renderSit(){
     var html = '<div class="main-in"><section class="interactive-head">'
       + '<p class="eyebrow">04 · What should matter to you · the take-home tool</p>'
       + '<h1>Where does your agent sit?</h1>'
-      + '<p>How autonomous is your agent, how closely supervised, and how verifiable is its work? Answer and the map re-weights: the capabilities you most need glow, and the ones you may be over-building dim.</p>'
+      + '<p>How autonomous is your agent? How closely is it supervised? How verifiable is its work? Answer these, and the map re-weights. The capabilities you most need glow, and the ones you may be over-building dim.</p>'
       + '</section>'
       + fatesAccordion()
       + '<div class="quad-wrap">'
@@ -436,7 +544,7 @@
           + '<div class="quad" id="quad">'
             + '<span class="q-axis top">supervision: close</span><span class="q-axis bottom">supervision: loose</span>'
             + '<span class="q-axis left">autonomy: low</span><span class="q-axis right">autonomy: high</span>'
-            + '<div class="q-cell tl" data-q="lc"><div class="qc-t">Low autonomy<br>Close supervision</div><div class="qc-d">a watched copilot; a human is in every loop</div></div>'
+            + '<div class="q-cell tl" data-q="lc"><div class="qc-t">Low autonomy<br>Close supervision</div><div class="qc-d">a watched copilot, with a human in every loop</div></div>'
             + '<div class="q-cell tr" data-q="hc"><div class="qc-t">High autonomy<br>Close supervision</div><div class="qc-d">long runs a human still reviews at the gates</div></div>'
             + '<div class="q-cell bl" data-q="ll"><div class="qc-t">Low autonomy<br>Loose supervision</div><div class="qc-d">small tasks fired and forgotten</div></div>'
             + '<div class="q-cell br" data-q="hl"><div class="qc-t">High autonomy<br>Loose supervision</div><div class="qc-d">a fleet running unattended on real systems</div></div>'
@@ -448,7 +556,7 @@
         + '<div class="quad-side">'
           + '<div class="qs-lab">What glows for you</div>'
           + '<div class="glow-list" id="glowList"></div>'
-          + '<div class="overbuild-line" id="overbuild">Most of the map is dim. You may be over-building; for a short, single-task, well-supervised agent on verifiable work, wait for the next model rather than scaffolding against failures it will absorb.</div>'
+          + '<div class="overbuild-line" id="overbuild">Most of the map is dim. You may be over-building. For a short, single-task, well-supervised agent on verifiable work, wait for the next model rather than building scaffolding against failures it will absorb.</div>'
         + '</div>'
       + '</div></div>';
     main.innerHTML = html;
@@ -486,22 +594,31 @@
     var isMap = h.indexOf('map')>=0;
     if(SURFACE==='deepdives' && routedOnce){
       if(slug && bySlug[slug]) gcount('/cap/'+slug, bySlug[slug].name);
-      else if(isMap) gcount('/fate-map','Fate map');
+      else if(isMap) gcount('/deep-dives','Deep Dives');
     }
     routedOnce = true;
     renderRail(slug);
     if(SURFACE==='matter'){ renderSit(); return; }
     if(SURFACE==='atlas'){
       if(slug){ location.href = DEEP_PAGE+'#/cap/'+slug; return; }
-      if(isMap){ location.href = DEEP_PAGE+'#/map'; return; }
+      if(isMap){ location.href = DEEP_PAGE; return; }
       renderAtlas(); return;
     }
     // deepdives
     if(slug){ renderCap(slug); return; }
-    if(isMap){ renderMap(); return; }
+    if(isMap){ history.replaceState(null, '', location.pathname+'#/'); renderDeepIndex(); return; }
     renderDeepIndex();
   }
   window.addEventListener('hashchange', route);
+
+  (function(){
+    var t;
+    window.addEventListener('resize', function(){
+      if(!document.querySelector('.dd-stage-spine')) return;
+      clearTimeout(t);
+      t = setTimeout(drawDeepSpine, 120);
+    });
+  })();
 
   /* ---- hamburger menu (mobile) — mirrors tour-engine.js ---- */
   (function(){

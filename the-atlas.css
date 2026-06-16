@@ -50,6 +50,7 @@ main h2{font-weight:600; font-size:clamp(1.9rem,3.6vw,2.9rem); letter-spacing:-.
 
 /* ---- inputs: one row — slider + three pickers ---- */
 .scenario-controls{display:flex; flex-wrap:wrap; gap:16px 26px; align-items:flex-start; padding:14px 20px; border-bottom:1px solid var(--line); background:var(--bg-sunken)}
+.scenario-note{margin:0; padding:10px 20px; border-bottom:1px solid var(--line); font-size:.78rem; line-height:1.45; color:var(--ink-3); background:var(--bg-raised)}
 .slider-row{display:flex; gap:10px; align-items:center; margin-top:6px}
 .slider-row input[type="range"]{width:150px; accent-color:var(--live); height:16px; cursor:pointer}
 .slider-readout{color:var(--ink-2); font-size:.85rem; white-space:nowrap}
@@ -218,7 +219,7 @@ main h2{font-weight:600; font-size:clamp(1.9rem,3.6vw,2.9rem); letter-spacing:-.
 .panel-head{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px 18px; margin-bottom:6px}
 .panel-head h4{margin:0; font-size:1.25rem; letter-spacing:-.02em}
 .panel-head .cap-meta{margin-top:0; flex:0 1 auto; min-width:0; align-items:center; justify-content:flex-end}
-.panel-head .dossier{margin-left:4px}
+.panel-head .deep-dive-link{margin-left:4px}
 .panel-def{margin:0 0 13px; color:var(--ink-2); font-size:.9rem; line-height:1.5}
 @media (min-width:981px){ .explorer-body #capabilityAtlas{display:none} }
 .atlas-layer{padding:21px 18px 9px}
@@ -272,7 +273,7 @@ main h2{font-weight:600; font-size:clamp(1.9rem,3.6vw,2.9rem); letter-spacing:-.
 .lane-arrow{display:grid; place-items:center; min-width:14px; color:var(--ink-3); font-family:var(--mono); font-weight:700; font-size:15px; flex:none}
 .cap-footer{display:flex; flex-wrap:wrap; gap:7px; justify-content:space-between; align-items:center; margin-top:12px; padding-top:11px; border-top:1px solid var(--line)}
 .cap-footer small{color:var(--ink-3)}
-.dossier{color:var(--live-ink); font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.06em; text-transform:uppercase}
+.deep-dive-link{color:var(--live-ink); font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.06em; text-transform:uppercase}
 
 /* ============================================================
    6 · CLOSER
