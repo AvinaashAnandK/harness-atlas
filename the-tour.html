@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Tour · Harness Atlas</title>
+<meta name="description" content="The Tour: two real incidents, three fates, one brilliant new hire. The lens the Harness Atlas is built on, in about seven minutes. 5 layers · 24 capabilities · 147 documented incidents.">
+<link rel="stylesheet" href="fieldnote-tokens.css">
+<link rel="stylesheet" href="tour.css">
+</head>
+<body>
+
+<div class="tprog"><div class="fill"></div></div>
+
+<header class="mast">
+  <div class="mast-in">
+    <a href="index.html" class="mark">HARNESS<span class="mid">·</span><b>ATLAS</b></a>
+    <span class="sep"></span>
+    <button class="menubtn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav aria-label="Surfaces" id="mastNav">
+      <a class="cur" href="the-tour.html"><span class="nn">01</span> <span class="nlabel">The Tour</span></a>
+      <a href="the-atlas.html"><span class="nn">02</span> <span class="nlabel">The Atlas</span></a>
+      <a href="capability-deep-dives.html"><span class="nn">03</span> <span class="nlabel">Deep Dives</span></a>
+      <a href="what-should-matter-to-you.html"><span class="nn">04</span> <span class="nlabel">What Matters</span></a>
+      <a href="timeline.html"><span class="nn">05</span> <span class="nlabel">Timeline</span></a>
+    </nav>
+    <button class="t-toggle" id="themeBtn" aria-label="Toggle light and dark mode">◐ Light</button>
+  </div>
+</header>
+
+<!-- breadcrumbs: the questions the tour has resolved so far -->
+<aside class="crumbs" aria-label="What the tour has covered so far">
+  <button class="ct" id="crumbBtn" aria-expanded="false"><span class="ct-t">Resolved so far</span><span class="ct-cur" id="crumbCur"></span><span class="caret">▾</span></button>
+  <ol>
+    <li data-sec="two-failures">Failures come in two kinds: loud and silent</li>
+    <li data-sec="failures-become-fences">Failures dictate what gets built into a harness</li>
+    <li data-sec="three-fates">Only some of it becomes a moat: three fates</li>
+    <li data-sec="catching-silence">Cheap checks catch loud; judgment catches silent</li>
+    <li data-sec="new-hire">The model is a brilliant new hire: five layers</li>
+    <li data-sec="capability-anatomy">Read a capability: failure → challenge → approaches → fate</li>
+  </ol>
+</aside>
+
+<main>
+
+<!-- ============ COLD OPEN ============ -->
+<section class="cold">
+  <div class="col">
+    <span class="eyebrow">An atlas of agentic harnesses · the tour</span>
+    <h1 class="display">The harness is not the model.</h1>
+    <p class="lead">It is the <b>scaffolding around the model</b>: everything that makes an AI agent understand your company and act inside your rules. <mark>The model you rent. The harness you build.</mark></p>
+    <p class="watch">Seven minutes. It starts with two things that happened to two real agents. Watch closely.</p>
+  </div>
+</section>
+
+<!-- ============ S1 · TWO FAILURES ============ -->
+<section class="tsec" id="two-failures">
+  <div class="col">
+    <p class="kick">Two failures</p>
+    <h2>One failure shouted. The other never made a sound.</h2>
+  </div>
+
+  <!-- scrolly A: the loud one -->
+  <div class="scrolly">
+    <div class="stage">
+      <figure class="fig" data-steps="3" aria-label="A terminal trace: the agent calls a model that does not exist and the call fails immediately">
+        <div class="term">
+          <span class="ln req" data-s="1">&gt; find me a vision model for this task</span>
+          <span class="ln call" data-s="2">torch.hub.load('pytorch/vision', 'BerryPicker')</span>
+          <span class="ln err" data-s="3">RuntimeError: 'BerryPicker' does not exist</span>
+        </div>
+        <div data-s="3"><span class="stamp loud">Loud</span></div>
+        <span class="srcchip" data-s="2">
+          <a href="https://gorilla.cs.berkeley.edu/blogs/2_hallucination.html" target="_blank" rel="noopener">Source: Gorilla, Reality Bytes ↗</a>
+          <span class="prov">UC Berkeley · the first team to measure API hallucination</span>
+        </span>
+      </figure>
+    </div>
+    <div class="beats">
+      <div class="beat" data-step="2"><div class="bcard">
+        <p>An agent was asked to find a vision model. It answered with <b>total confidence</b>. One problem: <mark>BerryPicker has never existed.</mark> The model needed a tool, could not find one, and made one up on the spot.</p>
+      </div></div>
+      <div class="beat" data-step="3"><div class="bcard">
+        <p>The call fired and failed <b>the instant it ran</b>. The error is in the trace, the step-by-step log every agent run leaves behind, at the moment it happened, impossible to miss.</p>
+        <p>Call this kind <span class="loud">loud</span>.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <p>Coding agents do this constantly: ask one to run a database migration without telling it a migrate tool exists, and it calls one that is not real. Annoying? Yes. Dangerous? Not very. <mark>A loud failure carries its own alarm.</mark></p>
+    <p style="margin-top:30px">Now the second agent. An AI safety director at Meta pointed an agent at her real inbox, with one explicit instruction.</p>
+  </div>
+
+  <!-- scrolly B: the silent one -->
+  <div class="scrolly">
+    <div class="stage">
+      <figure class="fig" data-steps="5" data-hook="inbox" aria-label="A chat reenactment: the agent compresses its own memory, loses the instruction, and deletes over 200 emails while ignoring stop commands">
+        <div class="inboxfig">
+          <div class="chatcol">
+            <div class="bub user" data-s="1">Don't action anything until I tell you to.</div>
+            <div class="bub agent" data-s="2">Processing inbox. 8,000+ emails found. Categorizing…</div>
+            <div class="bub agent bad" data-s="4">Cleaning up. Deleting low-priority emails…</div>
+            <div class="delcount" data-s="4">deleted: <b>0</b></div>
+            <div class="bub user" data-s="4">Stop. Don't do anything.</div>
+            <div class="bub agent bad" data-s="4">Continuing cleanup…</div>
+          </div>
+          <div class="ctxrail" aria-hidden="true">
+            <div class="rl-t">Agent memory (context window)</div>
+            <div class="summ">summary of earlier conversation</div>
+            <div class="instrwrap" data-s="1">
+              <div class="rline instr"></div>
+              <div class="instrtag">her instruction</div>
+            </div>
+            <div class="lostnote" data-s="3">⚠ instruction lost in compression</div>
+            <div class="rline mail" data-s="2"></div>
+            <div class="rline mail" data-s="2"></div>
+            <div class="rline mail" data-s="2"></div>
+            <div class="rline mail" data-s="2"></div>
+            <div class="rline mail" data-s="2"></div>
+            <div class="rline mail" data-s="2"></div>
+            <div class="rline mail" data-s="2"></div>
+          </div>
+        </div>
+        <div data-s="5"><span class="stamp silent">Silent</span></div>
+        <span class="srcchip" data-s="2">
+          <a href="https://techcrunch.com/2026/02/23/a-meta-ai-security-researcher-said-an-openclaw-agent-ran-amok-on-her-inbox/" target="_blank" rel="noopener">Source: TechCrunch, Feb 2026 ↗</a>
+          <span class="prov">Reported by Julie Bort · she ended it by pulling the plug</span>
+        </span>
+      </figure>
+    </div>
+    <div class="beats">
+      <div class="beat" data-step="1"><div class="bcard">
+        <p><b>"Don't action anything until I tell you to."</b></p>
+        <p>The instruction lands in the agent's memory, the <span class="instr-ref">blue line</span> in the memory panel. Keep your eye on it.</p>
+      </div></div>
+      <div class="beat" data-step="2"><div class="bcard">
+        <p>The inbox was huge. Processing <b>8,000 emails</b> started filling the agent's memory toward its limit.</p>
+      </div></div>
+      <div class="beat" data-step="3"><div class="bcard">
+        <p>The agent's memory hit its limit, so the harness did what harnesses do: it <b>compressed the oldest context</b> to make room.</p>
+        <p><mark>The blue line is gone.</mark> The instruction did not survive the compression. No error. No warning. A routine maintenance operation just deleted the only rule that mattered.</p>
+      </div></div>
+      <div class="beat" data-step="4"><div class="bcard">
+        <p>The agent started deleting. <b>200+ emails.</b> She typed stop. It kept going. She pulled the plug. From the wall.</p>
+        <p>Asked afterward if it remembered the instruction: <i>yes</i>, it said. <i>And I violated it.</i></p>
+      </div></div>
+      <div class="beat" data-step="5"><div class="bcard">
+        <p><mark>Now find the moment it went wrong. There is no red line.</mark> Every step after the compression looked like an agent doing its job. <mark>The damage surfaced in the world, not in the trace.</mark></p>
+        <p>Call this kind <span class="silent">silent</span>.</p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S2 · FAILURES BECOME FENCES ============ -->
+<section class="tsec" id="failures-become-fences">
+  <div class="col">
+    <p class="kick">Failures become fences</p>
+    <h2>How do you make sure a failure never repeats? You build a fence around it, into the harness.</h2>
+    <p>Anthropic's harness team says it plainly: <a href="https://www.anthropic.com/engineering/harness-design-long-running-apps" target="_blank" rel="noopener">every component in a harness encodes an assumption about what the model cannot do on its own</a>. <mark>A harness is an accumulation of catches</mark>: each one a failure somebody saw, understood, and codified so it cannot repeat. Here is one famous catch being born.</p>
+  </div>
+
+  <div class="scrolly">
+    <div class="stage">
+      <figure class="fig" data-steps="3" aria-label="Three steps: an incident, the catch designed for it, and the rule codified into the harness">
+        <div class="fence">
+          <div class="fstep f1" data-s="1">
+            <span class="fk">Failure</span>
+            <p>An agent at Replit deleted a <b>production database</b> during an explicit code freeze. Its explanation: it panicked at an empty query result.</p>
+          </div>
+          <div class="farrow" data-s="2">↓</div>
+          <div class="fstep f2" data-s="2">
+            <span class="fk">Catch</span>
+            <p>A gate: a <b>planning-only mode</b> that holds the agent in read-only until a human signs off.</p>
+          </div>
+          <div class="farrow" data-s="3">↓</div>
+          <div class="rulefile" data-s="3">
+            <span class="rf-t">harness rules · grows by one</span>
+            deny: production migrations without approval<br>
+            deny: bulk deletes without approval<br>
+            <span class="newrule">+ require: plan approved by human before any irreversible action</span>
+          </div>
+        </div>
+        <span class="srcchip" data-s="1">
+          <a href="https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/" target="_blank" rel="noopener">Source: Fortune, Jul 2025 ↗</a>
+          <span class="prov">Jason Lemkin's database · Replit's CEO announced the planning-mode fix</span>
+        </span>
+      </figure>
+    </div>
+    <div class="beats">
+      <div class="beat" data-step="1"><div class="bcard">
+        <p>July 2025. An agent at Replit wipes a founder's <b>production database</b> during a code freeze, then explains that it panicked.</p>
+        <p>Months of records, gone in seconds. A silent failure: no test could have fired, and the action was the outcome.</p>
+      </div></div>
+      <div class="beat" data-step="2"><div class="bcard">
+        <p>Replit's fix was <b>not a smarter model</b>.</p>
+        <p>It was a gate. A planning-only mode that physically holds the agent in read-only until a human approves the plan. The catch sits <mark>outside the agent's judgment</mark>, where no amount of confidence can talk past it.</p>
+      </div></div>
+      <div class="beat" data-step="3"><div class="bcard">
+        <p>And then the catch was <b>codified</b>. A standing rule the agent cannot un-learn, cannot compress away, cannot argue with.</p>
+        <p><mark>Failure → catch → codified.</mark> That is the loop. Run it for two years and your harness is a runbook no competitor can copy in a weekend.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="col">
+    <p>The asymmetry: a <span class="loud">loud</span> failure hands everyone the catch for free, because any team running the same model hits the same error and ships the same fix. A <span class="silent">silent</span> failure hands you nothing. <mark>The team that learns to catch it anyway is building something rivals cannot copy.</mark></p>
+    <p>But a catch is only worth keeping while its failure exists. So ask of any piece of scaffolding: <b>what happens to its failure over time?</b> That question gives every capability one of three fates.</p>
+  </div>
+</section>
+
+<!-- ============ S3 · THREE FATES ============ -->
+<section class="tsec" id="three-fates">
+  <div class="col">
+    <p class="kick">Three fates</p>
+    <h2>Not everything you build becomes a moat. The test is what happens to the failure that forced it.</h2>
+  </div>
+
+  <div class="scrolly">
+    <div class="stage">
+      <figure class="fig" data-steps="4" aria-label="Three fate cards: may fade, compounds, protects the builder, then examples of builder-protecting walls across products">
+        <div class="fates">
+          <div class="fategroup" data-s="1">
+            <span class="fglab">What happens to the failure over time?</span>
+            <div class="fate gray">
+              <span class="ft"><span class="fdot fade"></span>May fade</span>
+              <span class="born">born from a <b>loud</b> failure</span>
+              <p>The next model stops making the mistake, and the scaffolding gets deleted as dead weight.</p>
+              <span class="srcchip">
+                <a href="https://www.anthropic.com/engineering/harness-design-long-running-apps" target="_blank" rel="noopener">Source: Anthropic ↗</a>
+                <span class="prov">Harness design, on the record</span>
+              </span>
+            </div>
+            <div class="fate teal" data-s="2">
+              <span class="ft"><span class="fdot compound"></span>Compounds</span>
+              <span class="born">born from a <b>silent</b> failure</span>
+              <p>The next model cannot absorb what it cannot see, so the catches stack, year after year.</p>
+              <span class="srcchip">
+                <a href="https://justin3go.com/en/posts/2026/04/09-context-compaction-in-codex-claude-code-and-opencode" target="_blank" rel="noopener">Source: leaked-source teardown ↗</a>
+                <span class="prov">A single teardown of the Mar 2026 leak · strong but not independently audited</span>
+              </span>
+            </div>
+          </div>
+          <div class="fate amber sep" data-s="3">
+            <span class="ft"><span class="fdot protect"></span>Protects builder</span>
+            <p class="bigq">The third kind is not about success or failure in a task at all. These are guardrails that protect the team that ships the agent.</p>
+            <div class="vchips">
+              <span class="vchip"><b>Claude Code:</b> <i>decoy tools and billing filters, against rival harnesses like OpenClaw and distillation attempts</i></span>
+              <span class="vchip"><b>Notion-style memory:</b> <i>what the agent learned about you, stored as a blob you cannot read or migrate</i></span>
+            </div>
+          </div>
+          <div class="splitnote" data-s="4"><span class="fdot fade" style="box-shadow:0 0 0 2px var(--fate-compound)"></span><span>A few capabilities <b>split</b>: part fades, part compounds. The atlas marks those too.</span></div>
+        </div>
+      </figure>
+    </div>
+    <div class="beats">
+      <div class="beat" data-step="1"><div class="bcard">
+        <p>Some scaffolding <b class="loud">may fade</b>, and that is fine. It was born from a <b>loud</b> failure, and loud failures train their own fixes.</p>
+        <p>Real example: Anthropic built "context resets" because one model started <i>wrapping up work early</i> as it neared its memory limit. The next model stopped doing that. <mark>The resets were deleted as dead weight.</mark> On the record.</p>
+      </div></div>
+      <div class="beat" data-step="2"><div class="bcard">
+        <p>Some scaffolding <b class="silent">compounds</b>. It was born from a <b>silent</b> failure, the kind you just watched eat an inbox, and a smarter model cannot absorb a failure it cannot see.</p>
+        <p>Real example: Claude Code's memory-compression safeguards grew tier by tier, each tier added by a documented incident. <mark>Nothing on that list has ever been removed by a better model.</mark></p>
+      </div></div>
+      <div class="beat" data-step="3"><div class="bcard">
+        <p>And some scaffolding was <b class="amber">never about your task at all</b>, and not about your safety either. The walls that stop the agent harming people protect <b>you</b>, and they compound like any silent catch. This third kind is the team that ships the agent protecting <b>its own business</b>: commercial walls, so a rival cannot clone the model or run it on the cheap plan.</p>
+        <p>Claude Code ships decoy tools and billing filters against rival harnesses and distillation. A Notion-style agent keeps its memory of you in a blob you cannot migrate. <mark>And from inside a session, these walls look identical to the ones protecting you.</mark> Learning to spot whose wall you just hit is part of reading any harness you rent.</p>
+      </div></div>
+      <div class="beat" data-step="4"><div class="bcard">
+        <p>One wrinkle before we move on: a few capabilities <b>split</b>, part fades, part compounds. The atlas tags every capability with its fate, so you always know which kind you are looking at.</p>
+      </div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ S4 · CATCHING SILENCE (detour) ============ -->
+<section class="tsec" id="catching-silence">
+  <div class="col">
+    <p class="kick">Catching silence</p>
+    <h2>Loud failures are cheap to catch. Silent ones need expert judgment.</h2>
+    <p>For anything your agent produces, ask one question: <mark>how cheaply can a wrong answer be caught?</mark> A failing test costs milliseconds. A churned customer costs weeks. A bad judgment call may never be caught at all.</p>
+    <p>The cheap end yields to <b>programmatic checks</b>: rules and classifiers that run on everything for near nothing. The expensive end needs an <b>expert's opinion</b>: a labelled dataset, or an expert's rubric codified into an LLM-as-Judge.</p>
+
+    <details class="detour">
+      <summary><span class="dk">Detour · 2 min</span> How do you actually catch failures? Open if you want the machinery.</summary>
+      <div class="detour-in">
+
+        <div class="dcol cheap">
+          <span class="dh"><span class="fdot fade"></span>A checker exists · cheap to catch</span>
+          <div class="vlist">
+            <div class="vrow"><span class="vout">the test passes or fails</span><span class="verdict auto">✓ checker</span></div>
+            <div class="vrow"><span class="vout">the payment clears or bounces</span><span class="verdict auto">✓ checker</span></div>
+            <div class="vrow"><span class="vout">the schema validates or it does not</span><span class="verdict auto">✓ checker</span></div>
+          </div>
+          <p>The outcome is <b>objective</b>: a machine can verify it with no taste and no judgment. BerryPicker was caught by the runtime itself, for free.</p>
+          <p>Build these first: <b>classifiers and algorithmic rules</b> that run on every interaction at near-zero cost. A regex that flags a promised refund. A classifier that scores toxicity. A rule that blocks a DROP TABLE.</p>
+        </div>
+
+        <div class="dcol dear">
+          <span class="dh"><span class="fdot compound"></span>No checker exists · expensive to catch</span>
+          <div class="vlist">
+            <div class="vrow"><span class="vout">was the refactor good design?</span><span class="verdict shrug">no checker</span></div>
+            <div class="vrow"><span class="vout">was that the right reply to a furious customer?</span><span class="verdict shrug">no checker</span></div>
+            <div class="vrow expertrow"><span class="vout">someone who knows what good looks like labels it by hand</span><span class="verdict expert">expert</span></div>
+          </div>
+          <p>The outcome is a <b>judgment</b>. Until an expert marks it, you do not even know a failure occurred. It exists, unrecorded, waiting for someone qualified to go looking.</p>
+          <p>You need <b>human judgment</b>, or you codify that judgment into an <b>LLM-as-Judge</b>: a model graded against human raters, then run at scale, then audited so it does not drift.</p>
+        </div>
+
+        <div class="dspectrum">
+          <span class="dh2">Every domain has both kinds. Domains just lean.</span>
+          <div class="spec">
+            <div class="spec-ends"><span>objective · checkers everywhere</span><span>subjective · judgment everywhere</span></div>
+            <div class="spec-rows">
+              <div class="sprow"><span class="spname">Data pipelines</span><span class="spbar"><i class="o" style="width:86%"></i><i class="s" style="width:14%"></i></span></div>
+              <div class="sprow"><span class="spname">Coding</span><span class="spbar"><i class="o" style="width:64%"></i><i class="s" style="width:36%"></i></span></div>
+              <div class="sprow"><span class="spname">Support</span><span class="spbar"><i class="o" style="width:36%"></i><i class="s" style="width:64%"></i></span></div>
+              <div class="sprow"><span class="spname">Recommendations</span><span class="spbar"><i class="o" style="width:15%"></i><i class="s" style="width:85%"></i></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dnote"><b>The line runs through every domain, not between them.</b> A green build can still ship a cross-repo design bug, and a DROP TABLE on production has no green checkmark. Judge each outcome, not each industry. And the labels are real infrastructure: Shopify froze sets of expert-labelled shops just to measure whether its agent's understanding had failed. <a href="https://shopify.engineering/building-production-ready-agentic-systems" target="_blank" rel="noopener">The labels came first ↗</a></div>
+
+        <div class="dreads">
+          <span class="dh2">The full playbook, if you want it:</span>
+          <a class="dread" href="https://avinaashanandk926279.substack.com/p/evaluating-ai-agents-in-2026-what" target="_blank" rel="noopener">
+            <b>Evaluating AI Agents in 2026: What to Use and When ↗</b>
+            <span>Classifiers, rules, human review, LLM-as-Judge: which catching machinery fits which failure, with costs.</span>
+          </a>
+        </div>
+      </div>
+    </details>
+
+    <aside class="audit">
+      <div class="ak">Try this on your own system</div>
+      <p>Pull your agent's last ten failures. Ask of each one: <b>did anything announce this at the moment it happened?</b></p>
+      <p>You get two piles. The loud pile, the next model will probably absorb; do not over-build there. The silent pile is yours forever, and that is where your scaffolding belongs. <mark>The piles are your roadmap.</mark></p>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ S5 · THE NEW HIRE ============ -->
+<section class="tsec" id="new-hire">
+  <div class="col">
+    <p class="kick">The mental model</p>
+    <h2>You have sorted your failures. You are building capabilities to fence them. Where does each capability sit?</h2>
+    <p>Treat the model as a <mark>brilliant new hire</mark>. Overused as metaphors go, but it is the only one that maps every risk to a fix. Every attribute that makes the hire impressive comes with a matching risk, and every risk points at a capability the harness must supply.</p>
+  </div>
+
+  <div class="scrolly">
+    <div class="stage">
+      <figure class="fig hirefig" data-steps="4" aria-label="Five hire traits; zoom into the first, its fixing capabilities appear inside it, collapse into the Brain layer, then every trait gets its layer">
+        <div class="traitgrid">
+          <div class="trait t1">
+            <span class="attr">Knows everything in general</span>
+            <span class="risk">and nothing about your company</span>
+            <span class="fixlab">↳ the capabilities the harness builds for this risk</span>
+            <ol class="fixlist">
+              <li><b>Teaches</b> it the world it operates in</li>
+              <li><b>Shows</b> it what is in its toolbox</li>
+              <li><b>Decides</b> when to split the job</li>
+              <li><b>Makes it plan</b> before acting</li>
+              <li><b>Sizes</b> how hard to think</li>
+            </ol>
+            <span class="zoomline">Five fixes, one job: <b>getting the hire oriented</b>. That bucket has a name.</span>
+            <span class="bucketchip"><i data-lucide="compass"></i>L1 · The Brain</span>
+          </div>
+          <div class="trait t2">
+            <span class="attr">Can use real tools</span>
+            <span class="risk">but cannot feel what is irreversible</span>
+            <span class="bucketchip"><i data-lucide="hand"></i>L2 · The Hands</span>
+          </div>
+          <div class="trait t3">
+            <span class="attr">Works brilliantly all day</span>
+            <span class="risk">then wakes up with amnesia</span>
+            <span class="bucketchip"><i data-lucide="database"></i>L3 · Coherence</span>
+          </div>
+          <div class="trait t4">
+            <span class="attr">Sees a thousand mistakes</span>
+            <span class="risk">and learns from none of them</span>
+            <span class="bucketchip"><i data-lucide="trending-up"></i>L4 · Feedback</span>
+          </div>
+          <div class="trait t5">
+            <span class="attr">Follows every rule it is given</span>
+            <span class="risk">but cannot tell whose rules protect whom</span>
+            <span class="bucketchip"><i data-lucide="ban"></i>L5 · Limitations</span>
+          </div>
+        </div>
+      </figure>
+    </div>
+    <div class="beats">
+      <div class="beat" data-step="1"><div class="bcard">
+        <p>Five attributes that make the hire impressive. Five matching risks, in red. <b>Read each card as attribute, then risk.</b></p>
+      </div></div>
+      <div class="beat" data-step="2"><div class="bcard">
+        <p>Take the first risk: <b>knows nothing about your company.</b> The harness answers with a set of capabilities: one <mark>teaches the agent the world it operates in</mark>, one shows it its toolbox, one decides when to split a job, one makes it plan first, one decides how much reasoning to spend.</p>
+      </div></div>
+      <div class="beat" data-step="3"><div class="bcard">
+        <p>Five fixes, one job: <b>getting the hire oriented</b>. So they live in one bucket, and the bucket has a name: <mark>the Brain</mark>.</p>
+      </div></div>
+      <div class="beat" data-step="4"><div class="bcard">
+        <p>Run the same lens over the other four risks and you get <b>Hands, Coherence, Feedback, Limitations</b>. Five layers, twenty-four capabilities. And a new model is this same hire again: <mark>smarter every generation, just as new every generation.</mark></p>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S7 · READING A CAPABILITY + THE ATLAS ============ -->
+<section class="tsec" id="capability-anatomy">
+  <div class="col">
+    <p class="kick">Reading the atlas</p>
+    <h2>How to read any capability: start at the failure, end at its fate.</h2>
+    <p>Over the past year and a half we surveyed how harnesses grew: release notes, teardowns, incident reports, postmortems. <mark>147 documented incidents, organized into an atlas.</mark> And the atlas is organized exactly the way you just learned it: five layers, and inside each layer, its capabilities.</p>
+    <p>Each capability is one question the harness answers to orient the model, and the name the atlas gives it:</p>
+    <div class="qpair">
+      <div class="qrow"><span class="qq">"What is this project, and what are the rules of the world I'm operating in?"</span><span class="qcapn">Identity and Context</span></div>
+      <div class="qrow"><span class="qq">"What can I actually do right now, and what's in my toolbox?"</span><span class="qcapn">Tool Discovery</span></div>
+    </div>
+    <p>The other twenty-two unpack the same way. Open any capability and you get the same four things, in the same order. Here is Identity and Context, read the way you will read all twenty-four.</p>
+  </div>
+
+  <div class="scrolly">
+    <div class="stage">
+      <figure class="fig" data-steps="4" aria-label="One capability page unfolding: the cited failure, the challenge distilled from it, the approach families, and the fate">
+        <div class="capopen">
+          <div class="co-block" data-s="1" style="border-top:0;padding-top:0">
+            <span class="co-lab">1 · The failure that forces it</span>
+            <p>Atlassian benchmarked Claude Code with and without its Teamwork Graph. Blind, the agent guesses and hallucinates with full confidence. Grounded in the graph, it found cross-repo dependencies on its own: <b>44% more accurate, on 48% fewer tokens</b> (the units models read and bill by).</p>
+            <a class="co-src" href="https://www.atlassian.com/blog/company-news/teamwork-graph-team-26" target="_blank" rel="noopener">Atlassian, Team '26 ↗</a>
+          </div>
+          <div class="co-block" data-s="2">
+            <span class="co-lab">2 · The challenge, distilled</span>
+            <div class="co-head">
+              <span class="co-name">Identity and Context</span>
+              <span class="fbadge"><span class="fdot compound"></span>Compounds</span>
+            </div>
+            <p class="co-q">What is this project, and what are the rules of the world I'm operating in?</p>
+          </div>
+          <div class="co-block" data-s="3">
+            <span class="co-lab">3 · The approaches harnesses take · tap a family to open it</span>
+            <details class="co-famx">
+              <summary><b>Rules files in context</b><span class="co-chips">Claude Code · Codex · Cursor · Gemini CLI</span></summary>
+              <div class="lineage">
+                <div class="lstep"><b>1 · One file</b><small><span class="kw">AGENTS.md</span>, "a README for agents": adopted by <span class="kw">60,000+ projects</span>, read natively by Codex, Cursor, Windsurf, Devin and more.</small></div>
+                <div class="lstep"><b>2 · A hierarchy with precedence</b><small><span class="kw">CLAUDE.md</span>: global → project → folder → an <span class="kw">enterprise layer</span> nothing below can override. Reloaded from disk every turn.</small></div>
+                <div class="lstep"><b>3 · Rules that load only where they apply</b><small><span class="kw">Glob-scoped</span>: a rule in src/auth loads only when the agent works there, so the always-on cost stays small.</small></div>
+              </div>
+            </details>
+            <div class="co-par">· parallel bet, often run together ·</div>
+            <details class="co-famx" open>
+              <summary><b>External knowledge graph</b><span class="co-chips">Atlassian · Sourcegraph · Aider · Microsoft</span></summary>
+              <div class="lineage">
+                <div class="lstep"><b>Org graph</b><small>Atlassian's <span class="kw">Teamwork Graph</span>: <span class="kw">150B+ objects</span> and relationships across Jira, Confluence and connected tools, queried with permissions intact.</small></div>
+                <div class="lstep"><b>Code graph</b><small><span class="kw">Aider</span> parses every file, ranks symbols by how often the rest of the code references them, and ships the top of that graph in <span class="kw">about 1k tokens</span>.</small></div>
+                <div class="lstep"><b>Document graph</b><small>Microsoft's <span class="kw">GraphRAG</span>: an entity graph built over your documents, answering the connect-the-dots questions plain retrieval misses.</small></div>
+              </div>
+            </details>
+          </div>
+          <div class="co-fate" data-s="4"><span class="fdot compound"></span>4 · How it ages: the failure is silent and the model's statelessness is permanent. This one compounds.</div>
+        </div>
+      </figure>
+    </div>
+    <div class="beats">
+      <div class="beat" data-step="1"><div class="bcard">
+        <p>Start at the <b>failure mode</b>, always cited. Atlassian ran the cleanest version of this experiment: two identical agents, same repo, same task. The one without org context <mark>guessed at the database's layout and would have shipped the bug</mark>. The one with it found the hidden dependency.</p>
+      </div></div>
+      <div class="beat" data-step="2"><div class="bcard">
+        <p>Distill the failure and you get the <b>challenge</b>: the one question this capability exists to answer. The atlas states it on every page, with the capability's name and its fate badge.</p>
+      </div></div>
+      <div class="beat" data-step="3"><div class="bcard">
+        <p>Then the <b>approaches</b> different harnesses take: <mark>parallel bets</mark>, often run together. Rules files in the prompt is one family. An external knowledge graph is another. Teams run both.</p>
+        <p>Tap either family open: each is a lineage of bets, with the harnesses that run it. The atlas holds the full version, sources and all.</p>
+      </div></div>
+      <div class="beat" data-step="4"><div class="bcard">
+        <p>And finally, <b>how the capability has aged</b>: did better models thin it out, or did the catches stack? That is its fate, argued from the incidents, not asserted.</p>
+        <p><mark>Failure → challenge → approaches → fate.</mark> Same anatomy, twenty-four times.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="colw" id="assembled-atlas">
+    <figure class="fig" data-steps="1" aria-label="The assembled atlas: concentric layer rings with 24 capability nodes colored by fate">
+      <div class="shellsfig" data-s="1">
+        <div class="shellleft">
+          <div class="shells-wrap" id="shellsWrap">
+            <svg class="shells-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Five concentric rings with capability nodes"></svg>
+            <div class="shells-core">model<br>core</div>
+          </div>
+          <p class="nodehint">Tap any node to know more.</p>
+        </div>
+        <div class="shellside">
+          <div class="nodename" id="nodeName"></div>
+        </div>
+      </div>
+    </figure>
+  </div>
+
+  <div class="col">
+    <div class="handoff">
+      <p class="dim" style="margin-bottom:6px"><span class="eyebrow">Where to next</span></p>
+      <p>This is the whole machine: a model at the core, five layers around it, twenty-four capabilities, each one a question the harness answers. <b>The Atlas has the rest</b>: every capability, its incidents, its approaches, its fate. Open it anywhere; every page stands alone.</p>
+      <a class="cta-open" href="the-atlas.html">Open the Atlas <span class="arr">→</span></a>
+      <p class="also">And carry one question in: where does <b>your</b> agent sit? How autonomous, how supervised, how verifiable is its work? <a href="what-should-matter-to-you.html">What Should Matter to You</a> re-weights the map for your answers.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="col">
+    <p class="mono">The Tour · Harness Atlas · 5 layers · 24 capabilities · 147 documented incidents</p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="tour-engine.js"></script>
+<script>if(window.lucide) lucide.createIcons();</script>
+<!-- analytics: GoatCounter (cookieless) -->
+<script data-goatcounter="https://harness-atlas.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

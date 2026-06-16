@@ -3,9 +3,11 @@
    Paste-ready copy from the L1-L5 content packs. URLs verbatim.
    Fate vocabulary mapping (research term -> plain UI fate):
      silent-structural   -> Compounds   (compound)
-     loud-staleable      -> Fades       (fade)
-     commercial-defensive-> Protects the builder (protect)
+     loud-staleable      -> May fade    (fade)        [UI label softened to a hypothesis; was "Fades"]
+     commercial-defensive-> Protects builder (protect)
      split / mixed       -> Split       (split)
+   Fate is framed as an investment hypothesis ("a lens, not a law"), so the
+   loud/staleable label reads "May fade", matching 02 Atlas v2 + 03 Deep Dives.
    ============================================================ */
 window.ATLAS = {
   harnesses: [
@@ -13,7 +15,7 @@ window.ATLAS = {
     {key:'replit', name:'Replit'}, {key:'openclaw', name:'OpenClaw'},
     {key:'codex', name:'Codex'}, {key:'shopify', name:'Shopify'},
     {key:'fin', name:'Intercom Fin'}, {key:'google', name:'Google'},
-    {key:'langchain', name:'LangChain'}
+    {key:'langchain', name:'LangChain'}, {key:'atlassian', name:'Atlassian'}
   ],
   layers: [
     {num:1, name:'Brain', icon:'brain', q:'How does the agent know the world it operates in?', principle:'Trust the model to reason',
@@ -61,13 +63,13 @@ window.ATLAS.caps.push({
   ],
   families:[
     {label:'Family A · In-context instruction / rules files', bet:'persistent, team-authored instructions injected into the prompt every turn', nodes:[{name:'Single flat file', desc:'One plain text file of project rules the agent reads each time; used by 60k-plus projects.', usedBy:['codex', 'cursor', 'openclaw'], rel:'Baseline of Family A'}, {name:'File hierarchy with scopes and precedence', desc:'Layered rule files from company-wide down to one folder; the closest, most specific one wins.', usedBy:['claude-code', 'codex', 'google'], rel:'Builds on the flat file; adds scope and the un-overridable enterprise layer'}, {name:'Dynamic path-scoped loading (glob-matched)', desc:'Load a rule only when the agent opens files it covers, to save space the rest of the time.', usedBy:['cursor', 'claude-code'], rel:'Builds on the hierarchy'}]},
-    {label:'Family B · External knowledge / code graph', bet:'move context out of static files into a queryable, permission-aware store of relationships', nodes:[{name:'Org-owned relationship graph', desc:'A company-wide map of how 150 billion-plus items connect, searchable and respecting who can see what.', usedBy:['google'], rel:'Baseline of Family B; parallel to A and C'}, {name:'Code graph', desc:'A parsed map of the code\'s structure, so the agent can see how files connect.', usedBy:[], rel:'Parallel within Family B'}, {name:'LLM-built knowledge graph (GraphRAG)', desc:'An LLM reads the material, writes the map of how things relate, then answers from it.', usedBy:[], rel:'Parallel within Family B; the bridge to Family C'}, {name:'Org-owned structured stores', desc:'A reliable company database the agent trusts as fact: a customer list, product categories, a price table.', usedBy:['shopify'], rel:'Parallel within Family B; the simplest form, no graph traversal'}]},
+    {label:'Family B · External knowledge / code graph', bet:'move context out of static files into a queryable, permission-aware store of relationships', nodes:[{name:'Org-owned relationship graph', desc:'A company-wide map of how 150 billion-plus items connect, searchable and respecting who can see what.', usedBy:['atlassian'], rel:'Baseline of Family B; parallel to A and C'}, {name:'Code graph', desc:'A parsed map of the code\'s structure, so the agent can see how files connect.', usedBy:[], rel:'Parallel within Family B'}, {name:'LLM-built knowledge graph (GraphRAG)', desc:'An LLM reads the material, writes the map of how things relate, then answers from it.', usedBy:[], rel:'Parallel within Family B; the bridge to Family C'}, {name:'Org-owned structured stores', desc:'A reliable company database the agent trusts as fact: a customer list, product categories, a price table.', usedBy:['shopify'], rel:'Parallel within Family B; the simplest form, no graph traversal'}]},
     {label:'Family C · Semantic / embedding RAG', bet:'do not pre-load; retrieve on demand by similarity', nodes:[{name:'Codebase / docs embedding index', desc:'Break docs into chunks and fetch the closest matches per question; Claude Code chose not to do this.', usedBy:['cursor'], rel:'Baseline of Family C; parallel to A and B'}, {name:'Team-authored KB plus retrieval and rerank', desc:'Search a curated team knowledge base by meaning, then re-sort the hits for the best match.', usedBy:['fin'], rel:'Builds on the index; combines with Family B'}]}
   ],
   whyFate:'Every documented failure here is silent, or silent on the way in and loud only once a human or downstream system catches it: the blind agent guesses, Fin delivers wrong answers at scale with no warning label, Claudius declined free money politely. The model never sees the gap, because the gap is knowledge it was never given and cannot miss. A failure that does not stumble is not absorbed by a better model, and it gets more dangerous as the model improves: a more fluent, more confident model ships its wrong assumption further, and Project Vend shows the failure mode is the model being too helpful, a property that scales up. The need is permanent but the format moves, migrating from flat files toward queryable, permission-aware graphs, and nobody re-platforms a capability the next model is about to make unnecessary. The scaffolding accretes and becomes the moat.',
   forward:{cap:'Tool Discovery', teaser:'context tells the agent where it is; next is what it can actually do.'},
   thinSpot:'The blind-vs-equipped Atlassian narrative, with the hallucinated data model and the would-have-shipped duplicate-notification bug, rests on an unverifiable LinkedIn post; the failure class and the 44%/48% benchmark are corroborated by primary Atlassian material and The New Stack. The Cursor ~90% figure is one practitioner\'s claim, not a Cursor metric, and the Intercom Fin specifics all trace to a single third-party analysis, so treat those numbers as illustrative of the failure class rather than verified incidents.',
-  harnesses:['claude-code', 'cursor', 'codex', 'openclaw', 'shopify', 'fin', 'google']
+  harnesses:['claude-code', 'cursor', 'codex', 'openclaw', 'shopify', 'fin', 'google', 'atlassian']
 });
 
 window.ATLAS.caps.push({
@@ -116,7 +118,7 @@ window.ATLAS.caps.push({
   layer:'Brain',
   layerNum:1,
   fate:'fade',
-  fateLabel:'Fades',
+  fateLabel:'May fade',
   research:'loud-staleable, with a relocation twist',
   compounds:'no',
   fateSub:'a loud failure the next model absorbs',
@@ -822,7 +824,7 @@ window.ATLAS.caps.push({
   layer:'Limitations',
   layerNum:5,
   fate:'protect',
-  fateLabel:'Protects the builder',
+  fateLabel:'Protects builder',
   research:'commercial-defensive (the class definer)',
   compounds:'builder',
   fateSub:'a wall the builder raises for its own commercial or legal reasons',

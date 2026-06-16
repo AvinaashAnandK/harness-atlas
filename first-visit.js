@@ -72,12 +72,12 @@
         '<p class="fv-body">' + c.body + '</p>' +
         '<div class="fv-fates">' +
           '<span class="fv-fate"><span class="fdot compound"></span><span><b>Compounds</b> &middot; a silent failure, caught and encoded. Can become the moat.</span></span>' +
-          '<span class="fv-fate"><span class="fdot fade"></span><span><b>Fades</b> &middot; a loud failure the next model absorbs. Build it lightly.</span></span>' +
-          '<span class="fv-fate"><span class="fdot protect"></span><span><b>Protects the builder</b> &middot; raised for the agent-building team’s own reasons, not yours.</span></span>' +
+          '<span class="fv-fate"><span class="fdot fade"></span><span><b>May fade</b> &middot; a loud failure a better model may absorb. Build it lightly.</span></span>' +
+          '<span class="fv-fate"><span class="fdot protect"></span><span><b>Protects builder</b> &middot; raised for the agent-building team’s own reasons, not yours.</span></span>' +
         '</div>' +
         '<p class="fv-foot">' + c.foot + '</p>' +
         '<div class="fv-btns">' +
-          '<a class="fv-btn go" href="01-the-tour.html" id="fvGo">Take the 7-minute tour</a>' +
+          '<a class="fv-btn go" href="the-tour.html" id="fvGo">Take the 7-minute tour</a>' +
           '<button class="fv-btn skip" id="fvSkip" type="button">Skip, just browse</button>' +
         '</div>' +
       '</div>';

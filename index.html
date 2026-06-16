@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Harness Atlas</title>
-<meta name="description" content="An atlas of agentic AI harnesses: the capabilities every serious harness ends up building, the cited failures that force each one into existence, and which of these investments last. 5 layers · 24 capabilities · 140+ documented incidents.">
+<meta name="description" content="An atlas of agentic AI harnesses: the capabilities every serious harness ends up building, the cited failures that force each one into existence, and which of these investments last. 5 layers · 24 capabilities · 147 documented incidents.">
 <link rel="stylesheet" href="fieldnote-tokens.css">
 <link rel="stylesheet" href="atlas.css">
 <link rel="stylesheet" href="landing.css">
@@ -15,12 +15,13 @@
   <div class="mast-in">
     <a href="index.html" class="mark">HARNESS<span class="mid">·</span><b>ATLAS</b></a>
     <span class="sep"></span>
-    <nav aria-label="Surfaces">
-      <a href="01-the-tour.html"><span class="nn">01</span> <span class="nlabel">The Tour</span></a>
-      <a href="02-the-atlas.html"><span class="nn">02</span> <span class="nlabel">The Atlas</span></a>
-      <a href="03-capability-deep-dives.html"><span class="nn">03</span> <span class="nlabel">Deep Dives</span></a>
-      <a href="04-what-should-matter-to-you.html"><span class="nn">04</span> <span class="nlabel">What Matters</span></a>
-      <a href="05-timeline.html"><span class="nn">05</span> <span class="nlabel">Timeline</span></a>
+    <button class="menubtn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav aria-label="Surfaces" id="mastNav">
+      <a href="the-tour.html"><span class="nn">01</span> <span class="nlabel">The Tour</span></a>
+      <a href="the-atlas.html"><span class="nn">02</span> <span class="nlabel">The Atlas</span></a>
+      <a href="capability-deep-dives.html"><span class="nn">03</span> <span class="nlabel">Deep Dives</span></a>
+      <a href="what-should-matter-to-you.html"><span class="nn">04</span> <span class="nlabel">What Matters</span></a>
+      <a href="timeline.html"><span class="nn">05</span> <span class="nlabel">Timeline</span></a>
     </nav>
     <button class="t-toggle" id="themeBtn" aria-label="Toggle light and dark mode">◐ Light</button>
   </div>
@@ -55,7 +56,7 @@
       <div class="scaleline">
         <span><span class="num">5</span> layers</span><span class="dot">·</span>
         <span><span class="num">24</span> capabilities</span><span class="dot">·</span>
-        <span><span class="num">140+</span> documented incidents</span>
+        <span><span class="num">147</span> documented incidents</span>
       </div>
       <p class="honesty">Every failure in this atlas is a real, cited incident. No hypotheticals. Where a claim could not be verified against a primary source, the atlas says so.</p>
     </section>
@@ -67,7 +68,7 @@
     <div class="doors-head"><span class="k">Five ways in</span></div>
     <div class="doors">
 
-      <a class="door" href="01-the-tour.html">
+      <a class="door" href="the-tour.html">
         <span class="door-n">01</span>
         <span class="door-ico"><i data-lucide="route"></i></span>
         <h3 class="door-name">The Tour</h3>
@@ -76,7 +77,7 @@
         <span class="door-cta">Take the tour <span class="ar">-&gt;</span></span>
       </a>
 
-      <a class="door" href="02-the-atlas.html">
+      <a class="door" href="the-atlas.html">
         <span class="door-n">02</span>
         <span class="door-ico"><i data-lucide="layout-grid"></i></span>
         <h3 class="door-name">The Atlas</h3>
@@ -85,7 +86,7 @@
         <span class="door-cta">Open the atlas <span class="ar">-&gt;</span></span>
       </a>
 
-      <a class="door" href="03-capability-deep-dives.html">
+      <a class="door" href="capability-deep-dives.html">
         <span class="door-n">03</span>
         <span class="door-ico"><i data-lucide="layers"></i></span>
         <h3 class="door-name">Capability Deep Dives</h3>
@@ -94,7 +95,7 @@
         <span class="door-cta">Open the dossiers <span class="ar">-&gt;</span></span>
       </a>
 
-      <a class="door" href="04-what-should-matter-to-you.html">
+      <a class="door" href="what-should-matter-to-you.html">
         <span class="door-n">04</span>
         <span class="door-ico"><i data-lucide="crosshair"></i></span>
         <h3 class="door-name">What Should Matter to You</h3>
@@ -103,7 +104,7 @@
         <span class="door-cta">Find your map <span class="ar">-&gt;</span></span>
       </a>
 
-      <a class="door" href="05-timeline.html">
+      <a class="door" href="timeline.html">
         <span class="door-n">05</span>
         <span class="door-ico"><i data-lucide="milestone"></i></span>
         <h3 class="door-name">Timeline</h3>
@@ -129,6 +130,13 @@
 <script>
 /* render the door icons */
 if(window.lucide && window.lucide.createIcons){ try{ window.lucide.createIcons(); }catch(e){} }
+/* hamburger menu (mobile) — mirrors tour-engine.js */
+(function(){
+  var b = document.getElementById('menuBtn'), m = document.querySelector('.mast');
+  if(!b || !m) return;
+  b.addEventListener('click', function(){ var o = m.classList.toggle('menu-open'); b.setAttribute('aria-expanded', o?'true':'false'); });
+  [].slice.call(m.querySelectorAll('nav a')).forEach(function(a){ a.addEventListener('click', function(){ m.classList.remove('menu-open'); }); });
+})();
 /* theme toggle — identical behavior to the other surfaces (localStorage 'atlas-theme') */
 (function(){
   var btn = document.getElementById('themeBtn'), root = document.documentElement;

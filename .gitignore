@@ -6,5 +6,6 @@
 uploads/
 screenshots/
 
-# internal build-plan meta page (not a public surface)
-00-system.html
+# superseded versions, intermediates, and internal docs — kept locally, not shared
+# (originals + edit-pass v1, the tour lab, the build handoff, the 00-system meta page)
+archived/

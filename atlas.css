@@ -59,40 +59,44 @@ p{margin:0 0 1.05em}
 .stack > * + *{margin-top:1.05em}
 
 /* ---- MASTHEAD ------------------------------------------------ */
-.mast{
-  position:sticky; top:0; z-index:50;
-  background:color-mix(in srgb,var(--bg) 88%, transparent);
-  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--line);
-}
-.mast-in{display:flex; align-items:center; gap:18px; padding:11px 28px; max-width:var(--w-full); margin:0 auto}
-.mast .mark{
-  font-family:var(--mono); font-weight:700; font-size:13px; letter-spacing:.18em;
-  text-transform:uppercase; color:var(--ink); white-space:nowrap; text-decoration:none;
-}
-.mast .mark:hover{text-decoration:none}
-.mast .mark b{color:var(--live); font-weight:700}
-.mast .mark .mid{color:var(--ink-3); font-weight:400; margin:0 .15em}
-.mast .sep{flex:1}
-.mast nav{display:flex; gap:2px; overflow:auto; scrollbar-width:none}
+/* Canonical masthead — kept in sync with tour.css so every surface matches the Tour. */
+.mast{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.mast-in{max-width:var(--w-full);margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.mark{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.08em;color:var(--ink);text-decoration:none;background:none;padding:0}
+.mark .mid{color:var(--live)} .mark b{color:var(--ink)}
+.mast .sep{flex:none;width:1px;height:18px;background:var(--line-2)}
+.mast nav{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none}
 .mast nav::-webkit-scrollbar{display:none}
-.mast nav a{
-  display:inline-flex; align-items:baseline; gap:6px;
-  font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
-  color:var(--ink-3); padding:5px 9px; border-radius:var(--r-sm); white-space:nowrap;
+.mast nav a{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;color:var(--ink-3);white-space:nowrap;padding:4px 0}
+.mast nav a .nn{color:var(--ink-3);opacity:.6;margin-right:2px}
+.mast nav a:hover{color:var(--ink)}
+.mast nav a.cur{color:var(--live)}
+.t-toggle{margin-left:auto;flex:none;font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+  border:1px solid var(--line-2);background:var(--bg-raised);color:var(--ink-2);
+  border-radius:var(--r-pill);padding:5px 12px;cursor:pointer}
+.t-toggle:hover{color:var(--ink);border-color:var(--ink-3)}
+/* hamburger nav on mobile (mirrors tour.css) */
+.menubtn{display:none;flex-direction:column;justify-content:center;gap:4px;width:44px;height:40px;
+  border:1px solid var(--line-2);border-radius:var(--r-md);background:var(--bg-raised);
+  cursor:pointer;padding:0 11px;margin-left:auto}
+.menubtn span{display:block;height:2px;border-radius:1px;background:var(--ink);transition:transform .2s var(--ease),opacity .2s}
+.mast.menu-open .menubtn span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mast.menu-open .menubtn span:nth-child(2){opacity:0}
+.mast.menu-open .menubtn span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media (max-width:700px){
+  .mast-in{padding:8px 14px;flex-wrap:nowrap;gap:10px}
+  .menubtn{display:flex}
+  .t-toggle{order:0;margin-left:0}
+  .mast .sep{display:none}
+  .mast nav{display:none}
+  .mast.menu-open nav{display:flex;flex-direction:column;gap:0;position:absolute;top:100%;left:0;right:0;
+    background:var(--bg-raised);border-bottom:1px solid var(--line-2);padding:6px 14px 10px;
+    box-shadow:0 14px 30px rgba(0,0,0,.12)}
+  .mast.menu-open nav a{padding:12px 0;border-bottom:1px solid var(--line);font-size:12px}
+  .mast.menu-open nav a:last-child{border-bottom:0}
 }
-.mast nav a .nn{color:var(--ink-3); font-weight:700}
-.mast nav a:hover{color:var(--ink); background:var(--bg-sunken); text-decoration:none}
-.mast nav a:hover .nn{color:var(--live)}
-.mast nav a.cur{color:var(--ink); background:var(--bg-sunken)}
-.mast nav a.cur .nn{color:var(--live)}
-.t-toggle{
-  font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
-  border:1px solid var(--line-2); background:var(--bg-raised); color:var(--ink-2);
-  border-radius:var(--r-pill); padding:5px 12px; cursor:pointer;
-  transition:border-color var(--fast), color var(--fast); white-space:nowrap;
-}
-.t-toggle:hover{border-color:var(--live); color:var(--live)}
 
 /* ---- TYPE EXTRAS (beyond tokens file) ------------------------ */
 .slabel{display:flex; align-items:baseline; gap:14px; margin-bottom:22px}
@@ -298,14 +302,8 @@ details.dive .dive-body p{max-width:none}
   body{font-size:18px}
   .grid.c3,.grid.c4{grid-template-columns:1fr}
   .grid.c2{grid-template-columns:1fr}
-  /* opaque masthead so scrolling content does not bleed through it */
+  /* opaque masthead so scrolling content does not bleed through it (hamburger + mobile dropdown live in the masthead section) */
   .mast{background:var(--bg)}
-  .mast-in{padding:9px 14px; gap:10px}
-  .mast .mark{font-size:12px; letter-spacing:.12em}
-  .mast nav{gap:1px}
-  .mast nav a{padding:5px 7px}
-  .mast nav a .nlabel{display:none}
-  .t-toggle{padding:5px 9px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}

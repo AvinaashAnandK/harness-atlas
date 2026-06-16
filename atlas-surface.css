@@ -342,6 +342,19 @@
 .dd-list .dd-go svg{width:15px; height:15px}
 .dd-list a:hover .dd-go{color:var(--live-ink)}
 
+/* ---- deep-dive index: operating-loop regroup (L1-L4) + constraints overlay (L5) ---- */
+.dd-loop{margin-top:6px}
+.dd-overlay{margin-top:34px; padding-top:22px; border-top:1px dashed var(--line-2)}
+.dd-section-head{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin:0 0 8px}
+.dd-section-head .eyebrow{margin:0}
+.dd-section-h{font-weight:500; font-size:1.02rem; line-height:1.4; letter-spacing:-.01em; color:var(--ink-2); max-width:62ch; margin:0}
+.dd-group-head .dd-role{font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--live-ink); background:var(--live-bg); border:1px solid var(--live-bd); border-radius:var(--r-pill); padding:3px 9px; flex:none}
+.dd-group-head .dd-role.overlay{color:var(--ink-2); background:var(--bg-sunken); border-style:dashed; border-color:var(--line-2)}
+
+/* ---- dossier: plain-language standfirst + approach diagram-type pill ---- */
+.cap-standfirst{font-size:1.1rem; line-height:1.5; color:var(--ink-2); margin:0 0 20px; max-width:56ch}
+.diagram-pill{font-family:var(--mono); font-weight:700; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-2); background:var(--bg-sunken); border:1px solid var(--line-2); border-radius:var(--r-pill); padding:3px 8px; cursor:help; flex:none}
+
 /* glow list items are now links */
 .glow-item{text-decoration:none}
 .glow-item:hover{border-color:var(--ink-3)}

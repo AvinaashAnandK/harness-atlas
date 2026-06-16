@@ -1,373 +1,399 @@
 /* ============================================================
-   THE TOUR — scroll engine + scrubbed scenes
-   Scrubbing is driven by scroll position via inline styles, so
-   it works even where CSS transitions are throttled, and every
-   scene resolves to a readable static end-state.
+   THE TOUR — v5 engine (editorial pass).
+   Changes vs v4:
+   · No autoplay anywhere. Figures init at step 1 (no blank box
+     on anchor jumps or fast flicks).
+   · Mobile: stepped tap-through. A narration card sits under the
+     figure showing the current beat's text; "Continue" advances
+     figure + narration together. Dots are real step-jump
+     controls (≥24px hit areas).
+   · Desktop: beats drive steps as before.
+   · Breadcrumbs: click-to-jump; final milestone resolves at the
+     anatomy section's last beat, not the footer.
+   · Orbital nodes: ≥24px hit areas, styled selected state, and
+     each tap shows name + one-liner + a deep link into the
+     Atlas dossier. The how-to caption is persistent.
    ============================================================ */
 (function(){
   'use strict';
-  /* tour engine v1 */
-  var clamp = function(v,a,b){ return Math.max(a, Math.min(b, v)); };
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- theme toggle ---- */
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mqDesk = window.matchMedia('(min-width: 980px)');
+  function desk(){ return mqDesk.matches; }
+
+  /* ---------- theme toggle ---------- */
   (function(){
-    var btn = document.getElementById('themeBtn'), root = document.documentElement;
-    function set(t){ root.setAttribute('data-theme', t); if(btn) btn.textContent = t==='dark'?'◐ Light':'◑ Dark'; }
+    var root = document.documentElement, btn = document.getElementById('themeBtn');
+    function label(){ if(btn) btn.textContent = root.getAttribute('data-theme')==='dark' ? '◐ Light' : '◐ Dark'; }
+    function set(t){ root.setAttribute('data-theme', t); label(); }
     try{ var s = localStorage.getItem('atlas-theme'); if(s) set(s); }catch(e){}
+    label();
     if(btn) btn.addEventListener('click', function(){
-      var n = root.getAttribute('data-theme')==='dark'?'light':'dark';
+      var n = root.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
       set(n); try{ localStorage.setItem('atlas-theme', n); }catch(e){}
     });
   })();
 
-  /* ============================================================
-     SCENE scrubbers — keyed by data-scene. (stage, gbeat, prog)
-     gbeat = active global beat number, prog = 0..1 within beat.
-     ============================================================ */
-  var SCENES = {};
-
-  function setOp(el, v){ if(el) el.style.opacity = v; }
-
-  /* SCENE: loud trace */
-  SCENES.loud = function(stage, gbeat, prog){
-    var sc = stage.querySelector('[data-scene="loud"]');
-    if(!sc) return;
-    var lines = sc.querySelectorAll('.tl');
-    var stampLine = sc.querySelector('[data-stampline]');
-    if(gbeat <= 2){
-      var reveal = (reduce ? 4 : prog * 4.2); // lines 0..3 stream in
-      lines.forEach(function(l){
-        var i = +l.dataset.i;
-        if(i === 4){ setOp(l, 0); return; }
-        var o = reduce ? 1 : clamp((reveal - i + 0.6) / 0.6, 0, 1);
-        setOp(l, o);
-        l.style.filter = '';
-      });
-      setOp(stampLine, 0);
-    } else { // beat 3+: error stays, rest dims, LOUD stamps
-      lines.forEach(function(l){
-        var i = +l.dataset.i;
-        if(i === 4) return;
-        setOp(l, l.classList.contains('err') ? 1 : 0.34);
-      });
-      setOp(stampLine, 1);
-    }
-  };
-
-  /* SCENE: silent run */
-  SCENES.silent = function(stage, gbeat, prog){
-    var sc = stage.querySelector('[data-scene="silent"]');
-    if(!sc) return;
-    var instr = sc.querySelector('[data-instr]');
-    var del = sc.querySelector('[data-del]');
-    var sstamp = sc.querySelector('[data-silentstamp]');
-    var nothing = sc.querySelector('[data-nothing]');
-    var clns = sc.querySelectorAll('[data-ctxlines] .cln');
-    var bubs = {
-      compress: sc.querySelector('[data-compress-note]'),
-      danger: sc.querySelector('[data-danger]'),
-      stop: sc.querySelector('[data-stop]'),
-      after: sc.querySelector('[data-after]')
-    };
-    function bubbles(p){
-      setOp(bubs.compress, reduce ? 1 : clamp((p - 0.15) / 0.15, 0, 1));
-      setOp(bubs.danger,   reduce ? 1 : clamp((p - 0.45) / 0.15, 0, 1));
-      setOp(bubs.stop,     reduce ? 1 : clamp((p - 0.68) / 0.12, 0, 1));
-      setOp(bubs.after,    reduce ? 1 : clamp((p - 0.86) / 0.12, 0, 1));
-    }
-    if(gbeat === 4){
-      var p = reduce ? 1 : prog;
-      setOp(instr, clamp(1 - (p - 0.25) / 0.35, 0, 1));      // instruction fades inside compression
-      var keep = Math.round(10 - p * 5);                       // memory compresses
-      clns.forEach(function(c, i){
-        if(c === instr) return;
-        setOp(c, i < keep ? 1 : 0.16); c.style.height = i < keep ? '9px' : '3px';
-      });
-      var n = Math.max(0, Math.round((p - 0.55) / 0.45 * 214)); // deletions climb
-      if(del) del.textContent = n;
-      setOp(sstamp, 0); setOp(nothing, 0.55);
-      bubbles(p);
-    } else if(gbeat >= 5){                                     // end-state
-      setOp(instr, 0);
-      clns.forEach(function(c, i){ if(c===instr) return; setOp(c, i < 5 ? 1 : 0.16); c.style.height = i < 5 ? '9px' : '3px'; });
-      if(del) del.textContent = '214';
-      setOp(sstamp, 1); setOp(nothing, 1);
-      bubbles(1);
-    }
-  };
-
-  /* SCENE: moat split — static, nothing to scrub */
-  SCENES.moat = function(){};
-
-  /* SCENE: spectrum — markers settle into place as you scroll */
-  SCENES.spectrum = function(stage, gbeat, prog){
-    var sc = stage.querySelector('[data-scene="spectrum"]');
-    if(!sc) return;
-    var markers = sc.querySelectorAll('.marker');
-    markers.forEach(function(m, i){
-      var t = reduce ? 1 : clamp((prog - i * 0.12) / 0.3, 0, 1);
-      m.style.opacity = t;
-      m.style.transform = 'translate(-50%,-50%) translateY(' + ((1 - t) * 14) + 'px)';
+  /* ---------- hamburger menu (mobile) ---------- */
+  (function(){
+    var btn = document.getElementById('menuBtn'), mast = document.querySelector('.mast');
+    if(!btn || !mast) return;
+    btn.addEventListener('click', function(){
+      var open = mast.classList.toggle('menu-open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
-  };
-
-  /* SCENE: loud timeline — scaffold attaches, model absorbs it */
-  SCENES.loudtl = function(stage, gbeat, prog, ab){
-    var sc = stage.querySelector('[data-scene="loudtl"]'); if(!sc) return;
-    var step = ab && ab.dataset.step;
-    var p = (step === 'rule') ? 1 : (reduce ? 1 : prog);
-    var scaffold = sc.querySelector('[data-scaffold]'), slot = sc.querySelector('[data-slot]'),
-        core = sc.querySelector('[data-core]'), gen = sc.querySelector('[data-gen]'),
-        cap = sc.querySelector('[data-cap]'), stamp = sc.querySelector('[data-stampwrap]');
-    var attach = clamp(p / 0.3, 0, 1), bright = clamp((p - 0.42) / 0.18, 0, 1), absorb = clamp((p - 0.62) / 0.3, 0, 1);
-    if(scaffold){ scaffold.style.opacity = Math.max(0, attach * (1 - absorb)); scaffold.style.transform = 'translateY(' + (-18 * absorb) + 'px)'; }
-    if(slot) slot.style.opacity = absorb;
-    if(core) core.classList.toggle('bright', bright > 0.5);
-    if(gen) gen.textContent = bright > 0.5 ? 'Opus 4.6' : 'Sonnet 4.5';
-    if(cap) cap.textContent = p < 0.42 ? 'The harness built a crutch: reset the context on a schedule, and hand the work across the gap in a structured note.'
-      : (p < 0.66 ? 'Then Opus 4.6 arrived. It ran for hours without hurrying.'
-      : '"The resets had become dead weight." So they deleted the scaffolding.');
-    if(stamp) stamp.style.opacity = (step === 'rule') ? 1 : 0;
-  };
-
-  /* SCENE: silent family — verification grows as autonomy scales */
-  SCENES.silentfam = function(stage, gbeat, prog, ab){
-    var sc = stage.querySelector('[data-scene="silentfam"]'); if(!sc) return;
-    var step = ab && ab.dataset.step;
-    var p = (step === 'rule') ? 1 : (reduce ? 1 : prog);
-    sc.querySelectorAll('.dw-step').forEach(function(n, i){
-      var t = clamp((p - i * 0.14) / 0.22, 0, 1);
-      n.style.opacity = t; n.style.transform = 'translateX(' + ((1 - t) * -12) + 'px)';
+    [].slice.call(mast.querySelectorAll('nav a')).forEach(function(a){
+      a.addEventListener('click', function(){ mast.classList.remove('menu-open'); });
     });
-    var stamp = sc.querySelector('[data-stampwrap]');
-    if(stamp) stamp.style.opacity = (step === 'rule') ? 1 : 0;
-  };
+  })();
 
-  /* SCENE: HERMES — billing drains while the plan dial sits frozen */
-  SCENES.hermes = function(stage, gbeat, prog){
-    var sc = stage.querySelector('[data-scene="hermes"]'); if(!sc) return;
-    var p = reduce ? 1 : prog;
-    var fill = sc.querySelector('[data-billfill]'), amt = sc.querySelector('[data-billamt]'),
-        commit = sc.querySelector('[data-commit]'), cause = sc.querySelector('[data-cause]');
-    var drain = clamp(p / 0.6, 0, 1);
-    if(fill) fill.style.height = (drain * 100) + '%';
-    if(amt) amt.textContent = '$' + (drain * 200.98).toFixed(2);
-    if(commit) commit.style.opacity = clamp((p - 0.5) / 0.2, 0, 1);
-    if(cause) cause.style.opacity = clamp((p - 0.75) / 0.2, 0, 1);
-  };
-
-  /* SCENE: brain — one flip card per beat, tray grows as you go */
-  SCENES.brain = function(stage, gbeat, prog, ab){
-    var sc = stage.querySelector('[data-scene="brain"]'); if(!sc) return;
-    var idx = +ab.dataset.card;
-    sc.querySelectorAll('.qcard').forEach(function(c){
-      var ci = +c.dataset.card;
-      c.style.display = ci === idx ? 'block' : 'none';
-      if(ci === idx && !reduce) c.classList.toggle('flipped', prog > 0.42);
-    });
-    sc.querySelectorAll('.qtray .slot').forEach(function(s){
-      s.classList.toggle('docked', +s.dataset.idx <= idx);
-    });
-  };
-
-  /* SCENE: hand — one layer's fanned cards per beat */
-  SCENES.hand = function(stage, gbeat, prog, ab){
-    var sc = stage.querySelector('[data-scene="hand"]'); if(!sc) return;
-    var idx = +ab.dataset.layer;
-    sc.querySelectorAll('.hand').forEach(function(h){
-      var hi = +h.dataset.layer;
-      h.style.display = hi === idx ? 'block' : 'none';
-      if(hi === idx && !reduce) h.querySelectorAll('.hcard').forEach(function(c){ c.classList.toggle('flipped', prog > 0.4); });
-    });
-  };
-
-  /* ---- the assembled atlas: five concentric shells ---- */
-  var ATLAS_LAYERS = [
-    {name:'Brain', nodes:[['Identity and Context','compound','compass'],['Tool Discovery','split','wrench'],['Orchestration Routing','fade','git-fork'],['Planning','split','list-checks'],['Reasoning-Effort Allocation','split','gauge']]},
-    {name:'Hands', nodes:[['Permission and Irreversibility','compound','hand'],['Execution Security','compound','shield'],['Isolation','compound','box'],['Input and Output Gating','compound','filter'],['Tool Dispatch and Retry','fade','refresh-cw']]},
-    {name:'Coherence', nodes:[['Context Curation','compound','inbox'],['Compression for Coherence','compound','minimize-2'],['State Persistence and Ownership','compound','database'],['Offline Consolidation','compound','moon'],['Cross-Agent Coherence','compound','link']]},
-    {name:'Feedback', nodes:[['Implicit Signals','compound','activity'],['Explicit Signals','compound','thumbs-up'],['Runtime Evaluation','split','scan-eye'],['Observability and Offline Evaluation','compound','line-chart'],['Compounding Fixes','compound','trending-up']]},
-    {name:'Limitations', nodes:[["Won't Do (Safety)",'compound','ban'],["Won't Do (Commercial)",'protect','circle-dollar-sign'],["Can't Do (Ceilings)",'split','arrow-up-to-line'],["Won't Show (Opacity)",'compound','eye-off','edge']]}
-  ];
-  var R = [17, 26, 34, 41, 47];
-  function buildShells(){
-    var wrap = document.getElementById('shellsWrap'); if(!wrap || wrap._built) return; wrap._built = true;
-    var svg = wrap.querySelector('.shells-svg'), ns = 'http://www.w3.org/2000/svg';
-    R.forEach(function(rad, li){
-      var c = document.createElementNS(ns, 'circle');
-      c.setAttribute('cx', 50); c.setAttribute('cy', 50); c.setAttribute('r', rad);
-      if(li === 4) c.setAttribute('class', 'wall');
-      svg.appendChild(c);
-    });
-    ATLAS_LAYERS.forEach(function(layer, li){
-      var rad = R[li], n = layer.nodes.length;
-      var lab = document.createElement('div'); lab.className = 'ring-label'; lab.textContent = layer.name;
-      lab.style.left = '50%'; lab.style.top = (50 - rad) + '%'; wrap.appendChild(lab);
-      layer.nodes.forEach(function(node, ni){
-        var ang = (-60 + ni * (360 / n)) * Math.PI / 180;
-        var x = 50 + rad * Math.cos(ang), y = 50 + rad * Math.sin(ang);
-        var d = document.createElement('div');
-        d.className = 'shellnode ' + node[1] + (node[3] ? ' ' + node[3] : '');
-        d.style.left = x + '%'; d.style.top = y + '%';
-        d.setAttribute('data-name', node[0]);
-        wrap.appendChild(d);
-      });
-    });
-    // mobile five-column grid fallback
-    var grid = document.getElementById('shellsGrid');
-    if(grid){
-      ATLAS_LAYERS.forEach(function(layer){
-        var col = document.createElement('div'); col.className = 'scol';
-        var h = document.createElement('div'); h.className = 'sch'; h.textContent = layer.name; col.appendChild(h);
-        layer.nodes.forEach(function(node){
-          var row = document.createElement('div'); row.className = 'snode';
-          row.innerHTML = '<span class="fdot ' + node[1] + (node[3] ? ' ' + node[3] : '') + '"></span><span><i data-lucide="' + node[2] + '"></i>' + node[0] + '</span>';
-          col.appendChild(row);
-        });
-        grid.appendChild(col);
+  /* ---------- progress bar + section ticks ---------- */
+  (function(){
+    var prog = document.querySelector('.tprog'), bar = prog && prog.querySelector('.fill');
+    if(!bar) return;
+    var secs = [].slice.call(document.querySelectorAll('section[id]'));
+    function ticks(){
+      [].slice.call(prog.querySelectorAll('.tick')).forEach(function(t){ t.remove(); });
+      var doc = document.documentElement.scrollHeight - window.innerHeight;
+      if(doc <= 0) return;
+      secs.forEach(function(s){
+        var t = document.createElement('span'); t.className = 'tick';
+        t.style.left = (s.offsetTop / doc * 100) + '%';
+        prog.appendChild(t);
       });
     }
+    function on(){
+      var doc = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (doc > 0 ? (window.scrollY / doc * 100) : 0) + '%';
+    }
+    window.addEventListener('scroll', on, {passive:true});
+    window.addEventListener('resize', function(){ ticks(); on(); });
+    setTimeout(ticks, 200); on();
+  })();
+
+  /* ---------- deep links ---------- */
+  if(location.hash){
+    var tgt = document.getElementById(location.hash.slice(1));
+    if(tgt) setTimeout(function(){ tgt.scrollIntoView(); }, 80);
   }
 
-  /* SCENE: shells — nodes settle onto their rings */
-  SCENES.shells = function(stage, gbeat, prog){
-    var wrap = stage.querySelector('#shellsWrap'); if(!wrap) return;
-    var nodes = wrap.querySelectorAll('.shellnode');
-    nodes.forEach(function(nd, i){
-      var t = reduce ? 1 : clamp((prog - (i / nodes.length) * 0.5) / 0.4, 0, 1);
-      nd.style.opacity = t;
-      if(t >= 1) nd.style.transform = ''; else nd.style.transform = 'translate(-50%,-50%) scale(' + (0.25 + 0.75 * t) + ')';
-    });
-  };
-
-  /* SCENE: capopen — one node unfolds into a mini capability page */
-  SCENES.capopen = function(stage, gbeat, prog, ab){
-    var sc = stage.querySelector('[data-scene="capopen"]'); if(!sc) return;
-    var p = (gbeat >= 32) ? 1 : (reduce ? 1 : prog);
-    var blocks = sc.querySelectorAll('[data-co]');
-    blocks.forEach(function(b, i){
-      var t = clamp((p - 0.12 - i * 0.22) / 0.22, 0, 1);
-      b.style.opacity = t;
-      b.style.transform = 'translateY(' + ((1 - t) * 10) + 'px)';
-    });
-  };
-
-  /* expose for later sections to extend */
-  window.TourScenes = SCENES;
-
-  /* per-scene one-time init (hide scrub elements at rest) */
-  function initScene(stage){
-    var s = stage.querySelector('[data-scene="silent"]');
-    if(s){
-      ['[data-compress-note]','[data-danger]','[data-stop]','[data-after]'].forEach(function(sel){
-        var el = s.querySelector(sel); if(el && !reduce) el.style.opacity = 0;
-      });
-    }
-  }
-
-  /* ============================================================
-     SCROLLY engine
-     ============================================================ */
-  function setupScrolly(root){
-    var beats = [].slice.call(root.querySelectorAll('.beat'));
-    var stage = root.querySelector('.stage');
-    var scenes = [].slice.call(root.querySelectorAll('.scene'));
-    if(!beats.length || !stage) return;
-    initScene(stage);
-
-    function update(){
-      /* on mobile the stage is a compact sticky panel up top, so the
-         activation line moves down below it */
-      var mid = window.innerHeight * (window.innerWidth <= 880 ? 0.68 : 0.42);
-      var active = 0, best = Infinity;
-      beats.forEach(function(b, i){
-        var r = b.getBoundingClientRect();
-        var c = r.top + r.height / 2;
-        var d = Math.abs(c - mid);
-        if(d < best){ best = d; active = i; }
-      });
-      var ab = beats[active];
-      var sceneName = ab.dataset.scene;
-      var gbeat = +ab.dataset.beat;
-      beats.forEach(function(b, i){ b.classList.toggle('cur', i === active); });
-      scenes.forEach(function(s){ s.classList.toggle('on', s.dataset.scene === sceneName); });
-      stage.dataset.beat = gbeat;
-      var r = ab.getBoundingClientRect();
-      var prog = clamp((mid - r.top) / r.height, 0, 1);
-      var fn = SCENES[sceneName];
-      if(fn){ try{ fn(stage, gbeat, prog, ab); }catch(e){ /* keep scrolling */ } }
-    }
-    root._update = update;
-    return update;
-  }
-
-  /* ---- boot ---- */
-  var FATE_TIPS = {
-    compound: "Built against a silent failure, one nothing in the run announces. Caught and encoded, it keeps its value as models improve; this is the scaffolding that can become the moat.",
-    fade: "Built against a loud failure, one the trace announces. Better models absorb these, so the scaffolding is temporary: a loan the next model repays.",
-    protect: "A wall the agent-building team raises for its own commercial or legal reasons, not to make the agent better. Anti-distillation and hidden codenames when the team also makes the model; PII and compliance walls when it rents one. It neither fades nor compounds; it lasts as long as the business reason does.",
-    split: "This capability's halves age differently: part fades as models improve, part compounds. The page explains which is which."
-  };
-  function applyFateTips(){
-    [].slice.call(document.querySelectorAll('.fbadge')).forEach(function(b){
-      ['compound','fade','protect','split'].forEach(function(k){
-        if(b.classList.contains(k) && !b.hasAttribute('data-fate-tip')) b.setAttribute('data-fate-tip', FATE_TIPS[k]);
-      });
-      if(!b.hasAttribute('tabindex')) b.setAttribute('tabindex','0');
-    });
-  }
-  window.applyFateTips = applyFateTips;
-
-  /* prepend a Lucide capability icon to every .capname / .hname by name */
-  function iconifyNames(){
-    var map = {};
-    ATLAS_LAYERS.forEach(function(l){ l.nodes.forEach(function(n){ map[n[0]] = n[2]; }); });
-    [].slice.call(document.querySelectorAll('.capname, .hname')).forEach(function(el){
-      if(el.querySelector('i,svg')) return;
-      var ic = map[el.textContent.trim()];
-      if(ic){ var i = document.createElement('i'); i.setAttribute('data-lucide', ic); i.className = 'capicon'; el.insertBefore(i, el.firstChild); }
-    });
-  }
-
-  var updaters = [];
-  function boot(){
-    applyFateTips();
-    buildShells();
-    iconifyNames();
-    if(window.lucide && window.lucide.createIcons){ try{ window.lucide.createIcons(); }catch(e){} }
-    [].slice.call(document.querySelectorAll('[data-scrolly]')).forEach(function(root){
-      var u = setupScrolly(root); if(u) updaters.push(u);
-    });
-    // tap-to-flip on every flip card (coral = interactive)
-    [].slice.call(document.querySelectorAll('.qcard, .hcard')).forEach(function(c){
-      c.setAttribute('tabindex', '0');
-      c.addEventListener('click', function(){ c.classList.toggle('flipped'); });
-      c.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); c.classList.toggle('flipped'); } });
-    });
-    onScroll();
-    // deep-link entry points: re-run the jump after layout settles
-    if(location.hash){
-      var target = document.getElementById(location.hash.slice(1));
-      if(target) setTimeout(function(){ target.scrollIntoView(); onScroll(); }, 60);
-    }
-  }
-  var ticking = false;
-  function onScroll(){
-    if(ticking) return; ticking = true;
-    requestAnimationFrame(function(){
-      // progress rail
-      var rail = document.getElementById('tprog');
-      if(rail){
-        var h = document.documentElement.scrollHeight - window.innerHeight;
-        rail.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+  /* ---------- per-figure hooks ---------- */
+  var HOOKS = {
+    inbox: function(fig, n){
+      var rail = fig.querySelector('.ctxrail');
+      if(rail) rail.classList.toggle('squeezed', n >= 3);
+      var cnt = fig.querySelector('.delcount b');
+      if(cnt){
+        if(n >= 4 && !cnt._run){
+          cnt._run = true;
+          if(reduce){ cnt.textContent = '200+'; return; }
+          var v = 0;
+          var t = setInterval(function(){
+            v += 17;
+            if(v >= 200){ cnt.textContent = '200+'; clearInterval(t); }
+            else cnt.textContent = String(v);
+          }, 90);
+        }
+        if(n < 4 && !cnt._run) cnt.textContent = '0';
       }
-      updaters.forEach(function(u){ u(); });
-      ticking = false;
+    }
+  };
+
+  /* ---------- step setter ---------- */
+  function setStep(fig, n){
+    fig._step = n;
+    fig.setAttribute('data-step', n);
+    var last = null;
+    [].slice.call(fig.querySelectorAll('[data-s]')).forEach(function(el){
+      var s = parseInt(el.getAttribute('data-s'), 10);
+      var u = el.hasAttribute('data-s-until') ? parseInt(el.getAttribute('data-s-until'), 10) : Infinity;
+      var on = n >= s && n <= u;
+      el.classList.toggle('on', on);
+      if(on && s === n) last = el;
     });
+    if(fig._dots) fig._dots.forEach(function(d, i){ d.classList.toggle('on', i + 1 <= n); });
+    if(fig._nar) fig._nar(n);
+    var hook = fig.getAttribute('data-hook');
+    if(hook && HOOKS[hook]) HOOKS[hook](fig, n);
+    /* mobile: the figure scrolls internally; keep the newest content
+       visible WITHOUT moving the page (scroll the container only) */
+    if(!desk() && fig._touched && last){
+      try{
+        var fr = fig.getBoundingClientRect(), lr = last.getBoundingClientRect();
+        if(lr.bottom > fr.bottom - 56 || lr.top < fr.top){
+          fig.scrollTo({ top: fig.scrollTop + (lr.top - fr.top) - 24,
+                         behavior: reduce ? 'auto' : 'smooth' });
+        }
+      }catch(e){}
+    }
   }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  window.addEventListener('resize', onScroll);
-  if(document.readyState !== 'loading') boot(); else document.addEventListener('DOMContentLoaded', boot);
-  window.TourBoot = boot;
+
+  /* ---------- dots: real step-jump controls ---------- */
+  function attachDots(fig, total){
+    if(total < 2) return;
+    var bar = document.createElement('div'); bar.className = 'steps';
+    fig._dots = [];
+    for(var i = 1; i <= total; i++){
+      (function(n){
+        var d = document.createElement('button');
+        d.className = 'sdot'; d.type = 'button';
+        d.setAttribute('aria-label', 'Go to step ' + n + ' of ' + total);
+        d.addEventListener('click', function(){ fig._touched = true; setStep(fig, n); });
+        bar.appendChild(d); fig._dots.push(d);
+      })(i);
+    }
+    var rp = document.createElement('button');
+    rp.className = 'replay'; rp.type = 'button'; rp.textContent = 'restart';
+    rp.addEventListener('click', function(){ setStep(fig, 1); });
+    bar.appendChild(rp);
+    fig.appendChild(bar);
+  }
+
+  /* ---------- scrolly init ---------- */
+  function initScrolly(sc){
+    var fig = sc.querySelector('.fig'); if(!fig) return;
+    var total = parseInt(fig.getAttribute('data-steps'), 10) || 1;
+    var beats = [].slice.call(sc.querySelectorAll('.beat'));
+
+    /* desktop: beats drive */
+    if(beats.length && 'IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(es){
+        es.forEach(function(e){
+          if(!desk() || !e.isIntersecting) return;
+          beats.forEach(function(b){ b.classList.toggle('cur', b === e.target); });
+          setStep(fig, parseInt(e.target.getAttribute('data-step'), 10) || 1);
+        });
+      }, {rootMargin:'-38% 0px -42% 0px', threshold:0});
+      beats.forEach(function(b){ io.observe(b); });
+    }
+    if(beats.length) beats[0].classList.add('cur');
+
+    /* scrolling back above the first beat returns the figure to its
+       opening state, so the sequence rewinds cleanly */
+    if(beats.length){
+      window.addEventListener('scroll', function(){
+        if(!desk()) return;
+        var r = beats[0].getBoundingClientRect();
+        if(r.top > window.innerHeight * 0.62 && (fig._step || 1) !== 1){
+          beats.forEach(function(b){ b.classList.remove('cur'); });
+          beats[0].classList.add('cur');
+          setStep(fig, 1);
+        }
+      }, {passive:true});
+    }
+
+    /* mobile: stepped tap-through with interleaved narration */
+    if(beats.length && total > 1){
+      var stage = sc.querySelector('.stage');
+      var narWrap = document.createElement('div'); narWrap.className = 'mnar';
+      var narBody = document.createElement('div'); narBody.className = 'mnar-body';
+      var nxt = document.createElement('button');
+      nxt.className = 'mnext'; nxt.type = 'button';
+      nxt.innerHTML = 'Continue <span class="arr">▸</span>';
+      narWrap.appendChild(narBody); narWrap.appendChild(nxt);
+      stage.appendChild(narWrap);
+
+      var beatMap = beats.map(function(b){
+        return { step: parseInt(b.getAttribute('data-step'), 10) || 1,
+                 html: (b.querySelector('.bcard') || b).innerHTML };
+      });
+      fig._nar = function(n){
+        var pick = beatMap[0];
+        beatMap.forEach(function(bm){ if(bm.step <= n) pick = bm; });
+        narBody.innerHTML = pick.html;
+        nxt.style.display = (n >= total) ? 'none' : '';
+      };
+      nxt.addEventListener('click', function(){
+        fig._touched = true;
+        setStep(fig, Math.min(total, (fig._step || 1) + 1));
+      });
+    }
+  }
+
+  [].slice.call(document.querySelectorAll('.scrolly')).forEach(initScrolly);
+
+  /* every figure: dots, then init at step 1 — never a blank box */
+  [].slice.call(document.querySelectorAll('.fig[data-steps]')).forEach(function(fig){
+    var total = parseInt(fig.getAttribute('data-steps'), 10) || 1;
+    attachDots(fig, total);
+    setStep(fig, 1);
+  });
+
+  /* ---------- breadcrumbs: rail ≥1600px, sticky accordion below ---------- */
+  (function(){
+    var rail = document.querySelector('.crumbs'); if(!rail) return;
+    var items = [].slice.call(rail.querySelectorAll('li'));
+    var secs = items.map(function(li){ return document.getElementById(li.getAttribute('data-sec')); });
+    var btn = document.getElementById('crumbBtn'), cur = document.getElementById('crumbCur');
+    if(btn) btn.addEventListener('click', function(){
+      if(window.matchMedia('(min-width:1600px)').matches) return;
+      var open = rail.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    items.forEach(function(li, i){
+      li.setAttribute('role', 'link'); li.setAttribute('tabindex', '0');
+      function go(){
+        rail.classList.remove('open');
+        if(secs[i]) secs[i].scrollIntoView({behavior: reduce ? 'auto' : 'smooth'});
+      }
+      li.addEventListener('click', go);
+      li.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
+    });
+    function on(){
+      var vh = window.innerHeight;
+      var probe = window.scrollY + vh * .45;
+      var curIdx = -1, doneCount = 0, label = 'the tour begins';
+      secs.forEach(function(s, i){ if(s && s.offsetTop <= probe) curIdx = i; });
+      items.forEach(function(li, i){
+        var s = secs[i];
+        var resolved = s && (i < curIdx || probe > s.offsetTop + s.offsetHeight - vh * .55);
+        if(resolved){ doneCount++; label = li.textContent; }
+        li.classList.toggle('done', !!resolved);
+        li.classList.toggle('cur', i === curIdx && !resolved);
+        if(i === curIdx && !resolved) label = li.textContent;
+      });
+      if(cur) cur.textContent = doneCount + '/' + items.length + ' · ' + label;
+    }
+    window.addEventListener('scroll', on, {passive:true});
+    window.addEventListener('resize', on);
+    on();
+  })();
+
+  /* ---------- the orbital: nodes as the Atlas on-ramp ---------- */
+  var LAYERS = [
+    {name:'Brain', icon:'compass', nodes:[
+      ['Identity and Context','What is this project, and what are the rules of the world I’m operating in?'],
+      ['Tool Discovery','What can I actually do right now, and what’s in my toolbox?'],
+      ['Orchestration Routing','Is this job too big for one pass, and should I split it across helpers?'],
+      ['Planning','What’s my approach before I start, and should someone sign off on it first?'],
+      ['Reasoning-Effort Allocation','How hard should I think about this one, and which model should do it?']]},
+    {name:'Hands', icon:'hand', nodes:[
+      ['Permission and Irreversibility','Am I about to do something I cannot take back, and should a human stand between me and this button?'],
+      ['Execution Security','Is this instruction really mine, or did something hostile slip in through the content I’m reading?'],
+      ['Isolation','If this runs and goes wrong, what can it actually reach?'],
+      ['Input and Output Gating','Is this one file or tool result big enough to swallow my whole working memory?'],
+      ['Tool Dispatch and Retry','That call just failed. Do I retry it, adjust, or stop bothering the human?']]},
+    {name:'Coherence', icon:'database', nodes:[
+      ['Context Curation','What should be on my desk this turn, and what must never be thrown away?'],
+      ['Compression for Coherence','The context is filling up. What do I keep so I don’t lose the plot?'],
+      ['State Persistence and Ownership','When this session ends, will I remember any of this tomorrow, and who keeps that memory?'],
+      ['Offline Consolidation','What do I clean up and learn while I’m asleep?'],
+      ['Cross-Agent Coherence','My helpers are off doing their pieces. Will the pieces agree when they come back?']]},
+    {name:'Feedback', icon:'trending-up', nodes:[
+      ['Implicit Signals','What is the user’s behavior telling me that they aren’t saying?'],
+      ['Explicit Signals','What did they actually tell me?'],
+      ['Runtime Evaluation','Is this work actually right, while it is happening?'],
+      ['Observability and Offline Evaluation','Can we see what happened, and did the system get better or worse this week?'],
+      ['Compounding Fixes','What did we change so this never happens again?']]},
+    {name:'Limitations', icon:'ban', nodes:[
+      ["Won't Do (Safety)",'What must I never do, no matter how sure I am?'],
+      ["Won't Do (Commercial)",'Which of my refusals protect the vendor, not me?'],
+      ["Can't Do (Ceilings)",'What is actually impossible here, and do I admit it?'],
+      ["Won't Show (Opacity)",'What is happening in here that nobody can see?']]}
+  ];
+  var R = [17, 25, 33, 40, 47];
+  function slugify(name){
+    return name.toLowerCase().replace(/['’()]/g, '').replace(/\s+/g, '-');
+  }
+
+  (function buildShells(){
+    var wrap = document.getElementById('shellsWrap'); if(!wrap) return;
+    var svg = wrap.querySelector('.shells-svg'), ns = 'http://www.w3.org/2000/svg';
+    var nameBox = document.getElementById('nodeName');
+    var selected = null;
+    svg.setAttribute('viewBox', '0 0 100 100');
+    var defs = document.createElementNS(ns, 'defs');
+    svg.appendChild(defs);
+    function pt(r, deg){
+      var a = deg * Math.PI / 180;
+      return (50 + r * Math.cos(a)).toFixed(2) + ' ' + (50 + r * Math.sin(a)).toFixed(2);
+    }
+    LAYERS.forEach(function(layer, li){
+      var n = layer.nodes.length;
+      var r = R[li];
+      var label = 'L' + (li + 1) + ' · ' + layer.name.toUpperCase();
+
+      /* the label sits IN a gap cut into its own ring, in the node-free
+         arc closest to the top so the text reads horizontally */
+      var nodeStep = 360 / n;
+      var centerDeg = null, bestDiff = 1e9;
+      for(var k = 0; k < n; k++){
+        var cand = -90 + li * 20 + nodeStep / 2 + k * nodeStep;
+        var norm = ((cand + 90) % 360 + 360) % 360;     /* distance from top */
+        var diff = Math.min(norm, 360 - norm);
+        if(diff < bestDiff){ bestDiff = diff; centerDeg = cand; }
+      }
+      var inner = r < 20;
+      var charAdv = inner ? 1.42 : 1.62;                   /* mono advance at the label font */
+      var textDeg = (label.length * charAdv) / (2 * Math.PI * r) * 360;
+      var gapHalf = textDeg / 2 + 4;
+
+      /* ring drawn as one arc that leaves the gap open */
+      var ring = document.createElementNS(ns, 'path');
+      ring.setAttribute('d', 'M ' + pt(r, centerDeg + gapHalf) +
+        ' A ' + r + ' ' + r + ' 0 1 1 ' + pt(r, centerDeg - gapHalf));
+      ring.setAttribute('class', 'ring' + (li === 4 ? ' wall' : ''));
+      svg.appendChild(ring);
+
+      /* full circle as TWO half-arcs (no degenerate endpoints); the join
+         at 50% length is exactly centerDeg, where the text centers */
+      var lp = document.createElementNS(ns, 'path');
+      lp.setAttribute('d', 'M ' + pt(r, centerDeg - 180) +
+        ' A ' + r + ' ' + r + ' 0 0 1 ' + pt(r, centerDeg) +
+        ' A ' + r + ' ' + r + ' 0 0 1 ' + pt(r, centerDeg - 180));
+      lp.setAttribute('id', 'ringpath' + li);
+      lp.setAttribute('fill', 'none');
+      defs.appendChild(lp);
+      var lt = document.createElementNS(ns, 'text');
+      lt.setAttribute('class', 'ringlab' + (li === 4 ? ' wall' : '') + (inner ? ' inner' : ''));
+      lt.setAttribute('text-anchor', 'middle');
+      var tp = document.createElementNS(ns, 'textPath');
+      tp.setAttribute('href', '#ringpath' + li);
+      tp.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#ringpath' + li);
+      tp.setAttribute('startOffset', '50%');
+      tp.textContent = label;
+      lt.appendChild(tp);
+      svg.appendChild(lt);
+      layer.nodes.forEach(function(node, ni){
+        var a = -Math.PI / 2 + (ni / n) * 2 * Math.PI + li * 0.35;
+        var cx = (50 + R[li] * Math.cos(a)).toFixed(2), cy = (50 + R[li] * Math.sin(a)).toFixed(2);
+
+        var c = document.createElementNS(ns, 'circle');
+        c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', 2);
+        c.setAttribute('class', 'node');
+        svg.appendChild(c);
+
+        /* invisible, larger hit area on top (≥24px at typical render width) */
+        var hit = document.createElementNS(ns, 'circle');
+        hit.setAttribute('cx', cx); hit.setAttribute('cy', cy); hit.setAttribute('r', 3.6);
+        hit.setAttribute('class', 'nodehit');
+        hit.setAttribute('tabindex', '0');
+        hit.setAttribute('role', 'link');
+        hit.setAttribute('aria-label', node[0] + ', ' + layer.name + ' layer. Opens the Atlas dossier.');
+        var slug = slugify(node[0]);
+        function show(){
+          if(selected) selected.classList.remove('sel');
+          selected = c; c.classList.add('sel');
+          if(!nameBox) return;
+          nameBox.innerHTML =
+            '<b class="nn-name">' + node[0] + '</b>' +
+            '<span class="nn-q">' + node[1] + '</span>' +
+            '<span class="nn-meta"><i data-lucide="' + layer.icon + '"></i>L' + (li + 1) + ' · ' + layer.name + '</span>' +
+            '<a class="cta-open nn-cta" href="capability-deep-dives.html#/cap/' + slug + '">Open in Atlas <span class="arr">→</span></a>';
+          if(window.lucide) lucide.createIcons();
+        }
+        hit.addEventListener('mouseenter', show);
+        hit.addEventListener('focus', show);
+        hit.addEventListener('click', show);
+        hit.addEventListener('keydown', function(e){
+          if(e.key === 'Enter'){ location.href = 'capability-deep-dives.html#/cap/' + slug; }
+        });
+        svg.appendChild(hit);
+        /* the panel opens pre-loaded with the first capability, so real
+           content is the default view, never instructions */
+        if(li === 0 && ni === 0) show();
+      });
+    });
+  })();
+
 })();

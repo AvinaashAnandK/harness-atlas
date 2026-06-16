@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Atlas · Harness Atlas</title>
+<meta name="description" content="A guided atlas of the scaffolding around an LLM: one failing run, the four-job operating loop, the constraints overlay, and the full implementation atlas. 24 capabilities · 147 documented incidents.">
+<link rel="stylesheet" href="fieldnote-tokens.css">
+<link rel="stylesheet" href="atlas.css">
+<link rel="stylesheet" href="the-atlas.css">
+</head>
+<body data-surface="atlas-v2">
+
+<header class="mast">
+  <div class="mast-in">
+    <a href="index.html" class="mark">HARNESS<span class="mid">·</span><b>ATLAS</b></a>
+    <span class="sep"></span>
+    <button class="menubtn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav aria-label="Surfaces" id="mastNav">
+      <a href="the-tour.html"><span class="nn">01</span> <span class="nlabel">The Tour</span></a>
+      <a class="cur" href="the-atlas.html"><span class="nn">02</span> <span class="nlabel">The Atlas</span></a>
+      <a href="capability-deep-dives.html"><span class="nn">03</span> <span class="nlabel">Deep Dives</span></a>
+      <a href="what-should-matter-to-you.html"><span class="nn">04</span> <span class="nlabel">What Matters</span></a>
+      <a href="timeline.html"><span class="nn">05</span> <span class="nlabel">Timeline</span></a>
+    </nav>
+    <button class="t-toggle" id="themeBtn" aria-label="Toggle light and dark mode">◐ Light</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 1 · HERO: the claim and the mental model -->
+  <section class="v2-hero page-shell">
+    <p class="eyebrow">02 · The Atlas · 24 capabilities · 147 documented incidents, every one cited</p>
+    <div class="hero-grid">
+      <div>
+        <h1>A model is not an agent.<br><span>The harness makes it operational.</span></h1>
+        <p class="hero-lead">Treat the model as a broadly capable new hire: strong at general reasoning, unfamiliar with your systems, policies, and history. A harness is the scaffolding that helps it orient itself, act safely, carry state forward, and improve after failure.</p>
+        <div class="hero-actions">
+          <a class="vbtn primary" href="#scenario">Start with one run ↓</a>
+          <a class="vbtn ghost" href="#explorer">Browse the full atlas</a>
+        </div>
+      </div>
+      <aside class="thesis-card" aria-label="The core mental model">
+        <p class="card-kicker">The mental model</p>
+        <p class="thesis">A harness does four jobs on every run.</p>
+        <ol>
+          <li><b>Orient</b><span>Supply the right world and approach.</span></li>
+          <li><b>Act</b><span>Control what can touch real systems.</span></li>
+          <li><b>Remember</b><span>Restore the relevant history.</span></li>
+          <li><b>Improve</b><span>Turn failures into reusable fixes.</span></li>
+        </ol>
+        <p class="overlay-note"><b>Limitations and guardrails cut across the loop:</b> some protect the operator, some protect the builder, and some are hard ceilings.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 2 · ONE CONCRETE RUN THAT FAILS -->
+  <section class="scenario-band" id="scenario">
+    <div class="page-shell">
+      <div class="section-intro narrow">
+        <p class="eyebrow">Start with a failure</p>
+        <h2>What breaks when the harness loses one load-bearing rule?</h2>
+        <p>A customer asks a support agent to refund a duplicate £4,800 invoice. One rule is load-bearing — the agent is expected to follow it:</p>
+        <div class="rule-callout" role="note"><span class="rule-tag">The rule</span><b>Refunds above £1,000 require manager approval.</b></div>
+        <p>You watched this mechanism eat an inbox in <a href="the-tour.html#two-failures">the Tour</a>. Size the tool catalogue, add harness blocks, and watch what survives inside the run.</p>
+      </div>
+      <div id="scenarioApp" class="scenario-app"></div>
+    </div>
+  </section>
+
+  <!-- 3 · THE OPERATING LOOP + CONSTRAINTS OVERLAY -->
+  <section class="page-shell operating" id="map">
+    <div class="section-intro narrow">
+      <p class="eyebrow">The operating loop</p>
+      <h2>Four jobs, in the order a run encounters them.</h2>
+      <p>The model reasons inside a loop. The harness supplies the parts the model cannot reliably provide for itself. Open a capability only when you need the definition.</p>
+    </div>
+    <div id="loopMap" class="loop-map"></div>
+    <aside id="constraintsMap" class="constraints-panel"></aside>
+  </section>
+
+  <!-- 4 · THE FATE LENS -->
+  <section class="fate-band">
+    <div class="page-shell fate-shell">
+      <div>
+        <p class="eyebrow">A lens, not a law</p>
+        <h2>Which harness investments survive a better model?</h2>
+        <p class="fate-copy">The fate labels are investment hypotheses. Visible, measurable failures may need less bespoke scaffolding as models improve. Silent failures, enforcement boundaries, and business constraints tend to persist.</p>
+      </div>
+      <div class="legend" aria-label="Fate legend">
+        <div><span class="fdot compound"></span><b>Compounds</b><small>Silent failure; the encoded fix keeps its value.</small></div>
+        <div><span class="fdot fade"></span><b>May fade</b><small>Visible failure; bespoke scaffolding may shrink.</small></div>
+        <div><span class="fdot protect"></span><b>Protects builder</b><small>Persists as long as the business reason does.</small></div>
+        <div><span class="fdot split"></span><b>Split</b><small>Different halves age differently.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · OPTIONAL EXPERT LAYER: THE IMPLEMENTATION ATLAS -->
+  <section class="page-shell explorer-section" id="explorer">
+    <div class="section-intro">
+      <p class="eyebrow">The full map</p>
+      <h2>Explore the implementation atlas</h2>
+      <p>Every capability, its competing implementations, and who runs what.</p>
+    </div>
+    <details class="explorer" id="atlasExplorer" open>
+      <summary>
+        <span class="summary-mini">24 capabilities · 5 layers · filter by harness</span>
+        <span class="summary-action">Collapse / expand <b>+</b></span>
+      </summary>
+      <div class="explorer-body">
+        <div class="filterbar" id="filterbar"></div>
+        <div class="filter-result" id="filterResult"></div>
+        <div id="atlasStage" class="atlas-stage" aria-label="Implementation atlas: pick a layer, then a capability"></div>
+        <div id="capabilityAtlas"></div>
+      </div>
+    </details>
+  </section>
+
+  <!-- 6 · CLOSER: TO THE DOSSIERS -->
+  <section class="page-shell closer">
+    <p class="eyebrow">The takeaway</p>
+    <h2>The roadmap question is not “How smart is the model?”</h2>
+    <p>Ask where a failure would surface, what the blast radius is, and whether a better model removes the need or merely makes the failure harder to notice.</p>
+    <a class="vbtn primary" href="capability-deep-dives.html">Open the evidence dossiers →</a>
+  </section>
+
+</main>
+
+<script src="atlas-data.js"></script>
+<script src="the-atlas.js"></script>
+<!-- analytics: GoatCounter (cookieless) -->
+<script data-goatcounter="https://harness-atlas.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
