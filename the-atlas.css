@@ -6,7 +6,7 @@
    vermilion; surfaces stay warm paper.
    ============================================================ */
 
-.page-shell{width:min(1180px, calc(100% - 44px)); margin:0 auto}
+.page-shell{max-width:1180px; margin-left:var(--frame-left); margin-right:auto; padding:0 20px}
 .narrow{max-width:760px}
 .section-intro p:not(.eyebrow){color:var(--ink-2); font-size:1.05rem; max-width:64ch}
 main h1, main h2, main h3{margin-top:0}
@@ -147,7 +147,9 @@ main h2{font-weight:600; font-size:clamp(1.9rem,3.6vw,2.9rem); letter-spacing:-.
 .mini-cap .info{display:grid; place-items:center; min-width:18px; height:18px; font-family:var(--mono); font-weight:700; font-size:14px; line-height:1; color:var(--live); flex:none}
 .mini-def{display:none; margin:2px 0 6px 26px; color:var(--ink-3); font-size:.79rem; line-height:1.4}
 .mini-cap.open .mini-def{display:block}
-.constraints-panel{display:grid; grid-template-columns:240px 1fr; gap:18px; margin-top:16px; padding:18px; border:1.5px dashed var(--hl-bd); border-radius:var(--r-lg); background:var(--hl-bg)}
+/* intro stacks full-width on top; the 4 cards sit in a row below at their
+   natural height (the old 240px left column forced the cards to stretch tall) */
+.constraints-panel{display:grid; grid-template-columns:1fr; gap:14px; margin-top:16px; padding:18px; border:1.5px dashed var(--hl-bd); border-radius:var(--r-lg); background:var(--hl-bg)}
 .constraints-intro .eyebrow{color:var(--hl)}
 .constraints-panel h3{margin:4px 0 8px; letter-spacing:-.02em}
 .constraints-panel p{margin:0; color:var(--ink-2); font-size:.9rem}
@@ -300,7 +302,7 @@ main h2{font-weight:600; font-size:clamp(1.9rem,3.6vw,2.9rem); letter-spacing:-.
   .cap-grid{grid-template-columns:1fr 1fr}
 }
 @media (max-width:680px){
-  .page-shell{width:min(100% - 28px, 1180px)}
+  .page-shell{padding:0 14px}
   .v2-hero{padding:48px 0 44px}
   .v2-hero h1{font-size:clamp(2.2rem,9.5vw,3rem)}
   .hero-lead{font-size:1.05rem}

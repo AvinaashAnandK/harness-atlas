@@ -8,7 +8,7 @@
    only fate-color use here).
    ============================================================ */
 
-.tl-wrap{max-width:1040px; margin:0 auto; padding:0 28px}
+.tl-wrap{max-width:1040px; margin-left:var(--frame-left); margin-right:auto; padding:0 20px}
 
 /* ---- hero ---- */
 .tl-head{padding:52px 0 14px}
@@ -20,7 +20,7 @@
 
 /* ---- controls ---- */
 .tl-controls{position:sticky; top:49px; z-index:30; background:color-mix(in srgb,var(--bg) 92%,transparent); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:13px 0; margin:14px 0 0}
-.tl-controls-in{max-width:1040px; margin:0 auto; padding:0 28px}
+.tl-controls-in{max-width:1040px; margin-left:var(--frame-left); margin-right:auto; padding:0 20px}
 .crow{display:flex; flex-wrap:wrap; align-items:center; gap:10px}
 .crow + .crow{margin-top:10px}
 .tl-search{flex:1; min-width:220px; display:flex; align-items:center; gap:8px; background:var(--bg-raised); border:1px solid var(--line-2); border-radius:var(--r-pill); padding:7px 14px; transition:border-color var(--fast)}

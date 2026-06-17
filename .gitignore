@@ -9,3 +9,6 @@ screenshots/
 # superseded versions, intermediates, and internal docs — kept locally, not shared
 # (originals + edit-pass v1, the tour lab, the build handoff, the 00-system meta page)
 archived/
+
+# internal editorial map / audit doc — not part of the published site
+editorial-map.html

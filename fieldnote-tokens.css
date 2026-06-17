@@ -67,6 +67,11 @@
   --w-text:680px;   /* reading column */
   --w-wide:940px;   /* figures + interactives break out */
   --w-full:1200px;  /* page max */
+  /* Left inset that lines any content column up with the masthead's left edge.
+     Resolves to 0 when the parent is <= --w-full, otherwise to half the
+     overflow, so column-left + 20px padding == the nav's left edge at every
+     viewport width. Pair with `padding:0 20px` and `margin-right:auto`. */
+  --frame-left:max(0px, calc((100% - var(--w-full)) / 2));
 
   /* --- motion --- */
   --ease:cubic-bezier(.2,.7,.2,1);
